@@ -40,15 +40,22 @@ Contrast checked: amber on ink 10.6:1 · amber-dim on ink 5.1:1 · quill on parc
 ┌ STATUS BAR ─ marquee ticker · UTC clock · "visitors: 000013" · Best viewed 1024×768 ┐
 ├──────────────┬────────────────────────────────────────┬────────────────────────────┤
 │ HARBOR       │ DECK                                   │ DECODER RING               │
-│ fleet (8     │ boarding log (terminal) →              │ phrase → what it permits   │
-│ ship cards)  │ PLUNDER readout + rank + grade         │ (count) ; hover underlines │
-│ paste box    │ flags: hoisted red flags with          │ in the Hold                │
-│ URL field    │ parchment quote cards                  │                            │
-│ [BOARD]      │                                        │                            │
+│ paste box    │ boarding log (terminal) →              │ phrase → what it permits   │
+│ URL field    │ PLUNDER readout + rank + grade         │ (count) ; hover underlines │
+│ [BOARD]      │ flags: hoisted red flags with          │ in the Hold                │
+│              │ parchment quote cards                  │                            │
 ├──────────────┴────────────────────────────────────────┴────────────────────────────┤
+│ FLEET LEDGER — 8 ships x 8 categories, pennant per category, score/grade/rank      │
+├────────────────────────────────────────────────────────────────────────────────────┤
 │ THE HOLD — full policy text, flagged sentences highlighted (collapsed by default)  │
 └────────────────────────────────────────────────────────────────────────────────────┘
 ```
+Revised 2026-09-22: the first paint is a finished boarding (a cached real scan), never an
+empty state — a reader who is skimming must see the payoff, not the ask. The eight ships
+live in the **fleet ledger** below the three columns rather than as cards in the Harbor,
+which now holds only bring-your-own input; listing them twice starved the Harbor and broke
+its layout.
+
 Grid: `grid-cols-[280px_minmax(0,1fr)_300px]`, gaps 12 px, panels have 1 px `rope` borders with a 2 px inset amber corner tick (drawn with `::before`), 4 px radius. No cards-inside-cards: a flag is a list row; only the quote is a parchment card.
 
 Mobile (< 1024): status bar → harbor → deck → decoder → hold, stacked; fleet becomes a horizontal snap-scroll row.

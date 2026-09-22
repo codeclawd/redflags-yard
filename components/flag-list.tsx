@@ -6,6 +6,24 @@ import type { Flag } from "@/lib/types";
 import { CATEGORY_ICON, CATEGORY_LABEL, SEVERITY_COLOR, SEVERITY_LABEL } from "./severity";
 import { JollyRouge } from "./jolly-rouge";
 
+
+/**
+ * Display-only: a verdict repeated verbatim reads as a broken list rather than a
+ * stronger finding. The engine keeps every grounded flag — "Copy the report" and
+ * the hold highlighting still use all of them — but the list shows at most three
+ * of any one headline.
+ */
+const MAX_PER_HEADLINE = 3;
+
+function capRepeats<T extends { headline: string }>(flags: T[]): T[] {
+  const seen = new Map<string, number>();
+  return flags.filter((f) => {
+    const n = seen.get(f.headline) ?? 0;
+    seen.set(f.headline, n + 1);
+    return n < MAX_PER_HEADLINE;
+  });
+}
+
 export function FlagList({
   flags,
   openId,
@@ -38,7 +56,7 @@ export function FlagList({
 
   return (
     <ul ref={list} className="divide-y divide-rope">
-      {flags.map((flag, index) => {
+      {capRepeats(flags).map((flag, index) => {
         const Icon = CATEGORY_ICON[flag.category];
         const open = openId === flag.id;
         const color = SEVERITY_COLOR[flag.severity];

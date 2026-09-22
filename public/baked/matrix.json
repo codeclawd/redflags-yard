@@ -43,43 +43,20 @@
       "fetchedAt": "2026-09-21",
       "chars": 27555,
       "score": {
-        "value": 94,
+        "value": 84,
         "grade": "F",
         "rank": "Ghost ship"
       },
-      "flagCount": 37,
+      "flagCount": 30,
       "counts": {
-        "biometric_sensitive": 7,
+        "biometric_sensitive": 4,
         "ai_training": 1,
-        "cross_site_tracking": 3,
-        "precise_location": 2,
-        "contacts_harvest": 2,
+        "cross_site_tracking": 4,
+        "precise_location": 1,
+        "contacts_harvest": 0,
         "human_review": 1,
-        "no_deletion": 3,
+        "no_deletion": 4,
         "business_transfer": 1
-      }
-    },
-    {
-      "id": "snap",
-      "name": "Snapchat",
-      "url": "https://values.snap.com/privacy/privacy-policy",
-      "fetchedAt": "2026-09-21",
-      "chars": 34301,
-      "score": {
-        "value": 86,
-        "grade": "F",
-        "rank": "Ghost ship"
-      },
-      "flagCount": 33,
-      "counts": {
-        "biometric_sensitive": 0,
-        "ai_training": 5,
-        "cross_site_tracking": 2,
-        "precise_location": 3,
-        "contacts_harvest": 2,
-        "human_review": 0,
-        "no_deletion": 1,
-        "business_transfer": 2
       }
     },
     {
@@ -89,86 +66,17 @@
       "fetchedAt": "2026-09-21",
       "chars": 42407,
       "score": {
-        "value": 80,
-        "grade": "F",
-        "rank": "Ghost ship"
+        "value": 75,
+        "grade": "D",
+        "rank": "Pirate"
       },
-      "flagCount": 27,
+      "flagCount": 23,
       "counts": {
         "biometric_sensitive": 2,
         "ai_training": 2,
-        "cross_site_tracking": 4,
+        "cross_site_tracking": 3,
         "precise_location": 2,
         "contacts_harvest": 1,
-        "human_review": 0,
-        "no_deletion": 2,
-        "business_transfer": 1
-      }
-    },
-    {
-      "id": "google",
-      "name": "Google",
-      "url": "https://policies.google.com/privacy?hl=en-US",
-      "fetchedAt": "2026-09-21",
-      "chars": 46209,
-      "score": {
-        "value": 78,
-        "grade": "D",
-        "rank": "Pirate"
-      },
-      "flagCount": 28,
-      "counts": {
-        "biometric_sensitive": 4,
-        "ai_training": 2,
-        "cross_site_tracking": 8,
-        "precise_location": 4,
-        "contacts_harvest": 2,
-        "human_review": 1,
-        "no_deletion": 0,
-        "business_transfer": 0
-      }
-    },
-    {
-      "id": "temu",
-      "name": "Temu",
-      "url": "https://www.temu.com/privacy-and-cookie-policy.html",
-      "fetchedAt": "2026-09-21",
-      "chars": 29821,
-      "score": {
-        "value": 78,
-        "grade": "D",
-        "rank": "Pirate"
-      },
-      "flagCount": 39,
-      "counts": {
-        "biometric_sensitive": 0,
-        "ai_training": 0,
-        "cross_site_tracking": 7,
-        "precise_location": 0,
-        "contacts_harvest": 0,
-        "human_review": 0,
-        "no_deletion": 1,
-        "business_transfer": 1
-      }
-    },
-    {
-      "id": "linkedin",
-      "name": "LinkedIn",
-      "url": "https://www.linkedin.com/legal/privacy-policy",
-      "fetchedAt": "2026-09-21",
-      "chars": 41494,
-      "score": {
-        "value": 76,
-        "grade": "D",
-        "rank": "Pirate"
-      },
-      "flagCount": 33,
-      "counts": {
-        "biometric_sensitive": 1,
-        "ai_training": 2,
-        "cross_site_tracking": 3,
-        "precise_location": 0,
-        "contacts_harvest": 4,
         "human_review": 0,
         "no_deletion": 3,
         "business_transfer": 1
@@ -181,19 +89,111 @@
       "fetchedAt": "2026-09-21",
       "chars": 53752,
       "score": {
-        "value": 75,
+        "value": 73,
         "grade": "D",
         "rank": "Pirate"
       },
-      "flagCount": 27,
+      "flagCount": 22,
       "counts": {
         "biometric_sensitive": 3,
         "ai_training": 0,
-        "cross_site_tracking": 4,
+        "cross_site_tracking": 6,
         "precise_location": 0,
         "contacts_harvest": 0,
         "human_review": 2,
         "no_deletion": 0,
+        "business_transfer": 1
+      }
+    },
+    {
+      "id": "snap",
+      "name": "Snapchat",
+      "url": "https://values.snap.com/privacy/privacy-policy",
+      "fetchedAt": "2026-09-21",
+      "chars": 34301,
+      "score": {
+        "value": 72,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 21,
+      "counts": {
+        "biometric_sensitive": 0,
+        "ai_training": 5,
+        "cross_site_tracking": 2,
+        "precise_location": 3,
+        "contacts_harvest": 1,
+        "human_review": 0,
+        "no_deletion": 1,
+        "business_transfer": 1
+      }
+    },
+    {
+      "id": "temu",
+      "name": "Temu",
+      "url": "https://www.temu.com/privacy-and-cookie-policy.html",
+      "fetchedAt": "2026-09-21",
+      "chars": 29821,
+      "score": {
+        "value": 72,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 25,
+      "counts": {
+        "biometric_sensitive": 0,
+        "ai_training": 0,
+        "cross_site_tracking": 6,
+        "precise_location": 0,
+        "contacts_harvest": 0,
+        "human_review": 0,
+        "no_deletion": 1,
+        "business_transfer": 1
+      }
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "url": "https://policies.google.com/privacy?hl=en-US",
+      "fetchedAt": "2026-09-21",
+      "chars": 46209,
+      "score": {
+        "value": 70,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 19,
+      "counts": {
+        "biometric_sensitive": 3,
+        "ai_training": 2,
+        "cross_site_tracking": 7,
+        "precise_location": 2,
+        "contacts_harvest": 2,
+        "human_review": 1,
+        "no_deletion": 0,
+        "business_transfer": 0
+      }
+    },
+    {
+      "id": "linkedin",
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/legal/privacy-policy",
+      "fetchedAt": "2026-09-21",
+      "chars": 41494,
+      "score": {
+        "value": 68,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 24,
+      "counts": {
+        "biometric_sensitive": 0,
+        "ai_training": 1,
+        "cross_site_tracking": 5,
+        "precise_location": 0,
+        "contacts_harvest": 4,
+        "human_review": 0,
+        "no_deletion": 3,
         "business_transfer": 1
       }
     },
@@ -204,18 +204,18 @@
       "fetchedAt": "2026-09-21",
       "chars": 35055,
       "score": {
-        "value": 71,
+        "value": 65,
         "grade": "D",
         "rank": "Pirate"
       },
-      "flagCount": 29,
+      "flagCount": 18,
       "counts": {
         "biometric_sensitive": 0,
         "ai_training": 0,
         "cross_site_tracking": 7,
         "precise_location": 0,
         "contacts_harvest": 1,
-        "human_review": 4,
+        "human_review": 2,
         "no_deletion": 1,
         "business_transfer": 2
       }
