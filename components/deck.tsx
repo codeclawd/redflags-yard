@@ -1,7 +1,7 @@
 "use client";
 
 import { useReducedMotion } from "motion/react";
-import { Share2, ShieldAlert, Telescope } from "lucide-react";
+import { Share2, ShieldAlert } from "lucide-react";
 import type { Flag, ScanMeta, ScanResult } from "@/lib/types";
 import { FlagList } from "./flag-list";
 import { Plunder } from "./plunder";
@@ -19,62 +19,49 @@ export function Deck({
   phase,
   log,
   result,
+  cached,
   error,
   openFlagId,
   onToggleFlag,
   onShare,
 }: {
-  phase: "empty" | "scanning" | "results" | "error";
+  phase: "scanning" | "results" | "error";
   log: string[];
   result: ScanResult | null;
+  /** Bake date while this is the committed cached result; null once a live scan replaces it. */
+  cached: string | null;
   error: { message: string; recovery: string } | null;
   openFlagId: string | null;
   onToggleFlag: (flag: Flag) => void;
   onShare: () => void;
 }) {
   const reduced = useReducedMotion();
-  const { shown, done } = useTypewriter(log, reduced === true || phase === "empty");
+  // The cached boarding is already over, so it arrives whole — no typing, no
+  // count-up, no stagger. Only a live boarding is animated.
+  const instant = cached !== null || reduced === true;
+  const { shown, done } = useTypewriter(log, instant);
 
   return (
     <section
       aria-label="Deck"
-      className="panel scanlines relative flex min-h-0 flex-col gap-4 overflow-y-auto p-4"
+      className="panel scanlines relative order-1 flex max-h-[78dvh] min-h-0 flex-col gap-3 overflow-y-auto p-4 lg:order-none lg:max-h-none"
     >
-      {phase === "empty" ? (
-        <div className="flex min-h-[320px] flex-col justify-center gap-3 py-8">
-          <h2 className="max-w-[24ch] font-display text-[40px] leading-[0.95] tracking-[-0.01em] text-parchment text-balance">
-            Board a privacy policy. Take back what it takes.
-          </h2>
-          <p className="max-w-[62ch] text-[15px] text-amber-dim">
-            Every flag below is a sentence we found in the document, quoted exactly, with the
-            offset it sits at. No paraphrase, no invention. Pick a ship from the harbor and press
-            Board.
-          </p>
-          <p className="flex items-center gap-2 font-terminal text-[18px] leading-none text-foam">
-            <Telescope aria-hidden className="size-4" strokeWidth={1.75} />
-            Awaiting orders.
-          </p>
-        </div>
-      ) : null}
-
-      {phase !== "empty" ? (
-        <div>
-          <pre
-            aria-live="polite"
-            className="whitespace-pre-wrap font-terminal text-[18px] leading-[1.35] text-foam"
-          >
-            {shown.join("\n")}
-            {!done ? <span className="ml-0.5 inline-block bg-foam text-ink">█</span> : null}
-          </pre>
-          {phase === "scanning" ? (
-            <div
-              role="progressbar"
-              aria-label="Boarding"
-              className="barricade mt-3 h-2.5 rounded-[2px] border border-rope"
-            />
-          ) : null}
-        </div>
-      ) : null}
+      <div>
+        <pre
+          aria-live="polite"
+          className="whitespace-pre-wrap font-terminal text-[18px] leading-[1.35] text-foam"
+        >
+          {shown.join("\n")}
+          {!done ? <span className="ml-0.5 inline-block bg-foam text-ink">█</span> : null}
+        </pre>
+        {phase === "scanning" ? (
+          <div
+            role="progressbar"
+            aria-label="Boarding"
+            className="barricade mt-3 h-2.5 rounded-[2px] border border-rope"
+          />
+        ) : null}
+      </div>
 
       {phase === "error" && error ? (
         <div className="border border-blood bg-ink-3 p-3.5">
@@ -88,9 +75,13 @@ export function Deck({
 
       {phase === "results" && result ? (
         <>
-          <Plunder score={result.score} still={reduced === true} />
+          <Plunder
+            score={result.score}
+            still={instant}
+            provenance={cached ? `cached scan · ${cached} · rules only, no parley` : null}
+          />
 
-          {result.meta.llm !== "ran" ? (
+          {!cached && result.meta.llm !== "ran" ? (
             <p className="border border-rope bg-ink-3 px-3 py-2 text-[13px] text-amber-dim">
               Parley skipped ({PARLEY_REASON[result.meta.llm]}) — these flags are from the rulebook
               alone.
@@ -114,7 +105,7 @@ export function Deck({
           <FlagList
             flags={result.flags}
             openId={openFlagId}
-            still={reduced === true}
+            still={instant}
             onToggle={onToggleFlag}
           />
         </>

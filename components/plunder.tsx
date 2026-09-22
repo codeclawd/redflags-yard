@@ -4,7 +4,16 @@ import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "motion/react";
 import type { ScanScore } from "@/lib/types";
 
-export function Plunder({ score, still }: { score: ScanScore; still: boolean }) {
+export function Plunder({
+  score,
+  still,
+  provenance,
+}: {
+  score: ScanScore;
+  still: boolean;
+  /** Quiet line of origin, e.g. "cached scan · 2026-09-22". */
+  provenance: string | null;
+}) {
   const reduced = useReducedMotion();
   const instant = still || reduced === true;
   const [animated, setAnimated] = useState(0);
@@ -44,8 +53,11 @@ export function Plunder({ score, still }: { score: ScanScore; still: boolean }) 
         {score.rank}
       </motion.p>
 
-      <p className="w-full text-[13px] text-amber-dim">
-        Plunder — how much of you they are allowed to take.
+      <p className="flex w-full flex-wrap items-baseline gap-x-2 text-[13px] text-amber-dim">
+        <span>Plunder — how much of you they are allowed to take.</span>
+        {provenance ? (
+          <span className="font-terminal text-[18px] leading-none text-foam">{provenance}</span>
+        ) : null}
       </p>
     </div>
   );

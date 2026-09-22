@@ -1,18 +1,35 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Flag, ScanError, ScanErrorCode, ScanResult } from "@/lib/types";
 import { Deck } from "@/components/deck";
 import { DecoderRing } from "@/components/decoder-ring";
+import { FleetMatrix } from "@/components/fleet-matrix";
 import { Harbor } from "@/components/harbor";
 import { Hold } from "@/components/hold";
 import { HowItWorks } from "@/components/how-it-works";
 import { ShareReport } from "@/components/share-report";
 import { StatusBar } from "@/components/status-bar";
 import { mockScan } from "@/components/mock-scan";
-import type { FleetPolicy, FleetShip } from "@/components/types";
+import type { FleetMatrix as FleetMatrixData, FleetPolicy } from "@/components/types";
+import matrixJson from "@/public/baked/matrix.json";
+import bakedJson from "@/public/baked/tiktok.json";
 
-type Phase = "empty" | "scanning" | "results" | "error";
+// The first frame is a finished boarding. These two files are committed output
+// of the real engine over the real stored policy (`pnpm bake`, rules only, no
+// parley), imported rather than fetched so the result is painted, not awaited.
+// Pressing Board — here or on a ledger row — runs the live scan and replaces it.
+const MATRIX = matrixJson as unknown as FleetMatrixData;
+const BAKED = bakedJson as unknown as ScanResult;
+const BAKED_ID = "tiktok";
+const BAKED_SHIP = MATRIX.ships.find((ship) => ship.id === BAKED_ID) ?? MATRIX.ships[0];
+// The cached boarding is history, so it reports as one status line rather than
+// replaying five. A live boarding still types the whole log.
+const BAKED_LOG = [
+  `Boarded ${BAKED_SHIP.name} — ${BAKED.meta.sourceChars.toLocaleString("en-US")} chars searched, no parley, ${BAKED.flags.length} flags hoisted.`,
+];
+
+type Phase = "scanning" | "results" | "error";
 type Trouble = { message: string; recovery: string };
 
 const TROUBLE: Record<ScanErrorCode, Trouble> = {
@@ -51,16 +68,16 @@ const TROUBLE: Record<ScanErrorCode, Trouble> = {
 };
 
 export default function Page() {
-  const [fleet, setFleet] = useState<FleetShip[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(BAKED_ID);
   const [pasted, setPasted] = useState("");
   const [url, setUrl] = useState("");
 
-  const [phase, setPhase] = useState<Phase>("empty");
-  const [log, setLog] = useState<string[]>([]);
-  const [result, setResult] = useState<ScanResult | null>(null);
+  const [phase, setPhase] = useState<Phase>("results");
+  const [log, setLog] = useState<string[]>(BAKED_LOG);
+  const [result, setResult] = useState<ScanResult | null>(BAKED);
+  const [cached, setCached] = useState<string | null>(MATRIX.bakedAt);
   const [trouble, setTrouble] = useState<Trouble | null>(null);
-  const [shipName, setShipName] = useState("the ship");
+  const [shipName, setShipName] = useState(BAKED_SHIP.name);
   const [sourceText, setSourceText] = useState("");
   const [holdNote, setHoldNote] = useState<string | null>(null);
 
@@ -70,107 +87,125 @@ export default function Page() {
   const [overlay, setOverlay] = useState<"none" | "how" | "share">("none");
   const [scanCount, setScanCount] = useState(0);
 
+  // The cached result is complete without it, so the policy text the hold shows
+  // is the one thing that arrives after first paint. A boarding that starts
+  // first owns `sourceText`, and this drops its late answer on the floor.
+  const boarded = useRef(false);
   useEffect(() => {
     let live = true;
-    fetch("/policies/index.json")
-      .then((response) => response.json() as Promise<FleetShip[]>)
-      .then((ships) => {
-        if (live) setFleet(ships);
+    fetch(`/policies/${BAKED_ID}.json`)
+      .then((response) => response.json() as Promise<FleetPolicy>)
+      .then((policy) => {
+        if (live && !boarded.current) setSourceText(policy.text);
       })
-      .catch(() => {
-        if (live) setFleet([]);
-      });
+      .catch(() => {});
     return () => {
       live = false;
     };
   }, []);
 
-  const board = useCallback(async () => {
-    const ship = fleet.find((entry) => entry.id === selectedId) ?? null;
-    const usingPaste = !ship && pasted.trim().length > 0;
-    const name = ship ? ship.name : usingPaste ? "the pasted policy" : url.trim();
-    if (!ship && !usingPaste && url.trim().length === 0) return;
+  const board = useCallback(
+    async (overrideId?: string) => {
+      const id = overrideId ?? selectedId;
+      const ship = MATRIX.ships.find((entry) => entry.id === id) ?? null;
+      const usingPaste = !ship && pasted.trim().length > 0;
+      const name = ship ? ship.name : usingPaste ? "the pasted policy" : url.trim();
+      if (!ship && !usingPaste && url.trim().length === 0) return;
 
-    setPhase("scanning");
-    setResult(null);
-    setTrouble(null);
-    setOpenFlagId(null);
-    setActivePhrase(null);
-    setShipName(name);
-    setSourceText("");
-    setHoldNote(null);
-    setLog([`Hailing ${name}…`]);
+      boarded.current = true;
+      setPhase("scanning");
+      setResult(null);
+      setCached(null);
+      setTrouble(null);
+      setOpenFlagId(null);
+      setActivePhrase(null);
+      setShipName(name);
+      setSourceText("");
+      setHoldNote(null);
+      setLog([`Hailing ${name}…`]);
 
-    let text = "";
-    try {
-      if (ship) {
-        const policy = (await fetch(`/policies/${ship.id}.json`).then((r) =>
-          r.json(),
-        )) as FleetPolicy;
-        text = policy.text;
-      } else if (usingPaste) {
-        text = pasted;
-      }
-      if (text.length > 0) {
-        setSourceText(text);
+      let text = "";
+      try {
+        if (ship) {
+          const policy = (await fetch(`/policies/${ship.id}.json`).then((r) =>
+            r.json(),
+          )) as FleetPolicy;
+          text = policy.text;
+        } else if (usingPaste) {
+          text = pasted;
+        }
+        if (text.length > 0) {
+          setSourceText(text);
+          setLog((lines) => [
+            ...lines,
+            `Reading the manifest… ${text.length.toLocaleString("en-US")} chars`,
+            "Searching the hold…",
+          ]);
+        } else {
+          setHoldNote(
+            "A hailed URL is read on the server, so its text is not aboard. Every flag below still carries its quote.",
+          );
+          setLog((lines) => [...lines, "Reading the manifest…", "Searching the hold…"]);
+        }
+
+        let scan: ScanResult;
+        const mock = new URLSearchParams(window.location.search).get("mock") === "1";
+        if (mock && text.length > 0) {
+          await new Promise((resolve) => setTimeout(resolve, 900));
+          scan = mockScan(text, ship?.id ?? "pasted");
+        } else {
+          const body = ship
+            ? { policyId: ship.id }
+            : usingPaste
+              ? { text: pasted }
+              : { url: url.trim() };
+          const response = await fetch("/api/scan", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(body),
+          });
+          const payload = (await response.json()) as ScanResult | ScanError;
+          if (!response.ok || "error" in payload) {
+            const code = "code" in payload ? payload.code : "FETCH_FAILED";
+            setTrouble(TROUBLE[code] ?? TROUBLE.FETCH_FAILED);
+            setLog((lines) => [...lines, "Boarding failed."]);
+            setPhase("error");
+            return;
+          }
+          scan = payload;
+        }
+
         setLog((lines) => [
           ...lines,
-          `Reading the manifest… ${text.length.toLocaleString("en-US")} chars`,
-          "Searching the hold…",
+          scan.meta.llm === "ran"
+            ? "Parley with the quartermaster… done"
+            : "No parley — rules only",
+          `${scan.flags.length} flag${scan.flags.length === 1 ? "" : "s"} hoisted.`,
         ]);
-      } else {
-        setHoldNote(
-          "A hailed URL is read on the server, so its text is not aboard. Every flag below still carries its quote.",
-        );
-        setLog((lines) => [...lines, "Reading the manifest…", "Searching the hold…"]);
-      }
-
-      let scan: ScanResult;
-      const mock = new URLSearchParams(window.location.search).get("mock") === "1";
-      if (mock && text.length > 0) {
-        await new Promise((resolve) => setTimeout(resolve, 900));
-        scan = mockScan(text, ship?.id ?? "pasted");
-      } else {
-        const body = ship
-          ? { policyId: ship.id }
-          : usingPaste
-            ? { text: pasted }
-            : { url: url.trim() };
-        const response = await fetch("/api/scan", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify(body),
+        setResult(scan);
+        setScanCount((count) => count + 1);
+        setPhase("results");
+      } catch {
+        setTrouble({
+          message: "The boarding party never came back.",
+          recovery: "Check your connection and press Board again, or paste the text instead.",
         });
-        const payload = (await response.json()) as ScanResult | ScanError;
-        if (!response.ok || "error" in payload) {
-          const code = "code" in payload ? payload.code : "FETCH_FAILED";
-          setTrouble(TROUBLE[code] ?? TROUBLE.FETCH_FAILED);
-          setLog((lines) => [...lines, "Boarding failed."]);
-          setPhase("error");
-          return;
-        }
-        scan = payload;
+        setLog((lines) => [...lines, "Boarding failed."]);
+        setPhase("error");
       }
+    },
+    [selectedId, pasted, url],
+  );
 
-      setLog((lines) => [
-        ...lines,
-        scan.meta.llm === "ran"
-          ? "Parley with the quartermaster… done"
-          : "No parley — rules only",
-        `${scan.flags.length} flag${scan.flags.length === 1 ? "" : "s"} hoisted.`,
-      ]);
-      setResult(scan);
-      setScanCount((count) => count + 1);
-      setPhase("results");
-    } catch {
-      setTrouble({
-        message: "The boarding party never came back.",
-        recovery: "Check your connection and press Board again, or paste the text instead.",
-      });
-      setLog((lines) => [...lines, "Boarding failed."]);
-      setPhase("error");
-    }
-  }, [fleet, selectedId, pasted, url]);
+  const boardShip = useCallback(
+    (id: string) => {
+      setSelectedId(id);
+      setPasted("");
+      setUrl("");
+      void board(id);
+    },
+    [board],
+  );
 
   const toggleFlag = useCallback(
     (flag: Flag) => {
@@ -219,21 +254,15 @@ export default function Page() {
     <>
       <div className="sea" aria-hidden />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col gap-3 p-3 lg:h-dvh lg:overflow-hidden">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col gap-2 p-3 lg:h-dvh lg:overflow-hidden">
         <StatusBar ticker={ticker} scanCount={scanCount} />
 
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[280px_minmax(0,1fr)_300px]">
+        <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-[280px_minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)_auto]">
           <Harbor
-            fleet={fleet}
-            selectedId={selectedId}
+            selected={MATRIX.ships.find((ship) => ship.id === selectedId) ?? null}
             pasted={pasted}
             url={url}
             busy={busy}
-            onPick={(id) => {
-              setSelectedId((current) => (current === id ? null : id));
-              setPasted("");
-              setUrl("");
-            }}
             onPaste={(value) => {
               setPasted(value);
               if (value.length > 0) setSelectedId(null);
@@ -242,13 +271,14 @@ export default function Page() {
               setUrl(value);
               if (value.length > 0) setSelectedId(null);
             }}
-            onBoard={board}
+            onBoard={() => void board()}
           />
 
           <Deck
             phase={phase}
             log={log}
             result={result}
+            cached={cached}
             error={trouble}
             openFlagId={openFlagId}
             onToggleFlag={toggleFlag}
@@ -260,6 +290,8 @@ export default function Page() {
             activePhrase={activePhrase}
             onSelect={selectPhrase}
           />
+
+          <FleetMatrix matrix={MATRIX} activeId={selectedId} busy={busy} onBoard={boardShip} />
         </div>
 
         <Hold
@@ -273,7 +305,7 @@ export default function Page() {
           onToggle={() => setHoldOpen((open) => !open)}
         />
 
-        <footer className="panel flex flex-wrap items-center gap-x-4 gap-y-1 px-3 py-2 font-terminal text-[18px] leading-none">
+        <footer className="panel flex flex-wrap items-center gap-x-4 gap-y-1 px-3 py-1.5 font-terminal text-[18px] leading-none">
           <a
             href="https://github.com/codeclawd/redflags-yard"
             className="text-foam underline decoration-dotted underline-offset-[3px] hover:text-amber"
