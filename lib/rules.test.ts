@@ -7,7 +7,7 @@ const run = (sentence: string) => runRules(splitSentences(sentence));
 const categoriesOf = (sentence: string) => new Set(run(sentence).map((f) => f.category));
 
 /** Each category gets a sentence that must flag and one the firewall must kill. */
-const FIXTURES: Record<CategoryId, { positive: string; suppressed: string }> = {
+const FIXTURES: Record<Exclude<CategoryId, "vague_euphemism">, { positive: string; suppressed: string }> = {
   sells_shares: {
     positive: "We sell your personal information to third parties in exchange for valuable consideration every month.",
     suppressed: "We do not sell your personal information to third parties for money or anything else.",
