@@ -43,3 +43,7 @@ next-env.d.ts
 .omc/
 .impeccable/
 !.env.example
+eval/metric.out
+eval/last-errors.txt
+eval/results.tsv
+run.log
