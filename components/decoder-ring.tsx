@@ -16,7 +16,7 @@ export function DecoderRing({
   return (
     <section
       aria-label="Decoder ring"
-      className="panel flex min-h-0 flex-col gap-3 overflow-y-auto p-3"
+      className="panel order-4 flex max-h-[60dvh] min-h-0 flex-col gap-3 overflow-y-auto p-3 lg:order-none lg:max-h-none"
     >
       <h2 className="flex items-center gap-2 font-terminal text-[18px] leading-none text-amber">
         <KeyRound aria-hidden className="size-4" strokeWidth={1.75} />

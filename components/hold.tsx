@@ -46,7 +46,7 @@ export function Hold({
   }, [open, activeFlagId, activePhrase, segments]);
 
   return (
-    <section aria-label="The hold" className="panel flex min-h-0 flex-col p-3">
+    <section aria-label="The hold" className="panel flex min-h-0 flex-col px-3 py-2">
       <h2 className="flex flex-wrap items-baseline justify-between gap-2">
         <span className="flex items-center gap-2 font-terminal text-[18px] leading-none text-amber">
           <ScrollText aria-hidden className="size-4" strokeWidth={1.75} />
