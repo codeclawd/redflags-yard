@@ -9,6 +9,8 @@
 /** "We do NOT sell..." — the capability is being denied. */
 export const NEGATION_GUARDS: RegExp[] = [
   /\bwe\s+(?:do|does|did)\s+not\b/i,
+  // A policy often names itself instead of saying "we": "Spotify does not carry out..."
+  /\b(?:do|does)\s+not\s+(?:carry\s+out|engage\s+in|perform|conduct)\b/i,
   /\bwe\s+(?:don't|won't|will\s+not|would\s+not|cannot|can't|never)\b/i,
   /\bwe\s+have\s+(?:not|never)\b/i,
   /\bwe\s+(?:no\s+longer|neither)\b/i,

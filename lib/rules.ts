@@ -84,6 +84,11 @@ export const RULES: Rule[] = [
     firewall: true,
     headline: "They collect biometric or otherwise sensitive data about you",
     plainEnglish: "Faceprints, voiceprints, health, religion or sexuality sit in a different risk class: unlike a password, you cannot change them after a breach.",
+    // Identity verification and cautionary advice are not biometric collection.
+    negativeGuards: [
+      /\bverify\s+your\s+identity\b/i,
+      /\bplease\s+use\s+caution\b/i,
+    ],
     patterns: [
       /\bbiometric\b/i,
       /\b(?:face|facial|voice|iris|finger)\s*(?:print|prints|geometry|recognition|scan|template)/i,
@@ -150,6 +155,12 @@ export const RULES: Rule[] = [
     firewall: true,
     headline: "Deleting your account does not delete your data",
     plainEnglish: "Copies can outlive the account: in backups, in logs, or simply for \"as long as necessary\".",
+    // A stated necessity limit is the opposite of indefinite retention.
+    negativeGuards: [
+      /\bas\s+long\s+as\s+(?:is\s+)?necessary\b/i,
+      /\bno\s+longer\s+than\s+(?:is\s+)?necessary\b/i,
+      /\bas\s+long\s+as\s+the\s+user\s+chooses\b/i,
+    ],
     patterns: [
       /\bfor\s+the\s+life\s+of\s+(?:an|your|the)\s+account\b/i,
       /\b(?:keep|retain)\b[^.]{0,60}\bthat\s+has\s+been\s+(?:removed|deleted)\b/i,
@@ -235,6 +246,12 @@ export const RULES: Rule[] = [
     firewall: true,
     headline: "They can hoover up your contacts",
     plainEnglish: "Your address book is other people's data: they never agreed to this policy, and they are not asked.",
+    // Word sense: "your contacts with Customer Service" is correspondence, not an address book.
+    negativeGuards: [
+      /\bcontacts?\s+with\s+(?:our|the)\b/i,
+      /\bcontact(?:ing)?\s+(?:us|our\s+(?:customer\s+)?(?:service|support))\b/i,
+      /\bcontact\s+(?:information|details)\b/i,
+    ],
     patterns: [
       /\b(?:address\s+book|contact\s+list|contacts\s+list|phone\s+book)\b/i,
       /\byour\s+contacts\b/i,
