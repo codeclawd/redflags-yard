@@ -21,7 +21,7 @@ const STEPS: Array<[string, string]> = [
   ],
   [
     "Plunder",
-    "Flags are weighted by severity, repeated categories count for less after the third, and the total becomes a grade and a rank.",
+    "Each category counts once at full weight; repeats add a fifth each, up to double. The total becomes a score out of 100, a grade and a rank.",
   ],
 ];
 

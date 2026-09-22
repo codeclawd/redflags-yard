@@ -35,14 +35,14 @@ type Trouble = { message: string; recovery: string };
 const TROUBLE: Record<ScanErrorCode, Trouble> = {
   INVALID_INPUT: {
     message: "Nothing to board.",
-    recovery: "Pick a ship from the fleet, paste a policy, or hail a URL.",
+    recovery: "Pick a ship from the fleet ledger, paste a policy, or hail a URL.",
   },
   FETCH_FAILED: {
     message: "The ship is bot-walled.",
-    recovery: "Paste the text or pick one from the fleet.",
+    recovery: "Paste the text, or pick a ship from the fleet ledger.",
   },
   BLOCKED_URL: {
-    message: "That address points back inside the harbor.",
+    message: "That address is on a private network.",
     recovery: "Only public http and https addresses can be hailed.",
   },
   NOT_HTML: {
@@ -62,7 +62,7 @@ const TROUBLE: Record<ScanErrorCode, Trouble> = {
     recovery: "Wait a minute and press Board again.",
   },
   SCAN_FAILED: {
-    message: "The boarding party broke apart mid-search.",
+    message: "The scan failed partway through.",
     recovery: "Press Board again. If it keeps happening, paste the text instead.",
   },
 };
@@ -143,7 +143,7 @@ export default function Page() {
           ]);
         } else {
           setHoldNote(
-            "A hailed URL is read on the server, so its text is not aboard. Every flag below still carries its quote.",
+            "A hailed URL is read on the server, so the full text is not shown below. Every flag still carries its quote.",
           );
           setLog((lines) => [...lines, "Reading the manifest…", "Searching the hold…"]);
         }
@@ -178,7 +178,7 @@ export default function Page() {
         setLog((lines) => [
           ...lines,
           scan.meta.llm === "ran"
-            ? "Parley with the quartermaster… done"
+            ? "Parley — asked the model for what the rules missed… done"
             : "No parley — rules only",
           `${scan.flags.length} flag${scan.flags.length === 1 ? "" : "s"} hoisted.`,
         ]);
@@ -187,7 +187,7 @@ export default function Page() {
         setPhase("results");
       } catch {
         setTrouble({
-          message: "The boarding party never came back.",
+          message: "The scan never came back.",
           recovery: "Check your connection and press Board again, or paste the text instead.",
         });
         setLog((lines) => [...lines, "Boarding failed."]);
@@ -236,7 +236,7 @@ export default function Page() {
       return [
         "Red Flags reads a privacy policy and quotes the parts that take from you.",
         "Every flag carries the sentence it came from, verbatim.",
-        "Eight ships at anchor in the harbor.",
+        "Eight policies already scanned in the fleet ledger.",
       ];
     }
     return [

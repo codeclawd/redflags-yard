@@ -28,11 +28,13 @@ export const SEVERITY_COLOR: Record<Severity, string> = {
   low: "var(--color-amber-dim)",
 };
 
+// Severity is the one label a reader has to be able to rank at a glance, so it
+// says what it is. The colour carries the world; the word carries the meaning.
 export const SEVERITY_LABEL: Record<Severity, string> = {
-  critical: "No quarter",
-  high: "Heavy",
-  medium: "Noted",
-  low: "Minor",
+  critical: "Critical",
+  high: "High",
+  medium: "Medium",
+  low: "Low",
 };
 
 export const CATEGORY_ICON: Record<CategoryId, LucideIcon> = {

@@ -28,7 +28,7 @@ export function StatusBar({
     return () => clearInterval(id);
   }, []);
 
-  const line = ticker.length > 0 ? ticker : ["Pick a ship from the harbor and board it."];
+  const line = ticker.length > 0 ? ticker : ["Pick a ship from the fleet ledger and board it."];
 
   return (
     <header className="panel flex flex-wrap items-stretch gap-x-4 gap-y-2 px-3 py-2 lg:flex-nowrap">
