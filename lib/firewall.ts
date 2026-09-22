@@ -116,6 +116,23 @@ export const GLOSSARY_GUARDS: RegExp[] = [
   /\byou\s+can\s+change\s+your\s+(?:permissions|settings|preferences)\b/i,
 ];
 
+/**
+ * The sentence is about the law, or about a rule the company follows, rather
+ * than about something it does to you. Naming what the CCPA classifies as
+ * sensitive is not a confession of collecting it, and "we follow the
+ * Self-Regulatory Principles" is a commitment, not a practice.
+ */
+export const STATUTORY_GUARDS: RegExp[] = [
+  /\b(?:CCPA|CPRA|GDPR|VCDPA|HIPAA|COPPA|LGPD|PIPEDA|FERPA)\b/,
+  /\b(?:as\s+)?defined\s+(?:under|by|in)\s+(?:the\s+|applicable\s+)?(?:state|federal|local|privacy|data\s+protection)?\s*laws?\b/i,
+  /\bstate\s+privacy\s+laws?\b/i,
+  /\bhave\s+identified\s+as\b/i,
+  /\bself-?\s?regulatory\s+principles?\b/i,
+  /\bwe\s+(?:follow|adhere\s+to|are\s+certified\s+under)\s+the\b/i,
+  /\bprivacy\s+(?:framework|shield)\b/i,
+  /\bnot\s+be\s+subject\s+to\b/i,
+];
+
 const anyMatch = (guards: RegExp[], s: string) => guards.some((r) => r.test(s));
 
 export const isNegated = (sentence: string) => anyMatch(NEGATION_GUARDS, sentence);
@@ -125,6 +142,7 @@ export const isDefinitional = (sentence: string) => anyMatch(DEFINITIONAL_GUARDS
 export const isProtective = (sentence: string) => anyMatch(PROTECTIVE_GUARDS, sentence);
 export const isUserControl = (sentence: string) => anyMatch(USER_CONTROL_GUARDS, sentence);
 export const isGlossary = (sentence: string) => anyMatch(GLOSSARY_GUARDS, sentence);
+export const isStatutory = (sentence: string) => anyMatch(STATUTORY_GUARDS, sentence);
 
 /**
  * True when a sentence must not become a flag: it denies the capability, or
@@ -138,6 +156,7 @@ export function isConditional(sentence: string): boolean {
     isDefinitional(sentence) ||
     isProtective(sentence) ||
     isUserControl(sentence) ||
-    isGlossary(sentence)
+    isGlossary(sentence) ||
+    isStatutory(sentence)
   );
 }
