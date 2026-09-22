@@ -1,26 +1,51 @@
-// The plunder score. Formula locked by the plan; do not tune it here.
+// The plunder score: 0..100, higher = worse for you.
+//
+// Every real policy trips dozens of flags, so a plain weighted sum pins the
+// whole fleet at 100 and the rank stops meaning anything. Two corrections:
+//  1. Diminishing returns per category — the first flag in a category counts
+//     fully, each repeat adds REPEAT_FRACTION of the weight, capped at
+//     REPEAT_CAP× the weight. Ten "affiliates" sentences are one habit.
+//  2. A linear map with an entry cost: any flag at all costs ENTRY, then each
+//     raw point adds SLOPE. One hidden biometric clause is already a Smuggler;
+//     a clean policy is 0; the worst of the fleet approaches 100.
 
 import type { Flag, ScanScore, Severity, Rank } from "@/lib/types";
 
 const WEIGHT: Record<Severity, number> = { critical: 18, high: 10, medium: 5, low: 2 };
-
-/** Flags 4+ in the same category count half — one bad habit, not ten findings. */
-const REPEAT_DISCOUNT_AFTER = 3;
+const REPEAT_FRACTION = 0.2;
+const REPEAT_CAP = 2;
+const ENTRY = 15;
+/** Tuned against the eight-ship fleet (raw 151–218) so it spreads Pirate → Ghost ship. */
+const SLOPE = 0.34;
 
 export const MAX_LEXICON_BONUS = 15;
 
-export function scoreScan(flags: Flag[], lexiconHitsNotAlreadyFlagged: number): ScanScore {
-  const perCategory = new Map<string, number>();
-  let raw = 0;
+export function rawPlunder(flags: Flag[], lexiconHitsNotAlreadyFlagged: number): number {
+  const perCategory = new Map<string, { weight: number; count: number }>();
   for (const f of flags) {
-    const n = (perCategory.get(f.category) ?? 0) + 1;
-    perCategory.set(f.category, n);
     const w = WEIGHT[f.severity];
-    raw += n > REPEAT_DISCOUNT_AFTER ? w / 2 : w;
+    const cur = perCategory.get(f.category);
+    if (!cur) perCategory.set(f.category, { weight: w, count: 1 });
+    else {
+      cur.weight = Math.max(cur.weight, w);
+      cur.count += 1;
+    }
+  }
+  let raw = 0;
+  for (const { weight, count } of perCategory.values()) {
+    raw += weight * Math.min(REPEAT_CAP, 1 + REPEAT_FRACTION * (count - 1));
   }
   raw += Math.min(MAX_LEXICON_BONUS, Math.max(0, lexiconHitsNotAlreadyFlagged));
+  return raw;
+}
 
-  const value = Math.min(100, Math.max(0, Math.round(raw)));
+export function curve(raw: number): number {
+  if (raw <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round(ENTRY + SLOPE * raw)));
+}
+
+export function scoreScan(flags: Flag[], lexiconHitsNotAlreadyFlagged: number): ScanScore {
+  const value = curve(rawPlunder(flags, lexiconHitsNotAlreadyFlagged));
   return { value, grade: gradeFor(value), rank: rankFor(value) };
 }
 

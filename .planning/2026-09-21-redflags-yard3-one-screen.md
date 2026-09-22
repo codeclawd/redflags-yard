@@ -111,7 +111,7 @@ export type ScanErrorCode =
 export interface ScanError { error: string; code: ScanErrorCode; retryable: boolean }
 ```
 
-Scoring (locked): `raw = Σ flags(critical 18, high 10, medium 5, low 2) + min(15, lexiconHitsNotAlreadyFlagged × 1)`; `value = clamp(round(raw), 0, 100)`; grade A<20, B<40, C<60, D<80, F≥80; rank by the same bands: Honest merchant / Smuggler / Privateer / Pirate / Ghost ship. Same-category flags beyond the 3rd count half.
+Scoring — **REVISED 2026-09-21 22:40 CDT** (original locked formula measured: all 8 ships = 100, rank constant; refuted by `lib/score.ts` measurement, see falsification log). Now: per category, `weight(maxSeverity) × min(2, 1 + 0.2×(count−1))` with weights critical 18 / high 10 / medium 5 / low 2, summed across categories, `+ min(15, unflaggedLexiconHits)` = `raw`; `value = raw === 0 ? 0 : clamp(round(15 + 0.34×raw), 0, 100)`. Grade A<20, B<40, C<60, D<80, F≥80; rank Honest merchant / Smuggler / Privateer / Pirate / Ghost ship on the same bands. Also: lexicon hits become *flags* only at severity ≥ high and at most 2 per category (`selectLexiconFlags` in `lib/scan.ts`); every hit still appears in the decoder ring. Measured after: TikTok 100 · Snap 95 · Spotify 87 · Temu 86 · Google 85 · LinkedIn 83 · Zoom 82 · Discord 78 (Pirate); flags 27–39 per ship (was 53–91).
 
 ## Units of work
 

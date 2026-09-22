@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { gradeFor, rankFor, scoreScan, MAX_LEXICON_BONUS } from "@/lib/score";
+import { gradeFor, rankFor, scoreScan, rawPlunder, curve, MAX_LEXICON_BONUS } from "@/lib/score";
 import type { Flag, Severity, CategoryId } from "@/lib/types";
 
 const flag = (severity: Severity, category: CategoryId = "sells_shares", i = 0): Flag => ({
@@ -17,16 +17,22 @@ const flag = (severity: Severity, category: CategoryId = "sells_shares", i = 0):
 });
 
 describe("scoreScan", () => {
-  it("weights severities 18 / 10 / 5 / 2", () => {
-    expect(scoreScan([flag("critical")], 0).value).toBe(18);
-    expect(scoreScan([flag("high")], 0).value).toBe(10);
-    expect(scoreScan([flag("medium")], 0).value).toBe(5);
-    expect(scoreScan([flag("low")], 0).value).toBe(2);
+  it("weights severities 18 / 10 / 5 / 2 before the curve", () => {
+    expect(rawPlunder([flag("critical")], 0)).toBe(18);
+    expect(rawPlunder([flag("high")], 0)).toBe(10);
+    expect(rawPlunder([flag("medium")], 0)).toBe(5);
+    expect(rawPlunder([flag("low")], 0)).toBe(2);
   });
 
-  it("halves same-category flags beyond the third", () => {
+  it("gives same-category repeats diminishing returns, capped at 2x", () => {
     const four = [0, 1, 2, 3].map((i) => flag("high", "no_deletion", i));
-    expect(scoreScan(four, 0).value).toBe(10 + 10 + 10 + 5);
+    expect(rawPlunder(four, 0)).toBeCloseTo(10 * 1.6);
+    const twenty = Array.from({ length: 20 }, (_, i) => flag("high", "no_deletion", i));
+    expect(rawPlunder(twenty, 0)).toBe(20);
+  });
+
+  it("uses the highest severity seen in a category", () => {
+    expect(rawPlunder([flag("medium", "no_deletion", 0), flag("high", "no_deletion", 1)], 0)).toBeCloseTo(12);
   });
 
   it("does not discount across different categories", () => {
@@ -36,18 +42,25 @@ describe("scoreScan", () => {
       flag("high", "human_review", 2),
       flag("high", "childrens_data", 3),
     ];
-    expect(scoreScan(four, 0).value).toBe(40);
+    expect(rawPlunder(four, 0)).toBe(40);
   });
 
   it("caps the lexicon bonus at 15", () => {
-    expect(scoreScan([], 5).value).toBe(5);
-    expect(scoreScan([], 500).value).toBe(MAX_LEXICON_BONUS);
-    expect(scoreScan([], -5).value).toBe(0);
+    expect(rawPlunder([], 5)).toBe(5);
+    expect(rawPlunder([], 500)).toBe(MAX_LEXICON_BONUS);
+    expect(rawPlunder([], -5)).toBe(0);
   });
 
-  it("clamps to 0..100", () => {
+  it("curves: one critical clause is a Smuggler, not a Ghost ship", () => {
+    expect(scoreScan([flag("critical")], 0).value).toBe(21);
+    expect(scoreScan([flag("critical")], 0).rank).toBe("Smuggler");
+  });
+
+  it("clamps to 0..100 and never reaches 100 from a single category", () => {
     const many = Array.from({ length: 40 }, (_, i) => flag("critical", "sells_shares", i));
-    expect(scoreScan(many, 100).value).toBe(100);
+    expect(scoreScan(many, 100).value).toBeLessThan(100);
+    expect(curve(10_000)).toBe(100);
+    expect(curve(0)).toBe(0);
     expect(scoreScan([], 0).value).toBe(0);
   });
 });

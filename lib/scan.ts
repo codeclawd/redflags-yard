@@ -35,6 +35,22 @@ export function rankFlags(flags: Flag[]): Flag[] {
   );
 }
 
+const LEXICON_FLAG_MIN: Record<Flag["severity"], boolean> = { critical: true, high: true, medium: false, low: false };
+const LEXICON_FLAGS_PER_CATEGORY = 2;
+
+export function selectLexiconFlags(flags: Flag[]): Flag[] {
+  const perCategory = new Map<string, number>();
+  const out: Flag[] = [];
+  for (const f of [...flags].sort((a, b) => a.start - b.start)) {
+    if (!LEXICON_FLAG_MIN[f.severity]) continue;
+    const n = perCategory.get(f.category) ?? 0;
+    if (n >= LEXICON_FLAGS_PER_CATEGORY) continue;
+    perCategory.set(f.category, n + 1);
+    out.push(f);
+  }
+  return out;
+}
+
 const SOURCE_RANK = { rule: 0, llm: 1, lexicon: 2 } as const;
 
 /**
@@ -87,7 +103,11 @@ export async function scan(rawText: string, opts: ScanOptions = {}): Promise<Sca
   const ruleFlags = runRules(sentences);
   const { decoder, flags: lexiconFlags } = runLexicon(source, sentences);
 
-  let merged = mergeFlags([...ruleFlags, ...lexiconFlags]);
+  // The decoder ring carries every lexicon hit; the flag list carries only the
+  // serious ones, at most two per category, so a policy that says "affiliates"
+  // eleven times reads as one habit, not eleven findings. Bias to fewer flags.
+  const lexiconSelected = selectLexiconFlags(lexiconFlags);
+  let merged = mergeFlags([...ruleFlags, ...lexiconSelected]);
 
   // Attach a decoder translation to any rule flag whose sentence contains one.
   for (const flag of merged) {
