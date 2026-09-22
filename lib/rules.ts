@@ -64,6 +64,9 @@ export const RULES: Rule[] = [
     headline: "They follow you across other sites and apps",
     plainEnglish: "They build a picture of you from activity that happens outside their own product, on sites and apps they do not run.",
     patterns: [
+      /\bon\s+and\s+off\s+(?:our|the|its)\s+Services?\b/i,
+      /\bin-?app\s+browser\b/i,
+      /\bthird-?party\s+cookies\b/i,
       /\b(?:across|on)\s+(?:other|third[\s-]party|different)\s+(?:websites?|sites?|apps?|applications?|platforms?|services?|devices?)\b/i,
       /\bcross[\s-](?:site|context|device|app)\b/i,
       /\b(?:device\s+)?fingerprint(?:ing)?\b/i,
@@ -148,6 +151,9 @@ export const RULES: Rule[] = [
     headline: "Deleting your account does not delete your data",
     plainEnglish: "Copies can outlive the account: in backups, in logs, or simply for \"as long as necessary\".",
     patterns: [
+      /\bfor\s+the\s+life\s+of\s+(?:an|your|the)\s+account\b/i,
+      /\b(?:keep|retain)\b[^.]{0,60}\bthat\s+has\s+been\s+(?:removed|deleted)\b/i,
+      /\bmay\s+not\s+(?:ensure|guarantee|result\s+in)\b[^.]{0,40}\b(?:complete|comprehensive|full)\b/i,
       /\bretain\b[^.]{0,80}\b(?:as\s+long\s+as|indefinitely|necessary|permitted)\b/i,
       /\b(?:even\s+)?after\s+(?:you\s+)?(?:delete|deactivate|close|terminate)\b/i,
       /\bindefinitel(?:y|e)\b/i,
@@ -305,6 +311,8 @@ export const RULES: Rule[] = [
     headline: "The security promise is a shrug",
     plainEnglish: "\"Reasonable\" and \"industry-standard\" commit them to nothing specific and nothing testable.",
     patterns: [
+      /\bcannot\s+be\s+guaranteed\b/i,
+      /\bguaranteed\s+to\s+be\s+100\s*(?:%|percent)\s*secure\b/i,
       /\b(?:industry[\s-]standard|commercially\s+reasonable|reasonable|appropriate)\s+(?:technical\s+and\s+organizational\s+)?(?:security\s+)?(?:measures|safeguards|practices|controls|steps|precautions)\b/i,
       /\bno\s+(?:method|system|security\s+measure)\b[^.]{0,80}\b(?:100%|completely|entirely)?\s*(?:secure|guarantee)/i,
       /\bcannot\s+guarantee\b[^.]{0,60}\bsecurity\b/i,
