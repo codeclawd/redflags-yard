@@ -1,0 +1,2081 @@
+{
+  "version": 1,
+  "createdAt": "2026-09-22",
+  "seed": 20260922,
+  "note": "Hand-labeled independently of detector output. Frozen: do not regenerate.",
+  "items": [
+    {
+      "policyId": "tiktok",
+      "start": 21974,
+      "end": 22065,
+      "text": "For example, you can control whether we access your phone contacts in your device settings.",
+      "label": null,
+      "why": "conditional on user's own device settings choice -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 25213,
+      "end": 25387,
+      "text": "If you are a parent or guardian of a teen, our Guardian's Guide contains information and resources to help you understand the Services and the tools and controls you can use.",
+      "label": null,
+      "why": "points parent to a resource guide, no data practice disclosed"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 4946,
+      "end": 5249,
+      "text": "In other situations, we may process your financial information in order to provide you the goods or services you request from us; your driver’s license number in order to verify your identity; and information from users under the relevant age threshold in order to provide an age-appropriate experience.",
+      "label": null,
+      "why": "processing tied to user-requested purposes/identity verification; minors clause framed as functional/justified, not a standalone unconditional collection claim"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 1259,
+      "end": 1538,
+      "text": "Information You ProvideWhen you create an account, upload content, contact us directly, or otherwise use the Services, you may provide some or all of the following information:Account information, such as date of birth, username, password, email, phone number, and profile image.",
+      "label": null,
+      "why": "routine account info collection list, no red-flag practice"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 22178,
+      "end": 22346,
+      "text": "Data Security and RetentionWe use reasonable measures to help protect information from loss, theft, misuse, unauthorized access, disclosure, alteration, or destruction.",
+      "label": {
+        "category": "security_vague",
+        "severity": "medium"
+      },
+      "why": "\"reasonable measures\" security language with no concrete commitment"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 22718,
+      "end": 22847,
+      "text": "We retain information for as long as necessary to provide the Services and for the other purposes set out in this Privacy Policy.",
+      "label": null,
+      "why": "standard \"as long as necessary\" retention boilerplate, not indefinite/no-deletion language"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 23292,
+      "end": 23523,
+      "text": "For example, when we process your information such as your account registration information to provide you with the Services, we keep this information for as long as you have an account, subject to your updates of such information.",
+      "label": null,
+      "why": "retention tied to account existence and user's own updates -> limited, not indefinite"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 4325,
+      "end": 4694,
+      "text": "The type of information that state privacy laws, such as the CCPA, have identified as sensitive personal information include the following: racial or ethnic origin, national origin, religious beliefs, mental or physical health diagnosis, sexual life or sexual orientation, status as transgender or nonbinary, citizenship or immigration status, or financial information.",
+      "label": null,
+      "why": "just lists what CCPA defines as sensitive info, no collection practice asserted"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 5250,
+      "end": 5343,
+      "text": "We may also collect precise location data, depending on your settings and as explained below.",
+      "label": null,
+      "why": "location collection conditional on user's own settings -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 3866,
+      "end": 3981,
+      "text": "Information You Provide may include sensitive personal information, as defined under applicable state privacy laws.",
+      "label": null,
+      "why": "defines a term under state law, hedged \"may include\", no practice stated"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 17064,
+      "end": 17348,
+      "text": "In Connection with a Sale, Merger, or Other Business TransferWe may share Information We Collect in connection with or during negotiations of a corporate transaction, such as a merger, acquisition in full or in part, reorganization, asset sale, or in the unlikely event of bankruptcy.",
+      "label": {
+        "category": "business_transfer",
+        "severity": "high"
+      },
+      "why": "unconditional statement that data is shared/transferred during merger, sale, bankruptcy"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 18370,
+      "end": 18493,
+      "text": "Please use caution in disclosing personal information, especially sensitive personal information, while using the Services.",
+      "label": null,
+      "why": "cautionary advice to the user, not a company data practice"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 8468,
+      "end": 8572,
+      "text": "improve the Services; provide you with advertising; and promote the Services on other websites and apps.",
+      "label": null,
+      "why": "vague purpose-list fragment, no explicit tracking/sharing mechanism described"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 17554,
+      "end": 17768,
+      "text": "We may also disclose Information We Collect to enforce any terms applicable to the Services, and to protect and defend our rights, interests, safety, and security, and those of our affiliates, users, or the public.",
+      "label": null,
+      "why": "disclosure to enforce terms/protect rights and safety, akin to legal/security purpose -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 1538,
+      "end": 1717,
+      "text": "User content, including comments, photographs, livestreams, audio recordings, videos, and text that you choose to create, import, upload, or publish through our apps and websites.",
+      "label": null,
+      "why": "describes user-generated content types user chooses to upload, not a red flag"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 22065,
+      "end": 22178,
+      "text": "You can opt out of receiving marketing emails by using the “unsubscribe” link or mechanism noted in those emails.",
+      "label": null,
+      "why": "standard opt-out unsubscribe mechanism, user-controlled -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 22347,
+      "end": 22510,
+      "text": "You should understand that no data storage system or transmission of data over the Internet or any other public network can be guaranteed to be 100 percent secure.",
+      "label": {
+        "category": "security_vague",
+        "severity": "medium"
+      },
+      "why": "no-guarantee-of-security disclaimer, no real security commitment"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 14702,
+      "end": 14857,
+      "text": "We only share specific categories of information consistent with applicable law, including Executive Order 14352 and any compliance obligations thereunder.",
+      "label": null,
+      "why": "sharing framed as compliance with law/executive order -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 20551,
+      "end": 20643,
+      "text": "Because each browser is different, please consult the instructions provided by your browser.",
+      "label": null,
+      "why": "nav/boilerplate instruction to consult browser settings"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 11465,
+      "end": 11594,
+      "text": "To promote our and third-party products and services through marketing campaigns, including communications, contests, and events.",
+      "label": null,
+      "why": "vague marketing-purpose fragment, no explicit third-party data sharing stated"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 944,
+      "end": 1061,
+      "text": "Capitalized terms that are not defined in this Privacy Policy have the meaning given to them in the Terms of Service.",
+      "label": null,
+      "why": "pure boilerplate cross-reference to Terms of Service"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 9936,
+      "end": 10032,
+      "text": "and information about the delivery of products you have purchased through our shopping features.",
+      "label": null,
+      "why": "fragment about shopping delivery info, no red-flag practice"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 21144,
+      "end": 21294,
+      "text": "Please be aware that if you choose to refuse, disable, or delete cookies, some of the functionality of the Services may no longer be available to you.",
+      "label": null,
+      "why": "conditional on user's own choice to disable cookies -> null"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 1718,
+      "end": 1850,
+      "text": "Even if you are not a user, information about you may appear in user content created or published by users on our apps and websites.",
+      "label": null,
+      "why": "genuine but doesn't map to any listed category (non-user data appearing in others' content)"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 13830,
+      "end": 13953,
+      "text": "Please note that information disclosed to certain third parties may be processed in accordance with their privacy policies.",
+      "label": null,
+      "why": "generic disclaimer pointing to third parties' own policies, no practice asserted"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 3982,
+      "end": 4182,
+      "text": "We process such information in accordance with applicable law, such as to provide the Services and other permitted purposes under state privacy laws, like the California Consumer Privacy Act (\"CCPA\").",
+      "label": null,
+      "why": "names CCPA as defined term / compliance framing, no practice described"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 14857,
+      "end": 15181,
+      "text": "Payment processors and transaction fulfillment providers, who may receive certain Information You Provide, Automatically Collected Information, and Information From Other Sources, including, in particular, the following third-party payment providers/processors: PayPal (https://www.paypal.com/us/webapps/mpp/ua/privacy-full)",
+      "label": null,
+      "why": "named, functionally necessary sharing with payment processor (PayPal), not an undefined affiliate/partner"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 5705,
+      "end": 5811,
+      "text": "We also collect certain information about your interactions with websites when you use our in-app browser.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional collection of interaction data on external sites via in-app browser"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 24029,
+      "end": 24239,
+      "text": "We provide a separate experience for users under age 13 (“Child” or “Children”) (as well as users who are 13 years old in Florida) in the United States, in which we collect and process only limited information.",
+      "label": {
+        "category": "childrens_data",
+        "severity": "high"
+      },
+      "why": "unconditional statement of collecting/processing data from under-13 users"
+    },
+    {
+      "policyId": "tiktok",
+      "start": 26301,
+      "end": 26396,
+      "text": "Please note that your request may not ensure complete or comprehensive removal of the material.",
+      "label": {
+        "category": "no_deletion",
+        "severity": "high"
+      },
+      "why": "removal/deletion request may not fully remove the material"
+    },
+    {
+      "policyId": "temu",
+      "start": 21205,
+      "end": 21365,
+      "text": "To opt out of this profile photo and username sharing, please visit the “Notifications” menu and disable “Avatar and username sharing” and/or edit your reviews.",
+      "label": {
+        "category": "dark_pattern_optout",
+        "severity": "medium"
+      },
+      "why": "avatar/username sharing is on by default, opt-out buried in Notifications menu"
+    },
+    {
+      "policyId": "temu",
+      "start": 18052,
+      "end": 18204,
+      "text": "Third parties designated by youWe may share your personal information with third parties where you have instructed us or provided your consent to do so.",
+      "label": null,
+      "why": "sharing conditional on user's own instruction/consent -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 26744,
+      "end": 26933,
+      "text": "We use appropriate technical and organizational measures to help protect your personal information from loss, theft, misuse, unauthorized access, disclosure, alteration, and/or destruction.",
+      "label": {
+        "category": "security_vague",
+        "severity": "medium"
+      },
+      "why": "'appropriate technical and organizational measures' with no concrete commitment"
+    },
+    {
+      "policyId": "temu",
+      "start": 13013,
+      "end": 13193,
+      "text": "Interest-based advertisingWe, our service providers, and our third-party advertising partners may collect and use your personal information for interest-based advertising purposes.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional collection/use by third-party ad partners for interest-based (behavioral) advertising"
+    },
+    {
+      "policyId": "temu",
+      "start": 25970,
+      "end": 26168,
+      "text": "If we become aware that we have unintentionally collected personal information from an individual under 18 years of age through the Service, we will promptly delete the information from our records.",
+      "label": null,
+      "why": "remedial promise to delete unintentionally collected minor data -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 25607,
+      "end": 25686,
+      "text": "Individuals under 13 years of age are not permitted to use Temu or the Service.",
+      "label": null,
+      "why": "states under-13 users are barred, a restriction not a data practice -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 8097,
+      "end": 8441,
+      "text": "Information collected automaticallyTo enhance your experience with the Service and support the other purposes for which we collect personal information as outlined in this Privacy Policy, we may automatically collect information about you, your computer, or mobile device and your interactions with the Service and our communications over time,",
+      "label": null,
+      "why": "truncated heading/intro to an unlisted collection list, too generic to anchor a category"
+    },
+    {
+      "policyId": "temu",
+      "start": 17600,
+      "end": 17825,
+      "text": "Certain of these disclosures to third parties are known as “sharing” or processing your personal information for targeted advertising, but “sharing” may be considered “selling” your personal information under applicable laws.",
+      "label": {
+        "category": "sells_shares",
+        "severity": "critical"
+      },
+      "why": "explicit admission that 'sharing' with third parties for targeted ads may legally be 'selling'"
+    },
+    {
+      "policyId": "temu",
+      "start": 15413,
+      "end": 15563,
+      "text": "Cookies and similar technologies for technical operations, performance enhancement, advertising, analytics, etc.At Temu, we care deeply about privacy.",
+      "label": null,
+      "why": "heading fragment plus boilerplate reassurance ('we care deeply about privacy') -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 27132,
+      "end": 27433,
+      "text": "We generally retain personal information as long as necessary to fulfill the purposes for which we collected it, as well as for the purposes of satisfying any applicable U.S. legal, accounting, or reporting requirements, to establish, exercise or defend legal claims, or for fraud prevention purposes.",
+      "label": {
+        "category": "no_deletion",
+        "severity": "high"
+      },
+      "why": "no fixed retention period, open-ended extension via legal claims/fraud prevention"
+    },
+    {
+      "policyId": "temu",
+      "start": 0,
+      "end": 87,
+      "text": "Click here for information about interest based advertising and your available choices.",
+      "label": null,
+      "why": "navigational link text only -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 23733,
+      "end": 23956,
+      "text": "For more information about cookies and similar technologies, including how to see what cookies and similar technologies have been set on your browser and how to manage and delete them, visit https://www.allaboutcookies.org.",
+      "label": null,
+      "why": "navigational pointer to third-party cookie info site -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 17346,
+      "end": 17599,
+      "text": "Advertising and analytics partnersWe may share your personal information with third-party advertising, marketing, and analytics companies for the interest-based advertising and analytics purposes described in our Cookies and Similar Technologies Policy.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional sharing with third-party advertising/analytics companies for behavioral ad targeting"
+    },
+    {
+      "policyId": "temu",
+      "start": 13685,
+      "end": 13946,
+      "text": "In providing interest-based advertising, we follow the Self-Regulatory Principles for Online Behavioral Advertising as set forth by the Digital Advertising Alliance (DAA), which is an advocacy organization for responsible digital marketing and consumer privacy.",
+      "label": null,
+      "why": "self-praising compliance/reassurance statement about following DAA principles -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 13194,
+      "end": 13538,
+      "text": "For example, we may use your interactions with the Service (e.g., your browsing, searching and purchasing history on the Service), and information included in your account profile (e.g., your country if recorded) to show you interest-based advertising on our platform, which displays a merchandise partner’s listing or product more prominently.",
+      "label": null,
+      "why": "elaborating example of already-covered interest-based advertising use, on-platform only, no new practice"
+    },
+    {
+      "policyId": "temu",
+      "start": 22197,
+      "end": 22356,
+      "text": "Email promotional offers: When you provide us with your email address, we may send you certain marketing emails subject to the requirements of applicable laws.",
+      "label": null,
+      "why": "conditional on user providing their own email -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 21365,
+      "end": 21530,
+      "text": "Your Rights and ChoicesWe provide you with the ability to exercise certain rights and choices regarding our collection, use and sharing of your personal information.",
+      "label": null,
+      "why": "describes user rights/choices section -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 6842,
+      "end": 6970,
+      "text": "The personal information our payment processors pass to us includes your name, email address, billing address, and phone number.",
+      "label": null,
+      "why": "factual list of standard checkout data passed by payment processor -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 911,
+      "end": 1009,
+      "text": "To learn more about how we handle health data, please see our Consumer Health Data Privacy Policy.",
+      "label": null,
+      "why": "pointer to a separate health-data policy, no practice described here -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 7211,
+      "end": 7532,
+      "text": "Other third-party servicesWe collect your personal information from other third-party services, such as:Social media services, from whom we may collect your username, profile picture, and/or email address associated with the relevant third-party services, if you choose to register or log in via said third-party service.",
+      "label": null,
+      "why": "social login data collection conditional on user's own choice to register via third party -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 3542,
+      "end": 3664,
+      "text": "For more information regarding our collection of consumer health data, please see our Consumer Health Data Privacy Policy.",
+      "label": null,
+      "why": "navigational pointer to Consumer Health Data Privacy Policy -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 14268,
+      "end": 14631,
+      "text": "Compliance, legal obligations and protectionWe may use your personal information for compliance purposes and to comply with applicable U.S. laws, including lawful requests, and legal processes (e.g., responding to subpoenas or requests from U.S. government or regulatory authorities); to comply with legal requirements of government entities (e.g., U.S. Customs),",
+      "label": null,
+      "why": "law-enforcement/legal-process compliance disclosure (subpoenas, government requests) -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 2580,
+      "end": 2813,
+      "text": "state, country/region, zip code), recipient contact information (e.g., name, mobile phone number), and designated package collection point (e.g., city, state, country/region, zip code) in countries where we enable this functionality.",
+      "label": null,
+      "why": "fragment listing routine shipping/delivery recipient details, no red-flag practice stated"
+    },
+    {
+      "policyId": "temu",
+      "start": 19385,
+      "end": 19693,
+      "text": "financial institutions) in order to enforce our agreements or policies, protect the rights, property and safety of Temu, users and others, and to detect, prevent and address actual or suspected fraud, violations of Temu's Terms of Use, other illegal activities, security issues or when it is required by law.",
+      "label": null,
+      "why": "fraud-prevention/legal-compliance disclosure to protect rights and safety -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 24210,
+      "end": 24325,
+      "text": "In addition, our content may be integrated into web pages or other online services that are not associated with us.",
+      "label": null,
+      "why": "describes content syndication on unaffiliated sites, not a personal-data practice -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 10169,
+      "end": 10420,
+      "text": "How and Why We Use Your InformationWe use the personal information that we collect for various purposes, including to develop, improve, support, and provide the Service, allowing you to use its features while fulfilling and enforcing our Terms of Use.",
+      "label": null,
+      "why": "generic boilerplate about using data to provide/improve the Service -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 16922,
+      "end": 17202,
+      "text": "These third-party service providers only have access to personal information needed to perform their functions and services, and we require these service providers to use personal information only as necessary to perform their services or comply with applicable legal obligations.",
+      "label": null,
+      "why": "reassuring limitation on third-party service providers' data use -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 4051,
+      "end": 4359,
+      "text": "User-generated contentWhen you provide any content (e.g., images, videos, or text) to leave product reviews and ratings, provide images to search for items, or provide images or text to customise products, we collect this information and its associated metadata to support and enable your use of the Service.",
+      "label": null,
+      "why": "user-generated content collection conditional on user's own voluntary submission -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 1359,
+      "end": 1581,
+      "text": "The following are the types of personal information that we collect:Information that you provideWhen you create an account, browse the Service, place an order at checkout, contact us directly, or otherwise use the Service,",
+      "label": null,
+      "why": "truncated heading fragment listing collection contexts, no substantive claim -> null"
+    },
+    {
+      "policyId": "temu",
+      "start": 19948,
+      "end": 20069,
+      "text": "If we intend to transfer information about you, we will inform you either by email or by posting a notice on the Service.",
+      "label": null,
+      "why": "commits to notifying user before any data transfer, mitigating rather than a red flag -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 26964,
+      "end": 27008,
+      "text": "For the purposes of a Merger or Acquisition.",
+      "label": {
+        "category": "business_transfer",
+        "severity": "high"
+      },
+      "why": "explicit purpose: sharing data for a merger or acquisition"
+    },
+    {
+      "policyId": "snap",
+      "start": 6609,
+      "end": 7006,
+      "text": "Of course, you’ll also provide us with information you send through or save within our Services, including content and information about that content, and content you share and generate with our AI Features (content, or “Inputs,” including text, images, video, audio, precise location, and engagement, including content you share with My AI, used to generate content and responses, or “Outputs,”).",
+      "label": null,
+      "why": "describes AI feature input/output mechanics, not a stated red-flag practice -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 15737,
+      "end": 16017,
+      "text": "For example, we may automatically tag the Snaps you save to Memories based on the content within it (e.g., the Snap contained a dog), and then use that tag to personalize your experience, make recommendations, or show you ads (such as showing you Spotlight Snaps containing dogs).",
+      "label": null,
+      "why": "describes content auto-tagging for ad personalization but no category fits cleanly -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 3932,
+      "end": 3991,
+      "text": "In most cases, you can change your permissions at any time.",
+      "label": null,
+      "why": "user controls their own permissions -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 30595,
+      "end": 30769,
+      "text": "If location information is associated with a Snap — like those saved to Memories or posted to Snap Map or Spotlight — we’ll retain that location as long as we store the Snap.",
+      "label": {
+        "category": "precise_location",
+        "severity": "critical"
+      },
+      "why": "location tied to a Snap retained as long as the Snap is stored, effectively indefinite for saved content"
+    },
+    {
+      "policyId": "snap",
+      "start": 33210,
+      "end": 33321,
+      "text": "In addition, we may also limit how we collect, use, and store some of the information of Snapchatters under 18.",
+      "label": null,
+      "why": "framed as a protective limitation on minors' data, not an unconditional collection claim -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 18063,
+      "end": 18347,
+      "text": "In order to do this, we also develop and improve the algorithms and machine learning models (an expression of an algorithm that combs through significant amounts of data to find patterns or make predictions) that make our features and Services work, including through our AI features.",
+      "label": {
+        "category": "ai_training",
+        "severity": "critical"
+      },
+      "why": "unconditional statement of developing/improving ML models including AI features"
+    },
+    {
+      "policyId": "snap",
+      "start": 33763,
+      "end": 33815,
+      "text": "We may change this Privacy Policy from time to time.",
+      "label": {
+        "category": "silent_changes",
+        "severity": "medium"
+      },
+      "why": "policy can change at any time with no notice commitment"
+    },
+    {
+      "policyId": "snap",
+      "start": 26729,
+      "end": 26786,
+      "text": "Snap Inc. consists of different subsidiaries owned by us.",
+      "label": null,
+      "why": "just describes corporate subsidiary structure, no practice -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 9811,
+      "end": 10205,
+      "text": "IP address-based location information (IP address), information collected by cookies and similar technologies, depending on your settings, (cookies, pixels (small graphic data that recognize user activity, such as if and how often a user has visited a website), web storage, unique advertising identifiers), and log information (such as details about how you’ve used our Services, access times,",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "cookies, pixels, web storage, and unique advertising identifiers used for tracking"
+    },
+    {
+      "policyId": "snap",
+      "start": 30770,
+      "end": 30854,
+      "text": "Pro tip: You can see the location data we retain about you by downloading your data.",
+      "label": null,
+      "why": "describes a user right to download their own data -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 18348,
+      "end": 18493,
+      "text": "Our AI features typically use generative AI (artificial intelligence capable of generating text, images, or other media, using generative models.",
+      "label": null,
+      "why": "definitional parenthetical explaining what generative AI is -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 10588,
+      "end": 10916,
+      "text": "and access the microphone to record audio while recording video), and precise location information (precise location through methods like GPS signals).Data We Receive From OthersThe last category of data we collect is information about you that we may receive from others, such as other users, our affiliates, and third parties.",
+      "label": {
+        "category": "precise_location",
+        "severity": "critical"
+      },
+      "why": "unconditional collection of precise GPS location information"
+    },
+    {
+      "policyId": "snap",
+      "start": 18494,
+      "end": 18638,
+      "text": "Generative AI models learn the patterns and structure of their input training data and then generate new data that has similar characteristics).",
+      "label": null,
+      "why": "generic definition of how generative AI models work, not a stated practice about user data -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 19262,
+      "end": 19397,
+      "text": "AnalyticsIn order to understand what to build or how to improve our Services, we need to understand trends and demand for our features.",
+      "label": null,
+      "why": "generic purpose statement about understanding trends, no specific practice -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 8521,
+      "end": 8909,
+      "text": "This includes usage information (information about how you interact with our Services — for example, which Lenses you view and apply, your premium subscriptions, Stories you watch, and how often you interact with other Snapchatters) and content information (information about content you create or provide, your engagement with the camera and creative tools, your interactions with My AI,",
+      "label": null,
+      "why": "enumerates collected usage/content info categories with no distinct red-flag category match -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 30854,
+      "end": 30938,
+      "text": "How long we need to retain the information to comply with certain legal obligations.",
+      "label": null,
+      "why": "retention tied to legal obligations -> null per legal-compliance carve-out"
+    },
+    {
+      "policyId": "snap",
+      "start": 21393,
+      "end": 21510,
+      "text": "These tools may use signals such as account, device, usage, and content-related information described in this Policy.",
+      "label": null,
+      "why": "vague reference to 'tools' using described signals, no new practice stated -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 23990,
+      "end": 24162,
+      "text": "For example, the content you post to Stories, your current or recent activity status, or your status as a premium subscriber, can be viewed by your Friends if you allow it.",
+      "label": null,
+      "why": "visibility conditional on user's own sharing choice ('if you allow it') -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 10917,
+      "end": 11195,
+      "text": "This includes linked third-party service data (information we get when you link your Snapchat account to another service), data from advertisers (information from advertisers, app developers, publishers, and other third parties to help target or measure the performance of ads),",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "receives data from advertisers/third parties to target and measure ads, data-broker-like ecosystem"
+    },
+    {
+      "policyId": "snap",
+      "start": 19919,
+      "end": 20069,
+      "text": "ResearchWe conduct research to better understand general consumer interests, trends, and how our Services are used by you and others in our community.",
+      "label": null,
+      "why": "generic research-purpose statement, no specific practice -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 28979,
+      "end": 29261,
+      "text": "For example, if you store something in Memories, we will keep it as long as you need it, but when you Chat with a friend, our systems are designed to delete Chats you send within 24 hours after your friend reads it (unless you’ve changed your default settings or decide to save it).",
+      "label": null,
+      "why": "describes short 24-hour default deletion of Chats, a negation of retention harm -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 13450,
+      "end": 13580,
+      "text": "To do so, we use information about you across different areas of the Services in order to add context to your Snapchat experience.",
+      "label": null,
+      "why": "vague, benign statement about using info across Services to add context -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 29650,
+      "end": 29746,
+      "text": "To do the things you expect from our Services and as we’ve described within this Privacy Policy.",
+      "label": null,
+      "why": "fragment with no substantive content -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 26787,
+      "end": 26964,
+      "text": "We may share your information within those internal subsidiaries at your direction, the direction of other users, or as needed to carry out our own and our affiliates’ Services.",
+      "label": {
+        "category": "affiliate_sharing",
+        "severity": "critical"
+      },
+      "why": "shares info within undefined 'affiliates' as needed to carry out their services"
+    },
+    {
+      "policyId": "snap",
+      "start": 23849,
+      "end": 23989,
+      "text": "To provide our Services to you and our community, we may share some of your information with your friends on Snapchat or other Snapchatters.",
+      "label": null,
+      "why": "sharing with the user's own friends is core social function, not an undefined third party -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 20070,
+      "end": 20251,
+      "text": "This information, along with analytics (as we described above), helps us understand more about our community and about how our Services fit into the lives of those in our community.",
+      "label": null,
+      "why": "generic aggregate community-understanding statement -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 28470,
+      "end": 28569,
+      "text": "If you want to learn more about this, see the Region Specific Information section for more details.",
+      "label": null,
+      "why": "nav/cross-reference fragment -> null"
+    },
+    {
+      "policyId": "snap",
+      "start": 12073,
+      "end": 12172,
+      "text": "For example, before accessing your device’s camera roll or your device or third party contact book.",
+      "label": null,
+      "why": "full context is 'With Your Permission...we will ask your permission to collect additional information. For example, before accessing...contact book' -> conditional/consent-gated, null"
+    },
+    {
+      "policyId": "snap",
+      "start": 14345,
+      "end": 14570,
+      "text": "We may show recommended places on the Snap Map, generate content with our AI Features like stickers or Snaps, infer your age or interests based on your content or activity, or customize the content we show you, including ads.",
+      "label": null,
+      "why": "describes inferring age/interests from activity for ad customization but no listed category fits precisely -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 22067,
+      "end": 22245,
+      "text": "To improve our personalized recommendations and to improve the Spotify experience for all users, based on precise location data (where available and explicitly permitted by you).",
+      "label": null,
+      "why": "conditional on data being 'explicitly permitted by you' -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 11766,
+      "end": 11836,
+      "text": "estimated or confirmed age from an Age Check by a third party provider",
+      "label": null,
+      "why": "vague fragment naming an age-check provider, no practice described -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 23162,
+      "end": 23219,
+      "text": "so we can build AI features such as AI DJ and AI playlist",
+      "label": {
+        "category": "ai_training",
+        "severity": "critical"
+      },
+      "why": "unconditional statement that data is used to build AI DJ/playlist features"
+    },
+    {
+      "policyId": "spotify",
+      "start": 38139,
+      "end": 38198,
+      "text": "However, be aware that no system is ever completely secure.",
+      "label": {
+        "category": "security_vague",
+        "severity": "medium"
+      },
+      "why": "vague hedge that no system is completely secure, no concrete commitment"
+    },
+    {
+      "policyId": "spotify",
+      "start": 6648,
+      "end": 6691,
+      "text": "Not be subject to automated decision making",
+      "label": null,
+      "why": "describes a user right (opt out of automated decision-making) -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 35566,
+      "end": 35750,
+      "text": "Where users are able to see and update the personal data themselves, we keep the information for as long as the user chooses unless one of the limited purposes described below applies.",
+      "label": null,
+      "why": "retention is user-controlled ('for as long as the user chooses') -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 10533,
+      "end": 10599,
+      "text": "Younger users may have tailored advertising turned off by default.",
+      "label": null,
+      "why": "protective default (ads off for younger users) negates harm -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 40273,
+      "end": 40423,
+      "text": "If we learn that we’ve collected the personal data of a child under the applicable Age Limit, we’ll take reasonable steps to delete the personal data.",
+      "label": null,
+      "why": "conditional protective remediation step if child data collected -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 8708,
+      "end": 8890,
+      "text": "This is also known as interest based advertising, targeted advertising, or what some states may define as, ‘sharing or selling’ for purposes of cross-context behavioural advertising.",
+      "label": {
+        "category": "sells_shares",
+        "severity": "critical"
+      },
+      "why": "unconditional disclosure that behavioral ad data counts as 'sharing or selling'"
+    },
+    {
+      "policyId": "spotify",
+      "start": 20466,
+      "end": 20523,
+      "text": "This is to enhance our services, products, and offerings.",
+      "label": null,
+      "why": "generic filler phrase, no specific data practice named -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 29445,
+      "end": 29533,
+      "text": "You’ll always have the option to change your mind and withdraw your consent at any time.",
+      "label": null,
+      "why": "describes user's own right to withdraw consent anytime -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 11441,
+      "end": 11560,
+      "text": "It also depends on how you create your account, the country you are in, and if you use third party services to sign in.",
+      "label": null,
+      "why": "neutral descriptive statement, no data practice or harm -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 38021,
+      "end": 38138,
+      "text": "We put in place appropriate technical and organizational measures to help protect the security of your personal data.",
+      "label": {
+        "category": "security_vague",
+        "severity": "medium"
+      },
+      "why": "generic 'appropriate technical and organizational measures' language with no specifics"
+    },
+    {
+      "policyId": "spotify",
+      "start": 40095,
+      "end": 40272,
+      "text": "If you are a parent or guardian and become aware that your child, who is under the application Age Limit, has provided personal data to Spotify in any other context, contact us.",
+      "label": null,
+      "why": "instructs parent to contact company, no red-flag practice -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 17583,
+      "end": 17694,
+      "text": "Information about your contacts with our Customer Service, such as chat conversations and email correspondence.",
+      "label": null,
+      "why": "neutral list of customer-service correspondence types collected -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 38740,
+      "end": 38859,
+      "text": "You can log out of Spotify in multiple places at once by using the ‘Sign out everywhere’ function on your account page.",
+      "label": null,
+      "why": "describes a user security control (sign out everywhere) -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 14184,
+      "end": 14272,
+      "text": "Examples of this information are the device name, device identifiers, brand and version.",
+      "label": null,
+      "why": "neutral list of device data types, no tracking practice stated -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 34312,
+      "end": 34400,
+      "text": "to respond to a valid legal process (such as a search warrant, court order, or subpoena)",
+      "label": null,
+      "why": "legal process / subpoena disclosure -> null per hard rule"
+    },
+    {
+      "policyId": "spotify",
+      "start": 19642,
+      "end": 19772,
+      "text": "For example, we might direct you to an artist’s merchandise store on a third party platform or to a third party ticketing website.",
+      "label": null,
+      "why": "describes linking to third-party merch/ticketing sites, not a data-sharing practice -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 36249,
+      "end": 36501,
+      "text": "We also keep streaming history for the life of an account, for example, to provide retrospective playlists that users enjoy and personalized recommendations that take listening habits into account (for example, Your Time Capsule or Your Summer Rewind).",
+      "label": {
+        "category": "no_deletion",
+        "severity": "high"
+      },
+      "why": "streaming history retained 'for the life of an account', indefinite retention"
+    },
+    {
+      "policyId": "spotify",
+      "start": 14523,
+      "end": 14616,
+      "text": "Spotify partner applications to determine whether the application is installed on your device",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "detects whether partner apps are installed on your device, cross-app tracking"
+    },
+    {
+      "policyId": "spotify",
+      "start": 37008,
+      "end": 37106,
+      "text": "We may also keep data that has been removed from the Spotify Service for a limited period of time.",
+      "label": {
+        "category": "no_deletion",
+        "severity": "high"
+      },
+      "why": "keeps removed data after deletion for an unspecified period"
+    },
+    {
+      "policyId": "spotify",
+      "start": 14420,
+      "end": 14521,
+      "text": "devices your operating system makes available when connecting via Bluetooth, plugin, and installation",
+      "label": null,
+      "why": "neutral fragment listing connected devices via Bluetooth/plugin, no red-flag practice -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 18192,
+      "end": 18274,
+      "text": "Third party applications, services and devices you connect to your Spotify account",
+      "label": null,
+      "why": "heading/fragment naming third-party connections, no practice described -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 6236,
+      "end": 6382,
+      "text": "If you do not have an account or are not logged in, you can also opt-out by clicking the 'Your Privacy Choices' link at the footer of our website.",
+      "label": null,
+      "why": "describes an accessible opt-out mechanism, not buried -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 3506,
+      "end": 3590,
+      "text": "We provide these rights to all residents of the U.S., regardless of where they live.",
+      "label": null,
+      "why": "describes scope of rights provided, not a data practice -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 20928,
+      "end": 21067,
+      "text": "If you decide to create a Spotify account to experience our service in full, then we will combine this data with your Spotify account data.",
+      "label": null,
+      "why": "conditional on user's own decision to create an account -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 36763,
+      "end": 36848,
+      "text": "For example, we may be subject to legal or contractual obligations that require this.",
+      "label": null,
+      "why": "vague reference to legal/contractual obligations, no concrete practice -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 6924,
+      "end": 7013,
+      "text": "Spotify does not carry out this type of automated decision making in the Spotify Service.",
+      "label": null,
+      "why": "negation: explicitly states Spotify does NOT do automated decision making -> null"
+    },
+    {
+      "policyId": "spotify",
+      "start": 31595,
+      "end": 31734,
+      "text": "We and our partners may use this information to present you with offers, promotions, or other marketing that we think you’ll find relevant.",
+      "label": {
+        "category": "affiliate_sharing",
+        "severity": "critical"
+      },
+      "why": "'we and our partners' undefined third parties use data for marketing"
+    },
+    {
+      "policyId": "discord",
+      "start": 4146,
+      "end": 4297,
+      "text": "You can learn more about our approach to safety and content moderation, including how we use your information for these purposes, in our Safety Center.",
+      "label": null,
+      "why": "just points to Safety Center for more info, no practice stated"
+    },
+    {
+      "policyId": "discord",
+      "start": 24944,
+      "end": 25147,
+      "text": "If you turn off these settings, we will stop collecting and using new information about how you use and/or navigate Discord in order to understand and improve our services as described in these settings.",
+      "label": null,
+      "why": "conditional on user turning off their own settings -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 16921,
+      "end": 17103,
+      "text": "To comply with our legal obligationsWe retain and use your information in connection with potential legal claims when necessary and for compliance, regulatory, and auditing purposes.",
+      "label": null,
+      "why": "retention framed around legal obligations/compliance, not indefinite retention claim"
+    },
+    {
+      "policyId": "discord",
+      "start": 9973,
+      "end": 10091,
+      "text": "We may receive information from cookies (small text files placed on your computer or device) and similar technologies.",
+      "label": null,
+      "why": "generic cookie disclosure, no cross-site/device tracking practice stated"
+    },
+    {
+      "policyId": "discord",
+      "start": 5888,
+      "end": 6018,
+      "text": "If we were to change that in the future (for example, to facilitate content moderation), we would disclose that to you in advance.",
+      "label": null,
+      "why": "hypothetical future change with promised advance disclosure, not a current practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 29040,
+      "end": 29194,
+      "text": "Under certain conditions specified by the Data Privacy Framework principles, you may also be able to invoke binding arbitration to resolve your complaint.",
+      "label": null,
+      "why": "describes user's own optional right to invoke arbitration for DPF complaints, not a forced-arbitration clause"
+    },
+    {
+      "policyId": "discord",
+      "start": 9601,
+      "end": 9684,
+      "text": "When you take certain actions on other sites, we may receive information about you.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional statement that Discord receives info about user activity on other sites"
+    },
+    {
+      "policyId": "discord",
+      "start": 24007,
+      "end": 24133,
+      "text": "Customize your personal Discord settingsWe offer a number of settings that allow you to tailor your experience within Discord.",
+      "label": null,
+      "why": "heading plus user-controlled settings statement, no practice described"
+    },
+    {
+      "policyId": "discord",
+      "start": 30756,
+      "end": 30908,
+      "text": "For example, server administrators can add “bots” created by third-party developers that provide features like content moderation and interactive games.",
+      "label": null,
+      "why": "describes optional third-party bot feature server admins can add, not a data-sharing practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 20034,
+      "end": 20273,
+      "text": "We may also provide information to analytics and measurement partners to measure the effectiveness of sponsored content if you engage with it (for example, by starting a Quest or clicking on other sponsored content).To comply with the law.",
+      "label": {
+        "category": "affiliate_sharing",
+        "severity": "critical"
+      },
+      "why": "shares engagement info with undefined 'analytics and measurement partners'"
+    },
+    {
+      "policyId": "discord",
+      "start": 21331,
+      "end": 21528,
+      "text": "We may disclose information if Discord is evaluating and/or engaging in a merger, acquisition, reorganization, bankruptcy, or sale, transfer, or change in ownership of Discord or any of its assets.",
+      "label": {
+        "category": "business_transfer",
+        "severity": "high"
+      },
+      "why": "data disclosed as part of merger/acquisition/bankruptcy/sale of assets"
+    },
+    {
+      "policyId": "discord",
+      "start": 14689,
+      "end": 14741,
+      "text": "We use your information to personalize our services.",
+      "label": null,
+      "why": "generic personalization statement, no concerning practice specified"
+    },
+    {
+      "policyId": "discord",
+      "start": 28408,
+      "end": 28713,
+      "text": "Discord and its U.S. entities/subsidiaries (Backgammon Merger Sub II, LLC, Brazos Games, LLC, Discord International, Inc, Flames Sub LLC, and Sentropy Technologies Inc.) also comply with the EU-U.S. and Swiss-U.S. Data Privacy Frameworks, as well as the UK Extension to the EU-U.S. Data Privacy Framework.",
+      "label": null,
+      "why": "names legal frameworks (DPF) Discord complies with, no practice described"
+    },
+    {
+      "policyId": "discord",
+      "start": 10592,
+      "end": 10704,
+      "text": "Similarly, when we advertise on other services, we may receive information about your engagement with those ads.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional receipt of ad-engagement info from other services"
+    },
+    {
+      "policyId": "discord",
+      "start": 18509,
+      "end": 18845,
+      "text": "Similarly, if you link your Discord account with a third-party service (like a music-streaming service or gaming platform), embed content, interact with third-party content posted on Discord, interact with users on other services who have linked their account, or participate in a server that has third-party features like bots enabled,",
+      "label": null,
+      "why": "conditional on user's own action of linking accounts/enabling bots -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 32132,
+      "end": 32216,
+      "text": "You can contact VeraSafe only on matters related to the processing of personal data.",
+      "label": null,
+      "why": "boilerplate contact scope for DPO, not a data practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 14742,
+      "end": 14933,
+      "text": "This can include customizing your experience on Discord so that you see communities, activities, applications, features or promotions from us, or other content that may be of interest to you.",
+      "label": null,
+      "why": "describes personalized recommendations/content, not an alarming undisclosed practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 10899,
+      "end": 11055,
+      "text": "How we use your informationUnder certain data protection laws like GDPR, companies must have a “legal basis”—a valid reason—to process personal information.",
+      "label": null,
+      "why": "defines GDPR 'legal basis' concept, no practice described"
+    },
+    {
+      "policyId": "discord",
+      "start": 1739,
+      "end": 1926,
+      "text": "We also use certain information to help us identify violations of our terms and policies (such as our Community Guidelines) in order to prevent harmful content or conduct on the services.",
+      "label": null,
+      "why": "standard content-moderation purpose statement, not itself a red flag"
+    },
+    {
+      "policyId": "discord",
+      "start": 13111,
+      "end": 13336,
+      "text": "This includes responding to user reports, generating transcriptions of content as part of our investigation, detecting fraud and malware, and proactively scanning attachments and other content for illegal or harmful activity.",
+      "label": {
+        "category": "human_review",
+        "severity": "high"
+      },
+      "why": "generating transcriptions of content 'as part of our investigation' implies human staff reviewing content"
+    },
+    {
+      "policyId": "discord",
+      "start": 32724,
+      "end": 32958,
+      "text": "‍Exercising your rights: As described in the “How to control your privacy” section above, all our users have control over their information and can directly edit or delete information from their account and limit what data we process.",
+      "label": null,
+      "why": "describes user's own control/deletion rights -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 22792,
+      "end": 22931,
+      "text": "How to control your privacyWe believe that users should be able to tailor their Discord experience to their preferences, including privacy.",
+      "label": null,
+      "why": "heading plus generic claim of user control, no practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 17443,
+      "end": 17631,
+      "text": "With your consent‍We may also collect and use personal information with your consent, such as to send you marketing communications and personalize sponsored content where legally required.",
+      "label": null,
+      "why": "conditional on user's own consent for marketing/personalization -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 33642,
+      "end": 33778,
+      "text": "If you have any questions about these rights or wish to exercise control over your information, please reach out to privacy@discord.com.",
+      "label": null,
+      "why": "contact info for exercising rights, not a data practice"
+    },
+    {
+      "policyId": "discord",
+      "start": 25408,
+      "end": 25581,
+      "text": "If these settings are disabled, we will no longer use information specific to your account to power features that personalize Discord for you as described in these settings.",
+      "label": null,
+      "why": "conditional on user disabling their own settings -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 25197,
+      "end": 25407,
+      "text": "We offer certain settings that control whether and how we may personalize Discord for you, such as offering you relevant recommendations for in-app content and features or delivering relevant sponsored content.",
+      "label": null,
+      "why": "describes user-controlled personalization settings -> null"
+    },
+    {
+      "policyId": "discord",
+      "start": 9049,
+      "end": 9243,
+      "text": "For example, this includes information like your IP address, operating system information, browser information, and information about your device settings, such as your microphone and/or camera.",
+      "label": null,
+      "why": "lists device/browser info including mic/camera settings, not biometric or location capture"
+    },
+    {
+      "policyId": "discord",
+      "start": 4298,
+      "end": 4461,
+      "text": "You should take all of this into account when you are using our services, and choose the spaces, features, and settings that are most appropriate for your content.",
+      "label": null,
+      "why": "advisory to user about choosing appropriate spaces/settings, not a practice disclosure"
+    },
+    {
+      "policyId": "discord",
+      "start": 11175,
+      "end": 11529,
+      "text": "We use the Information We Collect—Account information, Content you create, Payment information, Information from actions you take, Information used to enable optional features, Other information you provide directly to us, Information about your device, Information about your use of the apps or websites, other information that we collect automatically,",
+      "label": null,
+      "why": "list/heading fragment of data categories, no concerning practice stated"
+    },
+    {
+      "policyId": "discord",
+      "start": 22700,
+      "end": 22792,
+      "text": "You can help maintain the security of your account by configuring two-factor authentication.",
+      "label": null,
+      "why": "describes optional user action (enabling 2FA) to improve security -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 48483,
+      "end": 48607,
+      "text": "Zoom does not have actual knowledge that it “sells” or “shares” the personal information of consumers under 16 years of age.",
+      "label": null,
+      "why": "negates sale/share of minors' data -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 44087,
+      "end": 44484,
+      "text": "and visual information (such as in Content and Context from Meetings, Webinars, Messaging, and Other Collaborative Features) education information such as from university customers; inferences we derive from the preceding or other information we collect; and sensitive personal information (such as certain categories in Account Information, Content and Context from Meetings, Webinars, Messaging,",
+      "label": {
+        "category": "biometric_sensitive",
+        "severity": "critical"
+      },
+      "why": "unconditional statement that 'sensitive personal information' is among data collected"
+    },
+    {
+      "policyId": "zoom",
+      "start": 17239,
+      "end": 17608,
+      "text": "Marketing, Advertising, and Analytics Partners: Zoom uses third-party marketing, advertising, and analytics providers: to provide statistics and analysis about how people are using Zoom products and services, including our website; and to provide advertising and marketing for Zoom products and services, including targeted advertising based on your use of our website.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "third-party marketing/advertising/analytics partners deliver targeted advertising based on site use -> cross-site ad tracking, not an explicit sale"
+    },
+    {
+      "policyId": "zoom",
+      "start": 35941,
+      "end": 36180,
+      "text": "Consistent with specific revocable consents: We rely on your prior consent in order to utilize cookies and similar technologies to engage advertising and analytics partners to deliver tailored advertising and analysis of our website usage.",
+      "label": null,
+      "why": "conditional on user's prior/revocable consent -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 12937,
+      "end": 13299,
+      "text": "Marketing and Promotions: If authorized by any applicable settings, to permit Zoom and/or its third party marketing partners to market, advertise, and promote Zoom products and services, including based on your product usage, information we receive from third-party partners, information you provide to process referral invitations, or if you visit our websites,",
+      "label": null,
+      "why": "conditional on 'applicable settings' authorization -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 13375,
+      "end": 13598,
+      "text": "We may also use this information to provide advertisements to you relating to Zoom products and services or to engage third party partners to analyze your interactions on our website or app or to deliver advertising to you.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "engages third-party partners to analyze interactions and deliver advertising -> cross-site ad tracking, not an explicit sale"
+    },
+    {
+      "policyId": "zoom",
+      "start": 4339,
+      "end": 4531,
+      "text": "As referenced below, Zoom employees do not access or use Customer Content without the authorization of the hosting account owner, or as required for legal, safety, security or support reasons.",
+      "label": null,
+      "why": "negation (employees do not access without authorization) plus legal/safety exception -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 50390,
+      "end": 50532,
+      "text": "To opt out of the use of cookies and similar technologies on our sites for interest-based advertising purposes, follow the instructions above.",
+      "label": null,
+      "why": "describes user's own opt-out mechanism -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 44846,
+      "end": 44923,
+      "text": "Please see our Children’s Educational Privacy Statement for more information.",
+      "label": null,
+      "why": "pointer to another document, no practice stated -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 53067,
+      "end": 53325,
+      "text": "We may update this Privacy Statement periodically to account for changes in our collection and/or processing of personal data, and will post the updated Privacy Statement on our website, with a “Last Updated” date at the top and an Update Note at the bottom.",
+      "label": {
+        "category": "silent_changes",
+        "severity": "medium"
+      },
+      "why": "policy updated periodically and merely posted on website, no direct user notice"
+    },
+    {
+      "policyId": "zoom",
+      "start": 37171,
+      "end": 37433,
+      "text": "As necessary for our (or others’) legitimate interests, unless those interests are overridden by your interests or fundamental rights and freedoms, which require protection of personal data: We process your personal data based on such legitimate interests to (i)",
+      "label": null,
+      "why": "vague legal-basis fragment, no concrete practice described -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 47717,
+      "end": 47937,
+      "text": "You can get more information and opt out of the use of cookies and similar technologies on our website and app by clicking the Cookies Settings or Your Privacy Choices, also on our homepage, and setting your preferences.",
+      "label": null,
+      "why": "describes user's own opt-out controls -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 51117,
+      "end": 51484,
+      "text": "To verify your identity, we may require you to log into your existing Zoom account (if applicable), give a declaration as to your identity under penalty of perjury, and/or provide additional information, such as providing at least two pieces of personal information relating to your account (which will be compared to information we have, such as profile information)",
+      "label": null,
+      "why": "describes identity-verification process for user requests, not a red flag -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 43069,
+      "end": 43288,
+      "text": "Under limited circumstances and after other available dispute resolution mechanisms have been exhausted, binding arbitration is available to address certain residual complaints under the DPF not resolved by other means.",
+      "label": null,
+      "why": "narrow DPF complaint arbitration mechanism, not a general forced-arbitration/class-waiver clause -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 17609,
+      "end": 17778,
+      "text": "These third-party partners may receive information about your activities on Zoom’s website through third-party cookies and similar technologies placed on Zoom’s website.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "third-party cookies on Zoom's site let partners receive user activity data"
+    },
+    {
+      "policyId": "zoom",
+      "start": 11342,
+      "end": 11479,
+      "text": "Such data does not leave your device, is not retained, cannot be used to identify you, and is only used to generate the selected effects.",
+      "label": null,
+      "why": "negates retention/identification -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 16495,
+      "end": 16628,
+      "text": "This information is processed on your device, and such information is neither received nor stored by either the third party, or Zoom.",
+      "label": null,
+      "why": "negates receipt/storage of the data -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 27628,
+      "end": 27818,
+      "text": "Livestreams: Meeting and webinar hosts can choose to livestream to a third-party site or service, which means anyone with access to the livestream will be able to see the meeting or webinar.",
+      "label": null,
+      "why": "conditional on host's own choice to livestream -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 27403,
+      "end": 27627,
+      "text": "Intelligent Features: Users may be able to access, based on underlying permissions, customer content and context from meetings, webinars, messaging, and other collaborative features through their use of intelligent features.",
+      "label": null,
+      "why": "conditional on underlying permissions, vague feature description -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 6615,
+      "end": 6799,
+      "text": "Emails sent to or received from non-Zoom Email users are encrypted after the email is sent or received from Zoom’s servers, if the Zoom Email user chooses to send them with encryption.",
+      "label": null,
+      "why": "conditional on user choosing to send with encryption -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 19009,
+      "end": 19225,
+      "text": "Third-Party Developers: If you purchase a third-party app or integration from the Zoom App Marketplace, Zoom may share information about the purchase with the third-party developer, to provide the app or integration.",
+      "label": null,
+      "why": "conditional on user's own purchase action -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 48700,
+      "end": 48785,
+      "text": "If we decline to process your request, you may have the right to appeal our decision.",
+      "label": null,
+      "why": "describes user's appeal right -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 2780,
+      "end": 3040,
+      "text": "Registration Information: Information provided when registering for a Zoom meeting, webinar, Zoom Room, or recording, which may include name and contact information, responses to registration questions, and other registration information requested by the host.",
+      "label": null,
+      "why": "just defines what registration information is collected, not a concerning practice -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 5417,
+      "end": 5703,
+      "text": "This also includes information about when and how people visit and interact with Zoom’s websites, including what pages are accessed, interaction with website features including Zoom’s website’s virtual chat feature, and whether or not the person signed up for a Zoom product or service.",
+      "label": null,
+      "why": "routine first-party website analytics description, not cross-site tracking or sale -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 20763,
+      "end": 20860,
+      "text": "Account owners may also be able to determine what information Zoom and others can access and use.",
+      "label": null,
+      "why": "vague statement about account owner visibility, no concrete practice -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 20113,
+      "end": 20281,
+      "text": "The account owner and their users can invite others (including guests not on their account and unlicensed participants) to meetings or webinars hosted on their account.",
+      "label": null,
+      "why": "describes normal meeting invite feature, not contacts/address-book harvesting -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 46528,
+      "end": 46917,
+      "text": "Access the categories and specific pieces of personal data Zoom has collected, the categories of sources from which the personal data is collected, the business purpose(s) for collecting the personal data, and the categories of third parties with whom Zoom has shared personal data, and obtain the personal data in a portable and, to the extent technically feasible, readily usable format;",
+      "label": null,
+      "why": "describes a statutory access/portability right -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 36713,
+      "end": 36896,
+      "text": "This includes detecting, investigating, preventing, and stopping fraudulent, harmful, unauthorized, or illegal activity (“fraud and abuse detection”) and compliance with privacy laws;",
+      "label": null,
+      "why": "fraud prevention and legal compliance purpose -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 5810,
+      "end": 5969,
+      "text": "Limited Information from Zoom Email and Calendar Services: “Zoom Email” refers to Zoom’s native email service and emails sent from Zoom’s native email service.",
+      "label": null,
+      "why": "just defines the term 'Zoom Email' -> null"
+    },
+    {
+      "policyId": "zoom",
+      "start": 24297,
+      "end": 24552,
+      "text": "Other Collaborative Feature Content (e.g., Zoom Email, Zoom Calendar, Zoom Docs, Clips, Whiteboard, Notes, Polls, Q&A, Feedback): Depending on their settings, account owners and designated account administrators can access content hosted on their account.",
+      "label": null,
+      "why": "conditional on account settings; describes normal admin access -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 3319,
+      "end": 3582,
+      "text": "You acknowledge that your continued use of our Services after we publish or send a notice about our changes to this Privacy Policy means that the collection, use and sharing of your personal data is subject to the updated Privacy Policy, as of its effective date.",
+      "label": {
+        "category": "implied_consent",
+        "severity": "medium"
+      },
+      "why": "deemed consent to updated policy merely by continued use after notice"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 39835,
+      "end": 40066,
+      "text": "Lawful bases include consent (where you have given consent), contract (where processing is necessary for the performance of a contract with you (e.g., to deliver the LinkedIn Services you have requested) and “legitimate interests.”",
+      "label": null,
+      "why": "defines legal bases for processing (GDPR terms), no practice disclosed -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 31856,
+      "end": 32152,
+      "text": "Subject to our European Regional Privacy Notice, we may also share with our Affiliates, including Microsoft, your (1) publicly-shared content (such as your public LinkedIn posts) to provide or develop their services and (2) personal data to improve, provide or develop their advertising services.",
+      "label": {
+        "category": "affiliate_sharing",
+        "severity": "critical"
+      },
+      "why": "unconditional sharing of public content and personal data with Affiliates including Microsoft for advertising"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 34562,
+      "end": 34689,
+      "text": "We can also share your personal data as part of a sale, merger or change in control, or in preparation for any of these events.",
+      "label": {
+        "category": "business_transfer",
+        "severity": "high"
+      },
+      "why": "personal data shared as part of sale/merger/change in control"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 8655,
+      "end": 8825,
+      "text": "You can opt out from our use of data from cookies and similar technologies that track your behavior on the sites of others for ad targeting and other ad-related purposes.",
+      "label": null,
+      "why": "opt-out is user's own affirmative control over cross-site ad tracking -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 14583,
+      "end": 14877,
+      "text": "We use the data we have about you (e.g., data you provide, data we collect from your engagement with our Services and inferences we make from the data we have about you), to personalize our Services for you, such as by recommending or ranking relevant content and conversations on our Services.",
+      "label": null,
+      "why": "standard on-platform personalization/recommendation use, not a listed red-flag practice"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 15029,
+      "end": 15319,
+      "text": "So, if you let us know that you are interested in a new skill (e.g., by watching a learning video), we will use this information to personalize content in your feed, suggest that you follow certain Members on our site, or suggest related learning content to help you towards that new skill.",
+      "label": null,
+      "why": "benign example of feed personalization based on user's own engagement"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 6872,
+      "end": 7028,
+      "text": "Related Companies and Other ServicesWe receive data about you when you use some of the other services provided by us or our Affiliates, including Microsoft.",
+      "label": {
+        "category": "affiliate_sharing",
+        "severity": "critical"
+      },
+      "why": "data flows to/from undefined 'Affiliates' beyond named Microsoft, unconditional practice statement"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 12333,
+      "end": 12446,
+      "text": "You can review LinkedIn's Responsible AI principles here and learn more about our approach to generative AI here.",
+      "label": null,
+      "why": "just points to informational AI-principles page, no practice described"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 37189,
+      "end": 37249,
+      "text": "We keep some of your data even after you close your account.",
+      "label": {
+        "category": "no_deletion",
+        "severity": "high"
+      },
+      "why": "unconditional retention of data after account closure"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 4561,
+      "end": 4681,
+      "text": "It’s your choice whether to include sensitive information on your profile and to make that sensitive information public.",
+      "label": null,
+      "why": "conditional on user's own choice to include/publish sensitive info -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 8918,
+      "end": 8974,
+      "text": "We receive data through cookies and similar technologies",
+      "label": null,
+      "why": "generic fragment about cookies, no cross-site/device claim stated -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 29964,
+      "end": 30175,
+      "text": "You may link your account with others’ services so that they can look up your contacts’ profiles, post your shares on such platforms, or enable you to start conversations with your connections on such platforms.",
+      "label": null,
+      "why": "conditional on user choosing to link account with other services -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 11998,
+      "end": 12332,
+      "text": "We may use your personal data to improve, develop, and provide products and Services, develop and train artificial intelligence (AI) models, develop, provide, and personalize our Services, and gain insights with the help of AI, automated systems, and inferences, so that our Services can be more relevant and useful to you and others.",
+      "label": {
+        "category": "ai_training",
+        "severity": "critical"
+      },
+      "why": "unconditional use of personal data to develop and train AI models"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 18856,
+      "end": 18972,
+      "text": "Please be aware that you cannot opt out of receiving service messages from us, including security and legal notices.",
+      "label": null,
+      "why": "inability to opt out is scoped to security and legal notices, a standard/necessary practice, not a marketing dark pattern -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 5134,
+      "end": 5391,
+      "text": "If you sync your calendars with our Services, we will collect your calendar meeting information to keep growing your network by suggesting connections for you and others, and by providing information about events, e.g. times, places, attendees and contacts.",
+      "label": null,
+      "why": "conditional on user's own action of syncing calendar -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 10440,
+      "end": 10664,
+      "text": "Others buying our Services for your use, such as your employer or your school, provide us with personal data about you and your eligibility to use the Services that they purchase for use by their workers, students or alumni.",
+      "label": null,
+      "why": "describes employer/school providing data, doesn't fit any listed category"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 13046,
+      "end": 13219,
+      "text": "Subject to your and their settings, when you connect with other Members, you will be able to search each others’ connections in order to exchange professional opportunities.",
+      "label": null,
+      "why": "conditional on user's and others' settings -> null"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 41023,
+      "end": 41119,
+      "text": "If you have questions or complaints regarding this Policy, please first contact LinkedIn online.",
+      "label": null,
+      "why": "boilerplate contact instructions for complaints"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 37049,
+      "end": 37181,
+      "text": "Residents in the Designated Countries and the UK, and other regions, may have additional rights under their laws.4.3 Account Closure",
+      "label": null,
+      "why": "describes user rights plus heading fragment, no practice disclosed"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 16402,
+      "end": 16527,
+      "text": "Keeping your profile accurate and up-to-date may help you better connect to others and to opportunities through our Services.",
+      "label": null,
+      "why": "encouragement to keep profile updated, not a red flag"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 18223,
+      "end": 18327,
+      "text": "We offer settings to control what messages you receive and how often you receive some types of messages.",
+      "label": null,
+      "why": "describes positive user message-control settings, no dark pattern"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 23259,
+      "end": 23399,
+      "text": "Other ResearchWe seek to create economic opportunity for Members of the global workforce and to help them be more productive and successful.",
+      "label": null,
+      "why": "mission/purpose statement, no data practice described"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 24307,
+      "end": 24482,
+      "text": "We use data (which can include your communications) to investigate, respond to and resolve complaints and for Service issues (e.g., bugs).2.8 Insights That Do Not Identify You",
+      "label": null,
+      "why": "data used for complaint/bug investigation, no explicit human-review-of-messages claim, and legitimate purpose -> null on balance"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 23894,
+      "end": 24006,
+      "text": "We publish or allow others to publish economic insights, presented as aggregated data rather than personal data.",
+      "label": null,
+      "why": "explicitly aggregated, non-personal data -> negates concern"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 2064,
+      "end": 2190,
+      "text": "For California residents, additional disclosures required by California law may be found in our California Privacy Disclosure.",
+      "label": null,
+      "why": "just names CCPA/California disclosure reference, no practice described"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 0,
+      "end": 130,
+      "text": "Your Privacy MattersLinkedIn’s mission is to connect the world’s professionals to allow them to be more productive and successful.",
+      "label": null,
+      "why": "mission statement boilerplate, no practice described"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 23400,
+      "end": 23632,
+      "text": "We use the personal data available to us to research social, economic and workplace trends, such as jobs availability and skills needed for these jobs and policies that help bridge the gap in various industries and geographic areas.",
+      "label": null,
+      "why": "disclosed research use of personal data for workforce trends, not a listed critical/high category"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 19693,
+      "end": 20016,
+      "text": "and other device identifiers;Member-provided information (e.g., profile, contact information, title and industry);Data from your use of our Services (e.g., search history, feed, content you read, who you follow or is following you, connections, groups participation, page visits, videos you watch, clicking on an ad, etc.),",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "continuation of the preceding ad-targeting data list (device identifiers, on-platform behavioral history) used for cross-service ad targeting"
+    },
+    {
+      "policyId": "linkedin",
+      "start": 19318,
+      "end": 19692,
+      "text": "We target (and measure the performance of) ads to Members, Visitors and others both on and off our Services directly or through a variety of partners, using the following data, whether separately or combined:Data collected by advertising technologies on and off our Services using pixels, ad tags (e.g., when an advertiser installs a LinkedIn tag on their website), cookies,",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional ad targeting on and off Services via pixels, ad tags, and cookies through partners"
+    },
+    {
+      "policyId": "google",
+      "start": 7398,
+      "end": 7651,
+      "text": "Provide personalized services, including content and adsWe use the information we collect to tailor our services for you, including providing customized and personalized experiences and recommendations, including things like content, and search results.",
+      "label": null,
+      "why": "generic personalization/ads description, no distinct red flag practice stated"
+    },
+    {
+      "policyId": "google",
+      "start": 21450,
+      "end": 21683,
+      "text": "Key termsAffiliatesAn affiliate is an entity that belongs to the Google group of companies, including the following companies that provide consumer services in the EU: Google Ireland Limited, Google Commerce Ltd, Google Payment Corp,",
+      "label": null,
+      "why": "merely defines 'affiliate' and names the specific covered entities -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 16949,
+      "end": 17098,
+      "text": "Depending on these settings, this may include precise location data, for example GPS data for Android features like navigation or finding your phone.",
+      "label": null,
+      "why": "conditional on user's own account/device settings -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 43977,
+      "end": 44043,
+      "text": "This feature makes it easier to share things with people you know.",
+      "label": null,
+      "why": "benign feature description, no privacy practice stated"
+    },
+    {
+      "policyId": "google",
+      "start": 19196,
+      "end": 19363,
+      "text": "Research and development: Google uses information to improve our services and to develop new products, features and technologies that benefit our users and the public.",
+      "label": null,
+      "why": "generic 'improve services/develop new products' language, not explicit AI training on user content"
+    },
+    {
+      "policyId": "google",
+      "start": 24879,
+      "end": 25089,
+      "text": "Sensitive personal informationThis is a particular category of personal information relating to topics such as confidential medical facts, racial or ethnic origins, political or religious beliefs, or sexuality.",
+      "label": null,
+      "why": "merely defines the term 'sensitive personal information' -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 45239,
+      "end": 45576,
+      "text": "We may also measure other interactions, such as how you move your mouse over an ad or if you interact with the page on which the ad appears.your activity on other sites and appsThis activity might come from your use of Google services, like from syncing your account with Chrome or your visits to sites and apps that partner with Google.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional collection of activity on partner sites/apps via account syncing"
+    },
+    {
+      "policyId": "google",
+      "start": 28662,
+      "end": 28912,
+      "text": "You can view and control your Search Services History and Web & App Activity at My Activity.activity on third-party sites and apps that use our servicesWebsites and apps that integrate Google services like ads and analytics share information with us.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional statement that integrated third-party sites/apps share data with Google"
+    },
+    {
+      "policyId": "google",
+      "start": 16295,
+      "end": 16689,
+      "text": "Internet, network, and other activity information such as your search terms; views and interactions with content and ads; Chrome browsing history you’ve synced with your Google Account; information about the interaction of your apps, browsers, and devices with our services (like IP address, crash reports, and system activity); and activity on third-party sites and apps that use our services.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "data category list includes unconditional 'activity on third-party sites and apps that use our services'"
+    },
+    {
+      "policyId": "google",
+      "start": 35312,
+      "end": 35411,
+      "text": "In some cases, we may also need to verify your identity and may ask you for information to do this.",
+      "label": null,
+      "why": "generic identity verification, no red flag practice"
+    },
+    {
+      "policyId": "google",
+      "start": 34421,
+      "end": 34788,
+      "text": "When your device detects an audio activation command, like “Hey Google,” Google records your voice and audio plus a few seconds before the activation. our usersFor example, to prevent abuse and increase transparency and accountability over our online content moderation practices, Google shares data about requests for removal of content from our services with Lumen,",
+      "label": null,
+      "why": "standard disclosed voice-activation recording feature; no biometric-identification use or third-party harm stated -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 4485,
+      "end": 4872,
+      "text": "These include:GPS and other sensor data from your deviceIP addressActivity on Google services, such as from your searches or places you label like home or workInformation about things near your device, such as Wi-Fi access points, cell towers, and Bluetooth-enabled devicesThe types of location data we collect and how long we store it depend in part on your device and account settings.",
+      "label": {
+        "category": "precise_location",
+        "severity": "critical"
+      },
+      "why": "unconditional list of GPS/Wi-Fi/cell-tower/Bluetooth location data collected"
+    },
+    {
+      "policyId": "google",
+      "start": 6946,
+      "end": 7153,
+      "text": "And we use your information to make improvements to our services — for example, understanding which search terms are most frequently misspelled helps us improve spell-check features used across our services.",
+      "label": null,
+      "why": "benign product-improvement example (spell-check), no red flag"
+    },
+    {
+      "policyId": "google",
+      "start": 11003,
+      "end": 11196,
+      "text": "Depending on your account settings, your activity on other sites and apps may be associated with your personal information in order to improve Google’s services and the ads delivered by Google.",
+      "label": null,
+      "why": "conditional on user's own account settings -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 27115,
+      "end": 27233,
+      "text": "On other platforms besides browsers, unique identifiers are used to recognize a specific device or app on that device.",
+      "label": {
+        "category": "cross_site_tracking",
+        "severity": "critical"
+      },
+      "why": "unconditional statement that unique identifiers are used to recognize/fingerprint devices"
+    },
+    {
+      "policyId": "google",
+      "start": 1786,
+      "end": 2069,
+      "text": "Information we collect as you use our servicesYour apps, browsers & devicesWe collect information about the apps, browsers, and devices you use to access Google services, which helps us provide features like automatic product updates and dimming your screen if your battery runs low.",
+      "label": null,
+      "why": "benign functional device-data collection (auto-updates, battery dimming)"
+    },
+    {
+      "policyId": "google",
+      "start": 29972,
+      "end": 30076,
+      "text": "We only provide aggregated reports to advertisers that don’t reveal information about individual people.",
+      "label": null,
+      "why": "negates harm: only aggregated, non-individual reports to advertisers -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 45659,
+      "end": 45838,
+      "text": "For example, a website might use our advertising services (like AdSense) or analytics tools (like Google Analytics), or it might embed other content (such as videos from YouTube).",
+      "label": null,
+      "why": "illustrative example of third-party integrations, no unconditional practice stated"
+    },
+    {
+      "policyId": "google",
+      "start": 18656,
+      "end": 18887,
+      "text": "Auditing and measurement: Google uses information for analytics and measurement to understand how our services are used, as well as to fulfill obligations to our partners like publishers, advertisers, developers, or rights holders.",
+      "label": null,
+      "why": "generic analytics/measurement purpose statement, no category match"
+    },
+    {
+      "policyId": "google",
+      "start": 38017,
+      "end": 38191,
+      "text": "This feature shows you information about recent activity in Gmail, such as the IP addresses that accessed your mail, the associated location, and the date and time of access.",
+      "label": null,
+      "why": "user-facing transparency feature showing the user their own account access history -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 8056,
+      "end": 8153,
+      "text": "For example, if you search for “mountain bikes,” you may see ads for sports equipment on YouTube.",
+      "label": null,
+      "why": "illustrative ad-personalization example, not a distinct new practice"
+    },
+    {
+      "policyId": "google",
+      "start": 8858,
+      "end": 8960,
+      "text": "For example, we analyze data about your visits to our sites to do things like optimize product design.",
+      "label": null,
+      "why": "benign analytics example (product design optimization)"
+    },
+    {
+      "policyId": "google",
+      "start": 11559,
+      "end": 11714,
+      "text": "Compliance & cooperation with regulatorsWe regularly review this Privacy Policy and make sure that we process your information in ways that comply with it.",
+      "label": null,
+      "why": "self-compliance statement, no red flag practice"
+    },
+    {
+      "policyId": "google",
+      "start": 15447,
+      "end": 15665,
+      "text": "Categories of information we collectIdentifiers and similar information such as your name and password, phone number, and address, as well as unique identifiers tied to the browser, application, or device you’re using.",
+      "label": null,
+      "why": "basic identifiers collection list (name, phone, address); no matching red-flag category"
+    },
+    {
+      "policyId": "google",
+      "start": 25089,
+      "end": 25201,
+      "text": "Server logsLike most websites, our servers automatically record the page requests made when you visit our sites.",
+      "label": null,
+      "why": "standard server-log collection, benign and common to most websites"
+    },
+    {
+      "policyId": "google",
+      "start": 18517,
+      "end": 18656,
+      "text": "For example, to protect our services, Google may receive or disclose information about IP addresses that malicious actors have compromised.",
+      "label": null,
+      "why": "security-related IP disclosure about malicious actors, not a user-data red flag"
+    },
+    {
+      "policyId": "google",
+      "start": 36055,
+      "end": 36244,
+      "text": "For example, your phone number can be used to help you access your account if you forget your password, help people find and connect with you, and make the ads you see more relevant to you.",
+      "label": null,
+      "why": "benign multi-purpose explanation of phone number use, no unconditional red flag"
+    },
+    {
+      "policyId": "google",
+      "start": 33230,
+      "end": 33405,
+      "text": "Our legal team reviews each and every request, regardless of type, and we frequently push back when a request appears to be overly broad or doesn’t follow the correct process.",
+      "label": null,
+      "why": "negates harm: describes pushing back on overly broad requests -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 38966,
+      "end": 39092,
+      "text": "We don’t use topics or show personalized ads based on sensitive categories like race, religion, sexual orientation, or health.",
+      "label": null,
+      "why": "explicit negation ('We don't use...') -> null"
+    },
+    {
+      "policyId": "google",
+      "start": 25678,
+      "end": 25964,
+      "text": "Depending on the user’s service, a different address may be assigned to the user by their service provider each time they connect to the Internet.25/Mar/2003 10:15:32 is the date and time of the query.http://www.google.com/search?q=cars is the requested URL, including the search query.",
+      "label": null,
+      "why": "illustrative example of server-log data format, not a practice statement"
+    }
+  ]
+}
