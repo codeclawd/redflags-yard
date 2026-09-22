@@ -1,0 +1,58 @@
+[
+  {
+    "id": "tiktok",
+    "name": "TikTok",
+    "url": "https://www.tiktok.com/legal/page/us/privacy-policy/en",
+    "fetchedAt": "2026-09-21",
+    "chars": 27555
+  },
+  {
+    "id": "temu",
+    "name": "Temu",
+    "url": "https://www.temu.com/privacy-and-cookie-policy.html",
+    "fetchedAt": "2026-09-21",
+    "chars": 29821
+  },
+  {
+    "id": "snap",
+    "name": "Snapchat",
+    "url": "https://values.snap.com/privacy/privacy-policy",
+    "fetchedAt": "2026-09-21",
+    "chars": 34301
+  },
+  {
+    "id": "spotify",
+    "name": "Spotify",
+    "url": "https://www.spotify.com/us/legal/privacy-policy/",
+    "fetchedAt": "2026-09-21",
+    "chars": 42407
+  },
+  {
+    "id": "discord",
+    "name": "Discord",
+    "url": "https://discord.com/privacy",
+    "fetchedAt": "2026-09-21",
+    "chars": 35055
+  },
+  {
+    "id": "zoom",
+    "name": "Zoom",
+    "url": "https://www.zoom.com/en/trust/privacy/privacy-statement/",
+    "fetchedAt": "2026-09-21",
+    "chars": 53752
+  },
+  {
+    "id": "linkedin",
+    "name": "LinkedIn",
+    "url": "https://www.linkedin.com/legal/privacy-policy",
+    "fetchedAt": "2026-09-21",
+    "chars": 41494
+  },
+  {
+    "id": "google",
+    "name": "Google",
+    "url": "https://policies.google.com/privacy?hl=en-US",
+    "fetchedAt": "2026-09-21",
+    "chars": 46209
+  }
+]
