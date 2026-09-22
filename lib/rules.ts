@@ -311,24 +311,14 @@ export const RULES: Rule[] = [
       /\bat\s+your\s+own\s+risk\b/i,
     ],
   },
-  {
-    id: "vague_euphemism",
-    category: "vague_euphemism",
-    severity: "medium",
-    firewall: true,
-    headline: "The wording is broad enough to cover almost anything",
-    plainEnglish: "Open-ended phrasing like this is a permission slip: it names no limit you could hold them to.",
-    patterns: [
-      /\bincluding,?\s+but\s+not\s+limited\s+to\b/i,
-      /\bsuch\s+as,?\s+(?:but\s+not\s+limited\s+to|among\s+other)/i,
-      /\b(?:other|certain)\s+(?:legitimate\s+)?business\s+purposes?\b/i,
-      /\blegitimate\s+interests?\b/i,
-      /\b(?:improve|enhance|personalize|tailor|optimize)\b[^.]{0,40}\b(?:our\s+services|your\s+experience|the\s+services)\b/i,
-      /\bas\s+(?:otherwise\s+)?(?:permitted|required)\s+by\s+(?:applicable\s+)?law\b/i,
-      /\band\s+similar\s+(?:technologies|purposes|entities)\b/i,
-      /\bany\s+other\s+purpose\b/i,
-    ],
-  },
+  // vague_euphemism is deliberately NOT a rule.
+  //
+  // Across 240 independently labeled sentences (eval/gold.json) not one was judged
+  // a standalone red flag on vagueness alone, while this rule was the single largest
+  // source of false positives — it fired on "We use your information to personalize
+  // our services" and on a definition of the word "cookie". Vagueness is context for
+  // a finding, not a finding itself. Every phrase below still reaches the reader
+  // through the decoder ring (lib/lexicon.ts), which informs without accusing.
 ];
 
 const VAGUE_MARKERS = [

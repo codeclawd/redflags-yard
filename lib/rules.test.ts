@@ -76,16 +76,14 @@ const FIXTURES: Record<CategoryId, { positive: string; suppressed: string }> = {
     positive: "We use commercially reasonable security measures, but no method of transmission is completely secure.",
     suppressed: "We do not rely on reasonable security measures alone and cannot guarantee anything less.",
   },
-  vague_euphemism: {
-    positive: "We process your information for other business purposes, including but not limited to our legitimate interests.",
-    suppressed: "We do not process your information for other business purposes or any legitimate interests.",
-  },
 };
 
 describe("the rule table", () => {
-  it("covers all 18 categories with at least 2 patterns each", () => {
+  // 17, not 18: vague_euphemism is decoder-only by design (see lib/rules.ts).
+  it("covers all 17 flagging categories with at least 2 patterns each", () => {
     const ids = new Set(RULES.map((r) => r.category));
-    expect(ids.size).toBe(18);
+    expect(ids.size).toBe(17);
+    expect(ids.has("vague_euphemism" as never)).toBe(false);
     expect(Object.keys(SEVERITY_BY_CATEGORY)).toHaveLength(18);
     for (const rule of RULES) {
       expect(rule.patterns.length, rule.id).toBeGreaterThanOrEqual(2);

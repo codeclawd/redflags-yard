@@ -112,3 +112,19 @@ describe("runLexicon", () => {
     }
   });
 });
+
+// The vague_euphemism capability was removed from the rule table on purpose; it must
+// still reach the reader through the decoder ring, or the change quietly lost a feature.
+describe("vague_euphemism survives as decoder-only", () => {
+  it("has lexicon entries and they still decode", () => {
+    const entries = LEXICON.filter((e) => e.category === "vague_euphemism");
+    expect(entries.length).toBeGreaterThanOrEqual(5);
+    const { decoder } = runLexicon(
+      "We may share your information for other business purposes, including but not limited to our legitimate interests.",
+      splitSentences(
+        "We may share your information for other business purposes, including but not limited to our legitimate interests.",
+      ),
+    );
+    expect(decoder.some((d) => d.category === "vague_euphemism")).toBe(true);
+  });
+});
