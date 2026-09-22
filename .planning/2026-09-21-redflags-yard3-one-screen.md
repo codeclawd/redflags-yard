@@ -1,6 +1,6 @@
 # Red Flags — Hackyard Yard #3 "One Screen" rebuild
 
-Date: 2026-09-21 · Branch: main (fresh repo) · Status: EXECUTING · Scope: full product, one screen · Depends-on: nothing (greenfield)
+Date: 2026-09-21 · Branch: main (fresh repo) · Status: SHIPPED 2026-09-21 22:47 CDT — https://redflags-yard.vercel.app · repo codeclawd/redflags-yard · Scope: full product, one screen · Depends-on: nothing (greenfield)
 
 ## Context / why
 
