@@ -79,6 +79,22 @@ export const PROTECTIVE_GUARDS: RegExp[] = [
   /\b(?:additional|extra|special)\s+(?:protections?|safeguards?)\b/i,
 ];
 
+/**
+ * A sentence about a control you operate, or a pointer to where the real
+ * detail lives. "You can opt out", "see our cookie policy", "click Settings":
+ * these describe the escape hatch, not the trap.
+ */
+export const USER_CONTROL_GUARDS: RegExp[] = [
+  /\byou\s+(?:can|may)\s+(?:opt\s*-?\s*out|turn\s+off|disable|manage|control|adjust|change|limit|review|access|download|delete)\b/i,
+  /\bif\s+you\s+turn\s+(?:off|these\s+settings)\b/i,
+  /\b(?:cookie|privacy|ad(?:vertising)?|account)\s+settings\b/i,
+  /\bopt\s*-?\s*out\s+(?:of|from)\b.{0,40}\b(?:by|at|through|using|clicking|visiting)\b/i,
+  /\bsee\s+(?:our|the)\b[^.]{0,60}\b(?:policy|statement|notice|guide|page|centre|center)\b/i,
+  /\bfor\s+more\s+information\b[^.]{0,40}\b(?:see|visit|read|click|refer)\b/i,
+  /\b(?:learn|read)\s+more\s+(?:about|at|in|here)\b/i,
+  /\byou\s+have\s+(?:choices|controls|options)\b/i,
+];
+
 const anyMatch = (guards: RegExp[], s: string) => guards.some((r) => r.test(s));
 
 export const isNegated = (sentence: string) => anyMatch(NEGATION_GUARDS, sentence);
@@ -86,6 +102,7 @@ export const isLegalProcess = (sentence: string) => anyMatch(LEGAL_PROCESS_GUARD
 export const isConsentGated = (sentence: string) => anyMatch(CONSENT_GUARDS, sentence);
 export const isDefinitional = (sentence: string) => anyMatch(DEFINITIONAL_GUARDS, sentence);
 export const isProtective = (sentence: string) => anyMatch(PROTECTIVE_GUARDS, sentence);
+export const isUserControl = (sentence: string) => anyMatch(USER_CONTROL_GUARDS, sentence);
 
 /**
  * True when a sentence must not become a flag: it denies the capability, or
@@ -97,6 +114,7 @@ export function isConditional(sentence: string): boolean {
     isLegalProcess(sentence) ||
     isConsentGated(sentence) ||
     isDefinitional(sentence) ||
-    isProtective(sentence)
+    isProtective(sentence) ||
+    isUserControl(sentence)
   );
 }
