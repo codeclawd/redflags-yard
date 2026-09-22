@@ -1,26 +1,248 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-ink: #07111b;
+  --color-ink-2: #0d1b28;
+  --color-ink-3: #15283a;
+  --color-rope: #2c4257;
+  --color-amber: #ffb000;
+  --color-amber-dim: #b57c00;
+  --color-foam: #5fd3c7;
+  --color-blood: #d6202b;
+  --color-ember: #f26b1d;
+  --color-gold: #e4b848;
+  --color-parchment: #f1e6c8;
+  --color-parchment-2: #e3d3a8;
+  --color-quill: #2a1f12;
+  --color-quill-dim: #6b563a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-pirata), "Times New Roman", serif;
+  --font-terminal: var(--font-vt323), ui-monospace, monospace;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── the sea ───────────────────────────────────────────────────────────── */
+
+html {
+  background-color: var(--color-ink);
+  color-scheme: dark;
+  scrollbar-color: var(--color-rope) var(--color-ink-2);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-ink);
+  color: var(--color-parchment);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sea {
+  position: fixed;
+  inset: -40px 0 0 -40px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("/dither.svg");
+  background-repeat: repeat;
+  animation: drift 60s linear infinite;
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(40px, 0, 0);
+  }
+}
+
+/* ── browser surfaces ──────────────────────────────────────────────────── */
+
+::selection {
+  background-color: var(--color-amber);
+  color: var(--color-ink);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--color-ink-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-rope);
+  border: 2px solid var(--color-ink-2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-amber-dim);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+input,
+textarea,
+button {
+  caret-color: var(--color-amber);
+  font: inherit;
+}
+
+::placeholder {
+  color: var(--color-amber-dim);
+  opacity: 1;
+}
+
+/* ── panels ────────────────────────────────────────────────────────────── */
+
+.panel {
+  position: relative;
+  background-color: var(--color-ink-2);
+  border: 1px solid var(--color-rope);
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 2px auto auto 2px;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid var(--color-amber);
+  border-left: 2px solid var(--color-amber);
+  pointer-events: none;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: auto 2px 2px auto;
+  width: 9px;
+  height: 9px;
+  border-bottom: 2px solid var(--color-amber);
+  border-right: 2px solid var(--color-amber);
+  pointer-events: none;
+}
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.06;
+  border: 0;
+  width: auto;
+  height: auto;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #ffffff 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* ── parchment ─────────────────────────────────────────────────────────── */
+
+.parchment {
+  background-color: var(--color-parchment);
+  color: var(--color-quill);
+  border: 1px solid var(--color-parchment-2);
+  border-radius: 3px;
+  box-shadow:
+    0 2px 0 var(--color-parchment-2),
+    0 10px 24px -12px rgba(0, 0, 0, 0.6);
+}
+
+/* ── the hold ──────────────────────────────────────────────────────────── */
+
+mark.hoisted {
+  background-color: color-mix(in srgb, var(--mark) 26%, transparent);
+  border-bottom: 2px solid var(--mark);
+  color: var(--color-parchment);
+  padding: 1px 0;
+  scroll-margin: 96px;
+}
+
+mark.hoisted[data-active="true"] {
+  background-color: color-mix(in srgb, var(--mark) 55%, transparent);
+  outline: 1px solid var(--mark);
+}
+
+.decoded {
+  text-decoration: underline dotted var(--color-gold);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  color: var(--color-parchment);
+}
+
+/* ── set dressing ──────────────────────────────────────────────────────── */
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.marquee > span {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee:hover > span {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.barricade {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--color-amber) 0 10px,
+    var(--color-ink-3) 10px 20px
+  );
+  animation: barricade 700ms linear infinite;
+}
+
+@keyframes barricade {
+  to {
+    background-position: 28.28px 0;
+  }
+}
+
+.snap-row {
+  scroll-snap-type: x mandatory;
+}
+
+.snap-row > * {
+  scroll-snap-align: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sea,
+  .marquee > span,
+  .barricade {
+    animation: none;
+  }
+
+  .scanlines::after {
+    display: none;
+  }
 }
