@@ -1,0 +1,114 @@
+import { describe, expect, it } from "vitest";
+import { LEXICON, runLexicon } from "@/lib/lexicon";
+import { SEVERITY_BY_CATEGORY } from "@/lib/rules";
+import { splitSentences } from "@/lib/text";
+
+const decode = (source: string) => runLexicon(source, splitSentences(source));
+
+describe("the lexicon table", () => {
+  it("has at least 50 entries — it is the headline feature", () => {
+    expect(LEXICON.length).toBeGreaterThanOrEqual(50);
+  });
+
+  it("every entry matches its own display phrase", () => {
+    for (const entry of LEXICON) {
+      const re = new RegExp(entry.phrase.source, entry.phrase.flags.replace("g", ""));
+      expect(re.test(entry.display), `${entry.display} does not match its own regex`).toBe(true);
+    }
+  });
+
+  it("every regex is case-insensitive and global", () => {
+    for (const entry of LEXICON) {
+      expect(entry.phrase.flags, entry.display).toContain("i");
+      expect(entry.phrase.flags, entry.display).toContain("g");
+    }
+  });
+
+  it("every meaning is at most 120 characters", () => {
+    for (const entry of LEXICON) {
+      expect(entry.meaning.length, `${entry.display}: ${entry.meaning.length}`).toBeLessThanOrEqual(120);
+    }
+  });
+
+  it("no meaning accuses the company of doing something", () => {
+    // Principle: describe what the wording PERMITS, never what they do.
+    const accusations = [/\bthey sell you\b/i, /\bthey are selling\b/i, /\bthey will sell\b/i, /\bscam\b/i, /\bsteal/i];
+    for (const entry of LEXICON) {
+      for (const bad of accusations) {
+        expect(bad.test(entry.meaning), `${entry.display}: ${entry.meaning}`).toBe(false);
+      }
+    }
+  });
+
+  it("uses only real category ids with a plausible severity", () => {
+    for (const entry of LEXICON) {
+      expect(Object.keys(SEVERITY_BY_CATEGORY)).toContain(entry.category);
+      expect(["critical", "high", "medium", "low"]).toContain(entry.severity);
+    }
+  });
+
+  it("has no duplicate display phrases", () => {
+    expect(new Set(LEXICON.map((e) => e.display)).size).toBe(LEXICON.length);
+  });
+});
+
+describe("runLexicon", () => {
+  it("decodes 'trusted partners'", () => {
+    const { decoder } = decode(
+      "We may share your personal information with trusted partners so that we can improve your experience across the Services.",
+    );
+    const hit = decoder.find((d) => d.phrase === "trusted partners");
+    expect(hit).toBeDefined();
+    expect(hit!.count).toBe(1);
+    expect(hit!.meaning).toMatch(/never name|companies/i);
+  });
+
+  it("F3 — 'trusted partners to improve your experience' yields at least 2 decoder entries", () => {
+    const { decoder, flags } = decode(
+      "We may share your data with trusted partners to improve your experience on the Services.",
+    );
+    const phrases = decoder.map((d) => d.phrase);
+    expect(phrases).toContain("trusted partners");
+    expect(phrases).toContain("improve your experience");
+    expect(decoder.length).toBeGreaterThanOrEqual(2);
+    expect(flags.length).toBeGreaterThan(0);
+  });
+
+  it("records every occurrence with correct offsets", () => {
+    const source =
+      "We share data with affiliates. Later in this document we mention affiliates again for completeness of the record.";
+    const hit = decode(source).decoder.find((d) => d.phrase === "affiliates");
+    expect(hit!.count).toBe(2);
+    for (const [start, end] of hit!.positions) {
+      expect(source.slice(start, end).toLowerCase()).toBe("affiliates");
+    }
+  });
+
+  it("does not raise a flag inside a firewalled sentence", () => {
+    const { flags, decoder } = decode(
+      "We do not share your personal information with trusted partners under any circumstances whatsoever.",
+    );
+    expect(decoder.some((d) => d.phrase === "trusted partners")).toBe(true);
+    expect(flags).toHaveLength(0);
+  });
+
+  it("produces flags whose quote is a verbatim slice of the source", () => {
+    const source =
+      "We may share your precise location with advertising identifiers and analytics partners for interest-based advertising purposes.";
+    for (const f of decode(source).flags) {
+      expect(source.slice(f.start, f.end)).toBe(f.quote);
+      expect(f.source).toBe("lexicon");
+      expect(f.decoded).toBeDefined();
+    }
+  });
+
+  it("ranks the decoder by severity then count", () => {
+    const { decoder } = decode(
+      "We share with trusted partners and affiliates. We may use cookies and similar technologies from time to time.",
+    );
+    const order = { critical: 0, high: 1, medium: 2, low: 3 } as const;
+    for (let i = 1; i < decoder.length; i++) {
+      expect(order[decoder[i - 1].severity]).toBeLessThanOrEqual(order[decoder[i].severity]);
+    }
+  });
+});
