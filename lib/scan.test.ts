@@ -172,3 +172,16 @@ describe("merge and rank", () => {
     expect(ranked.map((f) => f.severity)).toEqual(["critical", "high", "medium"]);
   });
 });
+
+describe("rankFlags interleaves categories", () => {
+  it("puts the first flag of each category before any repeats within a tier", async () => {
+    const { rankFlags } = await import("@/lib/scan");
+    const mk = (category: "biometric_sensitive" | "ai_training", start: number) => ({
+      id: `${category}:${start}`, category, severity: "critical" as const, score: 0.8,
+      headline: "h", plainEnglish: "p", quote: "q", start, end: start + 1,
+      specificity: "specific" as const, source: "rule" as const,
+    });
+    const out = rankFlags([mk("biometric_sensitive", 0), mk("biometric_sensitive", 5), mk("ai_training", 9)]);
+    expect(out.map((f) => f.id)).toEqual(["biometric_sensitive:0", "ai_training:9", "biometric_sensitive:5"]);
+  });
+});

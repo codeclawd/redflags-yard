@@ -26,10 +26,26 @@ export class ScanFailure extends Error {
 
 const SEVERITY_ORDER: Record<Severity, number> = { critical: 0, high: 1, medium: 2, low: 3 };
 
+/**
+ * Severity first; then, within a tier, the first flag of every category before
+ * any category's repeats — a reader sees each distinct habit once at the top
+ * instead of the same headline three times. Ties: score desc, position asc.
+ */
 export function rankFlags(flags: Flag[]): Flag[] {
-  return [...flags].sort(
+  const byPosition = [...flags].sort(
+    (a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity] || b.score - a.score || a.start - b.start,
+  );
+  const seen = new Map<string, number>();
+  const occurrence = new Map<string, number>();
+  for (const f of byPosition) {
+    const n = seen.get(f.category) ?? 0;
+    occurrence.set(f.id, n);
+    seen.set(f.category, n + 1);
+  }
+  return byPosition.sort(
     (a, b) =>
       SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity] ||
+      occurrence.get(a.id)! - occurrence.get(b.id)! ||
       b.score - a.score ||
       a.start - b.start,
   );

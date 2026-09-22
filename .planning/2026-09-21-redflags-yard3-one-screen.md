@@ -98,7 +98,7 @@ export interface ScanMeta {
 }
 
 export interface ScanResult {
-  flags: Flag[];            // ranked: severity desc, then score desc, then start asc
+  flags: Flag[];            // ranked: severity desc, then 1st-of-category before repeats (rev. 2026-09-21), then score desc, then start asc
   decoder: DecodedPhrase[]; // ranked by severity desc, count desc
   score: ScanScore;
   meta: ScanMeta;
