@@ -44,6 +44,10 @@ const TROUBLE: Record<ScanErrorCode, Trouble> = {
     message: "Too many boardings from this address.",
     recovery: "Wait a minute and press Board again.",
   },
+  SCAN_FAILED: {
+    message: "The boarding party broke apart mid-search.",
+    recovery: "Press Board again. If it keeps happening, paste the text instead.",
+  },
 };
 
 export default function Page() {
