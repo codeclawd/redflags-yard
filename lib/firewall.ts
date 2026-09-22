@@ -61,12 +61,31 @@ export const DEFINITIONAL_GUARDS: RegExp[] = [
   /\bto\s+(?:learn|find\s+out)\s+more\b/i,
 ];
 
+/**
+ * The company limiting itself, or cleaning up after itself. An age gate, a
+ * promise to delete what it should not have collected, a default that is off,
+ * a parental-controls section: these are the opposite of the harm the rule is
+ * hunting for, and flagging them reads as not having understood the sentence.
+ */
+export const PROTECTIVE_GUARDS: RegExp[] = [
+  /\b(?:are|is)\s+not\s+(?:permitted|allowed|eligible)\s+to\b/i,
+  /\bmay\s+not\s+(?:use|register|create\s+an\s+account)\b/i,
+  /\bif\s+(?:we|you)\s+(?:learn|become\s+aware|discover|find\s+out)\b/i,
+  /\b(?:take\s+reasonable\s+steps\s+to|promptly|immediately)\s+(?:delete|remove)\b/i,
+  /\bwe(?:'ll|\s+will)\s+(?:promptly\s+)?(?:delete|remove|terminate)\b/i,
+  /\bparent\s+or\s+guardian\b/i,
+  /\bturned\s+off\s+by\s+default\b/i,
+  /\bwe\s+(?:may\s+)?(?:also\s+)?limit\s+(?:how|what|the\s+(?:information|data))\b/i,
+  /\b(?:additional|extra|special)\s+(?:protections?|safeguards?)\b/i,
+];
+
 const anyMatch = (guards: RegExp[], s: string) => guards.some((r) => r.test(s));
 
 export const isNegated = (sentence: string) => anyMatch(NEGATION_GUARDS, sentence);
 export const isLegalProcess = (sentence: string) => anyMatch(LEGAL_PROCESS_GUARDS, sentence);
 export const isConsentGated = (sentence: string) => anyMatch(CONSENT_GUARDS, sentence);
 export const isDefinitional = (sentence: string) => anyMatch(DEFINITIONAL_GUARDS, sentence);
+export const isProtective = (sentence: string) => anyMatch(PROTECTIVE_GUARDS, sentence);
 
 /**
  * True when a sentence must not become a flag: it denies the capability, or
@@ -77,6 +96,7 @@ export function isConditional(sentence: string): boolean {
     isNegated(sentence) ||
     isLegalProcess(sentence) ||
     isConsentGated(sentence) ||
-    isDefinitional(sentence)
+    isDefinitional(sentence) ||
+    isProtective(sentence)
   );
 }
