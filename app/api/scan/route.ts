@@ -10,6 +10,11 @@ export const maxDuration = 10;
 export const dynamic = "force-dynamic";
 
 const LLM_TIMEOUT_MS = 6_500;
+// maxDuration is 10s. A URL fetch can burn 8s on its own, so the LLM gets only
+// what is left of a 9s budget, minus 500ms to serialise and answer.
+const BUDGET_MS = 9_000;
+const RESPONSE_RESERVE_MS = 500;
+const MIN_LLM_MS = 1_500;
 const RATE_LIMIT = 20;
 const RATE_WINDOW_MS = 60_000;
 
@@ -36,7 +41,7 @@ function takeToken(ip: string, now = Date.now()): boolean {
     bucket.tokens = Math.min(RATE_LIMIT, bucket.tokens + (elapsed / RATE_WINDOW_MS) * RATE_LIMIT);
     bucket.refilledAt = now;
   }
-  if (buckets.size > 5000) buckets.clear();
+  if (buckets.size > 5000) evictOldest(buckets);
   if (bucket.tokens < 1) {
     buckets.set(ip, bucket);
     return false;
@@ -46,9 +51,27 @@ function takeToken(ip: string, now = Date.now()): boolean {
   return true;
 }
 
-function clientIp(request: Request): string {
+/** Drop the oldest 20% (Map iterates in insertion order) rather than wiping
+ *  every bucket, which would hand a full quota back to an attacker on demand. */
+function evictOldest(map: Map<string, unknown>): void {
+  const drop = Math.max(1, Math.floor(map.size * 0.2));
+  let n = 0;
+  for (const key of map.keys()) {
+    if (n++ >= drop) break;
+    map.delete(key);
+  }
+}
+
+/**
+ * The LAST x-forwarded-for entry is the one the platform's own proxy appended;
+ * everything before it is attacker-controlled text. Exported for test.
+ */
+export function clientIp(request: Request): string {
   const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
+  if (forwarded) {
+    const parts = forwarded.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
@@ -60,6 +83,7 @@ const STATUS: Record<ScanErrorCode, number> = {
   CONTENT_TOO_LARGE: 413,
   FETCH_FAILED: 502,
   RATE_LIMITED: 429,
+  SCAN_FAILED: 500,
 };
 
 const NO_STORE = { "content-type": "application/json", "cache-control": "no-store" };
@@ -92,6 +116,7 @@ async function loadPolicy(policyId: string): Promise<PolicyFile> {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  const started = Date.now();
   if (!takeToken(clientIp(request))) {
     return fail({
       error: `Too many scans — ${RATE_LIMIT} a minute is the limit. Try again shortly.`,
@@ -125,11 +150,20 @@ export async function POST(request: Request): Promise<Response> {
     }
     if (url) {
       const fetched = await fetchPolicyText(url);
-      return ok(await scan(fetched.text, { llmTimeoutMs: LLM_TIMEOUT_MS }));
+      const llmTimeoutMs = Math.max(
+        0,
+        Math.min(LLM_TIMEOUT_MS, BUDGET_MS - (Date.now() - started) - RESPONSE_RESERVE_MS),
+      );
+      if (llmTimeoutMs < MIN_LLM_MS) {
+        const result = await scan(fetched.text, { llm: false });
+        return ok({ ...result, meta: { ...result.meta, llm: "skipped:timeout" } });
+      }
+      return ok(await scan(fetched.text, { llmTimeoutMs }));
     }
     return ok(await scan(text ?? "", { llmTimeoutMs: LLM_TIMEOUT_MS }));
   } catch (err) {
     if (err instanceof ScanFailure || err instanceof FetchFailure) return fail(err.payload);
-    return fail({ error: "The scan failed unexpectedly.", code: "INVALID_INPUT", retryable: true });
+    console.error("[scan] unexpected failure", err);
+    return fail({ error: "The scan failed unexpectedly.", code: "SCAN_FAILED", retryable: true });
   }
 }

@@ -2,8 +2,11 @@ import { describe, expect, it } from "vitest";
 import {
   FetchFailure,
   assertPublicUrl,
+  fetchPolicyText,
   isPrivateIpv4,
   isPrivateIpv6,
+  pinnedLookup,
+  type FetchFactory,
   type Resolver,
 } from "@/lib/fetch-policy";
 
@@ -88,10 +91,11 @@ describe("assertPublicUrl — F6", () => {
     expect(await codeOf(() => assertPublicUrl("https://nope.example/", failing))).toBe("FETCH_FAILED");
   });
 
-  it("allows a normal public https URL", async () => {
-    const url = await assertPublicUrl("https://www.example.com/privacy", publicResolver);
+  it("allows a normal public https URL, and reports the validated addresses", async () => {
+    const { url, addresses } = await assertPublicUrl("https://www.example.com/privacy", publicResolver);
     expect(url.hostname).toBe("www.example.com");
     expect(url.protocol).toBe("https:");
+    expect(addresses).toEqual([{ address: "93.184.216.34", family: 4 }]);
   });
 
   it("blocks when any one of several resolved addresses is private", async () => {
@@ -105,5 +109,68 @@ describe("assertPublicUrl — F6", () => {
   it("blocks a host that resolves to nothing", async () => {
     const empty: Resolver = async () => [];
     expect(await codeOf(() => assertPublicUrl("https://void.example/", empty))).toBe("BLOCKED_URL");
+  });
+});
+
+describe("DNS-rebinding pin — the connection uses the address that was validated", () => {
+  const page = (body: string) =>
+    new Response(body, { status: 200, headers: { "content-type": "text/html" } });
+  const policyHtml = `<html><body><article><p>${"We may share your personal information with our trusted partners. ".repeat(12)}</p></article></body></html>`;
+
+  it("hands the first validated address to the fetch factory, not the hostname", async () => {
+    const pins: Array<{ address: string; family: number }> = [];
+    const factory: FetchFactory = (pin) => {
+      pins.push(pin);
+      return (async () => page(policyHtml)) as unknown as typeof fetch;
+    };
+    const out = await fetchPolicyText("https://policy.example/privacy", {
+      resolve: fakeResolver("93.184.216.34"),
+      fetchFactory: factory,
+    });
+    expect(pins).toEqual([{ address: "93.184.216.34", family: 4 }]);
+    expect(out.finalUrl).toBe("https://policy.example/privacy");
+  });
+
+  it("re-validates AND re-pins on every redirect hop", async () => {
+    const pins: Array<{ address: string; family: number }> = [];
+    let hop = 0;
+    const resolve: Resolver = async (hostname) =>
+      hostname === "policy.example"
+        ? [{ address: "93.184.216.34", family: 4 }]
+        : [{ address: "151.101.1.69", family: 4 }];
+    const factory: FetchFactory = (pin) => {
+      pins.push(pin);
+      return (async () =>
+        hop++ === 0
+          ? new Response(null, { status: 302, headers: { location: "https://second.example/p" } })
+          : page(policyHtml)) as unknown as typeof fetch;
+    };
+    await fetchPolicyText("https://policy.example/privacy", { resolve, fetchFactory: factory });
+    expect(pins).toEqual([
+      { address: "93.184.216.34", family: 4 },
+      { address: "151.101.1.69", family: 4 },
+    ]);
+  });
+
+  it("refuses a redirect to a rebound private address", async () => {
+    const resolve: Resolver = async (hostname) =>
+      hostname === "policy.example"
+        ? [{ address: "93.184.216.34", family: 4 }]
+        : [{ address: "169.254.169.254", family: 4 }];
+    const factory: FetchFactory = () =>
+      (async () =>
+        new Response(null, { status: 302, headers: { location: "http://metadata.example/latest" } })) as unknown as typeof fetch;
+    expect(
+      await codeOf(() => fetchPolicyText("https://policy.example/privacy", { resolve, fetchFactory: factory })),
+    ).toBe("BLOCKED_URL");
+  });
+
+  it("pinnedLookup can only answer with the validated address", () => {
+    const seen: unknown[] = [];
+    pinnedLookup({ address: "93.184.216.34", family: 4 })("policy.example", {}, (err, addresses) => {
+      seen.push(err, addresses);
+    });
+    expect(seen[0]).toBeNull();
+    expect(seen[1]).toEqual([{ address: "93.184.216.34", family: 4 }]);
   });
 });

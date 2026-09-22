@@ -3,6 +3,7 @@
 // the private ranges BEFORE a socket is opened, and again on every redirect.
 
 import { lookup } from "node:dns/promises";
+import { Agent, fetch as undiciFetch } from "undici";
 import { Readability } from "@mozilla/readability";
 import { JSDOM } from "jsdom";
 import type { ScanError } from "@/lib/types";
@@ -61,8 +62,14 @@ export function isPrivateIpv6(ip: string): boolean {
 export const isPrivateAddress = (ip: string, family: number): boolean =>
   family === 6 ? isPrivateIpv6(ip) : isPrivateIpv4(ip);
 
+export interface ValidatedUrl {
+  url: URL;
+  /** Every address that passed the private-range check, in resolver order. */
+  addresses: Array<{ address: string; family: number }>;
+}
+
 /** Throws `FetchFailure(BLOCKED_URL)` unless the URL is safe to open. */
-export async function assertPublicUrl(raw: string, resolve: Resolver = realResolver): Promise<URL> {
+export async function assertPublicUrl(raw: string, resolve: Resolver = realResolver): Promise<ValidatedUrl> {
   let url: URL;
   try {
     url = new URL(raw);
@@ -79,11 +86,13 @@ export async function assertPublicUrl(raw: string, resolve: Resolver = realResol
   }
 
   // A bare IP literal never reaches the resolver, so check it directly too.
-  if (/^\d+\.\d+\.\d+\.\d+$/.test(host) && isPrivateIpv4(host)) {
-    throw blocked("That address is on a private network, so it will not be fetched.");
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(host)) {
+    if (isPrivateIpv4(host)) throw blocked("That address is on a private network, so it will not be fetched.");
+    return { url, addresses: [{ address: host, family: 4 }] };
   }
-  if (host.includes(":") && isPrivateIpv6(host)) {
-    throw blocked("That address is on a private network, so it will not be fetched.");
+  if (host.includes(":")) {
+    if (isPrivateIpv6(host)) throw blocked("That address is on a private network, so it will not be fetched.");
+    return { url, addresses: [{ address: host, family: 6 }] };
   }
 
   let addresses: Array<{ address: string; family: number }>;
@@ -98,8 +107,35 @@ export async function assertPublicUrl(raw: string, resolve: Resolver = realResol
       throw blocked(`${host} resolves to a private address, so it will not be fetched.`);
     }
   }
-  return url;
+  return { url, addresses };
 }
+
+/**
+ * The TOCTOU close-out. `assertPublicUrl` validates the addresses a hostname
+ * resolves to; without pinning, the socket would resolve the name a SECOND time
+ * and a DNS-rebinding server can answer 127.0.0.1 on that second lookup. So the
+ * connection is opened against the address we already validated: undici's
+ * `connect.lookup` is forced to hand back exactly that one address.
+ */
+export type FetchFactory = (pin: { address: string; family: number }) => typeof fetch;
+
+type LookupFn = (
+  hostname: string,
+  options: unknown,
+  callback: (err: NodeJS.ErrnoException | null, addresses: Array<{ address: string; family: number }>) => void,
+) => void;
+
+/** A DNS lookup that can only ever answer with the already-validated address. */
+export const pinnedLookup =
+  (pin: { address: string; family: number }): LookupFn =>
+  (_hostname, _options, callback) =>
+    callback(null, [{ address: pin.address, family: pin.family }]);
+
+export const pinnedFetchFactory: FetchFactory = (pin) => {
+  const dispatcher = new Agent({ connect: { lookup: pinnedLookup(pin) } });
+  return ((input: RequestInfo | URL, init?: RequestInit) =>
+    undiciFetch(String(input), { ...init, dispatcher } as never)) as unknown as typeof fetch;
+};
 
 export interface FetchedPolicy {
   text: string;
@@ -109,15 +145,17 @@ export interface FetchedPolicy {
 
 export async function fetchPolicyText(
   raw: string,
-  deps: { resolve?: Resolver; fetchImpl?: typeof fetch } = {},
+  deps: { resolve?: Resolver; fetchFactory?: FetchFactory } = {},
 ): Promise<FetchedPolicy> {
-  const doFetch = deps.fetchImpl ?? fetch;
-  let url = await assertPublicUrl(raw, deps.resolve);
+  const makeFetch = deps.fetchFactory ?? pinnedFetchFactory;
+  let { url, addresses } = await assertPublicUrl(raw, deps.resolve);
   const signal = AbortSignal.timeout(FETCH_TIMEOUT_MS);
 
   let response: Response | null = null;
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
     let res: Response;
+    // One resolve, one validate, one pinned connect — per hop.
+    const doFetch = makeFetch(addresses[0]);
     try {
       res = await doFetch(url.toString(), {
         redirect: "manual",
@@ -140,7 +178,7 @@ export async function fetchPolicyText(
         throw new FetchFailure({ error: "That URL redirects too many times.", code: "FETCH_FAILED", retryable: false });
       }
       // Re-validate every hop: a redirect to 169.254.169.254 is the classic bypass.
-      url = await assertPublicUrl(new URL(location, url).toString(), deps.resolve);
+      ({ url, addresses } = await assertPublicUrl(new URL(location, url).toString(), deps.resolve));
       continue;
     }
     response = res;

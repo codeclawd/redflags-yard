@@ -106,7 +106,8 @@ export interface ScanResult {
 
 export type ScanErrorCode =
   | "INVALID_INPUT" | "FETCH_FAILED" | "BLOCKED_URL" | "NOT_HTML"
-  | "EMPTY_CONTENT" | "CONTENT_TOO_LARGE" | "RATE_LIMITED";
+  | "EMPTY_CONTENT" | "CONTENT_TOO_LARGE" | "RATE_LIMITED"
+  | "SCAN_FAILED";        // added 2026-09-21 per review — 500 for unexpected exceptions
 
 export interface ScanError { error: string; code: ScanErrorCode; retryable: boolean }
 ```

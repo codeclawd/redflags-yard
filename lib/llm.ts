@@ -76,7 +76,11 @@ export function chunkSentences(sentences: Sentence[]): Sentence[][] {
       size = current.reduce((n, x) => n + x.text.length, 0);
     }
   }
-  if (current.length > OVERLAP_SENTENCES) chunks.push(current);
+  // Always emit the trailing chunk. Dropping it when it was only the overlap
+  // lost the ENTIRE text of a short policy, which then read as "no chunks".
+  if (current.length > 0 && (chunks.length === 0 || current.length > OVERLAP_SENTENCES)) {
+    chunks.push(current);
+  }
   return chunks.slice(0, MAX_CHUNKS);
 }
 
@@ -135,7 +139,9 @@ export function groundFindings(source: string, findings: unknown[], existing: Fl
     seen.add(key);
 
     flags.push({
-      id: `${category}:${at.start}`,
+      // `:llm` suffix: a rule flag on the same sentence owns `${category}:${start}`,
+      // and two flags sharing an id collide as React keys.
+      id: `${category}:${at.start}:llm`,
       category,
       severity: SEVERITY_BY_CATEGORY[category],
       score: 0.5,
@@ -167,7 +173,7 @@ export async function runLlm(
   if (!generate) return { flags: [], status: "skipped:no-key" };
 
   const chunks = chunkSentences(sentences);
-  if (chunks.length === 0) return { flags: [], status: "skipped:no-key" };
+  if (chunks.length === 0) return { flags: [], status: "skipped:error" };
 
   const signal = AbortSignal.timeout(opts.timeoutMs);
   let failure: ScanMeta["llm"] | null = null;

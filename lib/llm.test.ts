@@ -47,6 +47,7 @@ describe("groundFindings", () => {
     expect(flags).toHaveLength(1);
     expect(flags[0].category).toBe("no_deletion");
     expect(flags[0].source).toBe("llm");
+    expect(flags[0].id).toBe(`no_deletion:${flags[0].start}:llm`);
     expect(SOURCE.slice(flags[0].start, flags[0].end)).toBe(flags[0].quote);
   });
 
@@ -102,6 +103,18 @@ describe("plumbing", () => {
     expect(chunks.length).toBeGreaterThan(1);
     expect(chunks.length).toBeLessThanOrEqual(6);
     for (const c of chunks) expect(c.length).toBeGreaterThan(0);
+  });
+
+  it("keeps the trailing chunk for a short policy — 2 sentences over 300 chars is 1 chunk", () => {
+    const one = "We may share your personal information with our affiliates, our corporate family and our trusted partners for advertising and analytics purposes across the services you use.";
+    const two = "We retain that personal information indefinitely, and copies of it remain in our backups and archives even after you ask us to delete your account entirely.";
+    const short = `${one} ${two}`;
+    expect(short.length).toBeGreaterThan(300);
+    const sentences = splitSentences(short);
+    expect(sentences).toHaveLength(2);
+    const chunks = chunkSentences(sentences);
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]).toHaveLength(2);
   });
 
   it("accepts a well-formed response and rejects extra keys", () => {
