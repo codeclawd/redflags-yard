@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Gitignored scratch probes are not shipped code and must not break the gate.
+    ".scratch/**",
   ]),
 ]);
 
