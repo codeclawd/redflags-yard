@@ -95,6 +95,27 @@ export const USER_CONTROL_GUARDS: RegExp[] = [
   /\byou\s+have\s+(?:choices|controls|options)\b/i,
 ];
 
+/**
+ * A glossary entry or a hypothetical, not a practice. Policies define their
+ * terms ("An affiliate is an entity that...", "Sensitive personal information
+ * is a category of...") and float futures they have not adopted ("if we were
+ * to change that, we would tell you"). Both quote the scary noun without
+ * asserting the company does the thing.
+ */
+export const GLOSSARY_GUARDS: RegExp[] = [
+  /\b(?:an?|the)\s+[a-z][\w\s-]{0,24}\s+is\s+(?:an?|the)\s+(?:entity|category|term|company|business|process|feature|technology)\b/i,
+  /\bthis\s+is\s+(?:a|an)\s+(?:particular\s+)?(?:category|type|kind|class)\s+of\b/i,
+  /\bconsists?\s+of\s+(?:different\s+)?(?:subsidiaries|entities|companies)\b/i,
+  /\bkey\s+terms?\b/i,
+  /\bis\s+defined\s+(?:as|in|under)\b/i,
+  /\bfor\s+example,?\s+(?:a|an|the)\b[^.]{0,30}\bis\b/i,
+  /\bif\s+we\s+were\s+to\b/i,
+  /\bwe\s+would\s+(?:disclose|tell|notify|inform|let\s+you)\b/i,
+  /\bit(?:'s|\s+is)\s+your\s+choice\b/i,
+  /\bdepending\s+on\s+(?:these|your)\s+settings\b/i,
+  /\byou\s+can\s+change\s+your\s+(?:permissions|settings|preferences)\b/i,
+];
+
 const anyMatch = (guards: RegExp[], s: string) => guards.some((r) => r.test(s));
 
 export const isNegated = (sentence: string) => anyMatch(NEGATION_GUARDS, sentence);
@@ -103,6 +124,7 @@ export const isConsentGated = (sentence: string) => anyMatch(CONSENT_GUARDS, sen
 export const isDefinitional = (sentence: string) => anyMatch(DEFINITIONAL_GUARDS, sentence);
 export const isProtective = (sentence: string) => anyMatch(PROTECTIVE_GUARDS, sentence);
 export const isUserControl = (sentence: string) => anyMatch(USER_CONTROL_GUARDS, sentence);
+export const isGlossary = (sentence: string) => anyMatch(GLOSSARY_GUARDS, sentence);
 
 /**
  * True when a sentence must not become a flag: it denies the capability, or
@@ -115,6 +137,7 @@ export function isConditional(sentence: string): boolean {
     isConsentGated(sentence) ||
     isDefinitional(sentence) ||
     isProtective(sentence) ||
-    isUserControl(sentence)
+    isUserControl(sentence) ||
+    isGlossary(sentence)
   );
 }
