@@ -3,10 +3,21 @@
 // Measures the deterministic detector (llm:false) against eval/gold.json, a corpus
 // labeled independently of detector output.
 //
-//   metric = (2 * falsePositives + falseNegatives) / items * 100      (lower is better)
+//   metric = 100 * (1 - F0.5)                                        (lower is better)
 //
-// False positives count double: the product's stated bias is toward false negatives,
-// and one junk flag discredits every real flag beside it.
+// F0.5 weights precision above recall, because the product's stated bias is toward
+// false negatives and one junk flag discredits every real flag beside it.
+//
+// CORRECTED 2026-09-22, mid-run. The original metric was
+//   (2 * falsePositives + falseNegatives) / items * 100
+// which is degenerate: a detector that flags NOTHING scores (0 + 51)/240*100 = 21.25,
+// beating any real detector measured so far. The loop could have "won" by silencing
+// the product. F0.5 has its optimum at a detector that is both precise and complete
+// (null detector -> F=0 -> metric 100, the worst possible score), while still paying
+// roughly twice as much attention to precision as to recall. Every round scored under
+// the old metric was re-derived under this one and the ranking was unchanged through
+// round 5; only the lexicon-silencing round flipped from win to loss, which is exactly
+// the failure this correction exists to catch.
 //
 // correct:false (a CRASH, not a loss) when either invariant breaks:
 //   1. every gold offset still resolves against its policy text, and
@@ -71,10 +82,14 @@ test("score", async () => {
   }
 
   const n = gold.items.length;
-  const metric = ((2 * fp + fn) / n) * 100;
+
   const precision = tp + fp === 0 ? 0 : tp / (tp + fp);
   const recall = tp + fn === 0 ? 0 : tp / (tp + fn);
   const f1 = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+  const beta2 = 0.25; // F0.5 — precision weighted ~2x recall
+  const fBeta =
+    precision + recall === 0 ? 0 : ((1 + beta2) * precision * recall) / (beta2 * precision + recall);
+  const metric = 100 * (1 - fBeta);
   const correct = offsetsOk && quotesOk;
 
   writeFileSync(
