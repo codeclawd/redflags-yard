@@ -4,8 +4,6 @@
 
 import { lookup } from "node:dns/promises";
 import { Agent, fetch as undiciFetch } from "undici";
-import { Readability } from "@mozilla/readability";
-import { JSDOM } from "jsdom";
 import type { ScanError } from "@/lib/types";
 
 export const FETCH_TIMEOUT_MS = 8_000;
@@ -213,6 +211,10 @@ export async function fetchPolicyText(
   const buffer = await readCapped(response);
   const html = new TextDecoder("utf-8").decode(buffer);
 
+  // Loaded lazily and left external to the bundler (next.config
+  // serverExternalPackages): jsdom's dependency chain trips ERR_REQUIRE_ESM
+  // when bundled, and only the URL path needs a DOM at all.
+  const [{ JSDOM }, { Readability }] = await Promise.all([import("jsdom"), import("@mozilla/readability")]);
   const dom = new JSDOM(html, { url: url.toString() });
   const article = new Readability(dom.window.document).parse();
   const text = (article?.textContent ?? dom.window.document.body?.textContent ?? "").trim();
