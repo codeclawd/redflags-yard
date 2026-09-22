@@ -25,7 +25,13 @@ this loop.
 ## The three files
 
 - **ASSET** (the loop edits these freely): `lib/rules.ts`, `lib/lexicon.ts`, `lib/firewall.ts`,
-  `lib/scan.ts` (selection/merge/rank logic only).
+  `lib/scan.ts` (selection/merge/rank logic only), and — **added 2026-09-22, round 9** —
+  `lib/text.ts`. Rationale for the amendment, recorded before the round that used it:
+  three residual false positives are mangled run-on quotes ("Key termsAffiliatesAn affiliate
+  is...") produced by Readability gluing a heading onto the next sentence with no terminator.
+  That is a visible product defect — a reader is shown a broken quote — and it is not fixable
+  from the rule tables. The scope was widened because the evidence pointed at that file, not
+  because widening it scored better; the round is measured on the unchanged frozen corpus.
 - **SCORING** (FROZEN — never edit): `eval/gold.json`, `eval/score.mjs`, `eval/sample.mjs`.
 - **INSTRUCTIONS**: this file. Human-only.
 

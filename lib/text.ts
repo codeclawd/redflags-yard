@@ -133,6 +133,26 @@ function pushTrimmed(out: Sentence[], source: string, rawStart: number, rawEnd: 
  * `source` is expected to already be `normalize`d (it is idempotent, so
  * passing raw text works too, offsets are identical either way).
  */
+/**
+ * Readability drops heading markup, gluing a heading onto the sentence that
+ * follows it with no terminator: "Key termsAffiliatesAn affiliate is an entity".
+ * Quoting that back at a reader looks broken, so a lowercase->uppercase seam is
+ * treated as a boundary when the run since the last break is short enough to be
+ * a heading. Brand casing (TikTok, LinkedIn, YouTube, PayPal, iPhone) is spared.
+ */
+const HEADING_MAX = 60;
+const CAMEL_BRAND = /(?:Tik|Linked|You|Pay|Snap|Word|Java|Type|Face|Power|Share|Whats|My|Drop)$/;
+
+function isHeadingSeam(text: string, i: number, segStart: number): boolean {
+  if (!/[a-z]/.test(text[i]) || !/[A-Z]/.test(text[i + 1] ?? "")) return false;
+  if (i + 1 - segStart > HEADING_MAX) return false;
+  let w = i;
+  while (w > segStart && /[A-Za-z]/.test(text[w - 1])) w--;
+  const word = text.slice(w, i + 1);
+  if (word.length < 3 || CAMEL_BRAND.test(word)) return false;
+  return /[a-z]{2}/.test(word);
+}
+
 export function splitSentences(source: string): Sentence[] {
   const text = normalize(source);
   const out: Sentence[] = [];
@@ -141,6 +161,11 @@ export function splitSentences(source: string): Sentence[] {
     const ch = text[i];
     if (ch === "\n") {
       pushTrimmed(out, source, start, i);
+      start = i + 1;
+      continue;
+    }
+    if (isHeadingSeam(text, i, start)) {
+      pushTrimmed(out, source, start, i + 1);
       start = i + 1;
       continue;
     }
