@@ -12,3 +12,4 @@ d0d37fb	45.5696	43	8	keep	recall patterns (retention/off-service/in-app browser/
 d4b1d5c	41.9525	38	7	keep	heading-seam splitting (also fixes mangled quotes shown to readers)
 (reverted)	41.6910	33	11	discard	cap repeated verdicts in engine — 0.26 gain for 8pt recall loss; cosmetic fix belongs in UI
 01ddfd1	41.3333	37	7	keep	subject-agnostic negation over harm verbs (reviewer-found Mozilla FP)
+0fa0437	40.7008	36	7	keep	plural legal guard + passive consent + non-precise lookbehind + legal reason does not excuse retention
