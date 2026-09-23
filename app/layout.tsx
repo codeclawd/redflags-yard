@@ -24,13 +24,13 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Red Flags — board a privacy policy",
+  title: "Red Flags — see what a privacy policy lets them take",
   description:
-    "Boards a privacy policy and hoists a flag on every clause that takes from you, quoting the document verbatim.",
+    "Paste any privacy policy and see what it lets the company take, quoted word for word.",
   openGraph: {
-    title: "Red Flags — board a privacy policy",
+    title: "Red Flags — see what a privacy policy lets them take",
     description:
-      "Boards a privacy policy and hoists a flag on every clause that takes from you, quoting the document verbatim.",
+      "Paste any privacy policy and see what it lets the company take, quoted word for word.",
     type: "website",
   },
 };

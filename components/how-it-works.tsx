@@ -12,16 +12,16 @@ const STEPS: Array<[string, string]> = [
     "Eighteen categories of harm, each with its own patterns, run over every sentence. A firewall drops sentences that are negated, conditional, or about legal process, so “we do not sell your data” never reads as selling.",
   ],
   [
-    "Decoder ring",
+    "Weasel words",
     "A lexicon of phrases that sound harmless — affiliates, as long as necessary, similar technologies — is matched separately and translated into what it permits, not what the company does.",
   ],
   [
-    "Parley",
+    "AI check",
     "When a model is available it reads the same text for what the rules missed. Every quote it returns must be found verbatim in the source or it is dropped. When it is rate-limited the deterministic result stands on its own.",
   ],
   [
-    "Plunder",
-    "Each category counts once at full weight; repeats add a fifth each, up to double. The total becomes a score out of 100, a grade and a rank.",
+    "Score",
+    "Each category counts once at full weight; repeats add a fifth each, up to double. The total becomes a risk score out of 100 (higher is worse for you) and a letter grade.",
   ],
 ];
 
@@ -30,7 +30,7 @@ export function HowItWorks({ onClose }: { onClose: () => void }) {
     <Overlay title="How it works" onClose={onClose}>
       <p className="mb-4 max-w-[68ch] text-[14px] text-amber-dim">
         Red Flags never paraphrases a policy. Every flag carries the sentence it came from and the
-        offset it sits at, so you can check it in the hold.
+        offset it sits at, so you can check it in the policy text.
       </p>
       <ol className="divide-y divide-rope">
         {STEPS.map(([name, body]) => (

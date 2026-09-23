@@ -1,17 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { Plus, Minus } from "lucide-react";
 import type { Flag } from "@/lib/types";
 import { CATEGORY_ICON, CATEGORY_LABEL, SEVERITY_COLOR, SEVERITY_LABEL } from "./severity";
-import { JollyRouge } from "./jolly-rouge";
-
 
 /**
  * Display-only: a verdict repeated verbatim reads as a broken list rather than a
  * stronger finding. The engine keeps every grounded flag — "Copy the report" and
- * the hold highlighting still use all of them — but the list shows at most three
- * of any one headline.
+ * the policy-text highlighting still use all of them — but the list shows at most
+ * three of any one headline.
  */
 const MAX_PER_HEADLINE = 3;
 
@@ -24,115 +21,121 @@ function capRepeats<T extends { headline: string }>(flags: T[]): T[] {
   });
 }
 
+const CONTEXT = 220;
+
+/** The words either side of a quote, cut back to a word boundary. */
+function surrounding(text: string, start: number, end: number) {
+  const beforeRaw = text.slice(Math.max(0, start - CONTEXT), start);
+  const afterRaw = text.slice(end, end + CONTEXT);
+  const before = start > CONTEXT ? beforeRaw.replace(/^\S*\s/, "") : beforeRaw;
+  const after = end + CONTEXT < text.length ? afterRaw.replace(/\s\S*$/, "") : afterRaw;
+  return {
+    before: (start > CONTEXT ? "…" : "") + before,
+    after: after + (end + CONTEXT < text.length ? "…" : ""),
+  };
+}
+
 export function FlagList({
   flags,
   openId,
-  still,
+  text,
   onToggle,
 }: {
   flags: Flag[];
   openId: string | null;
-  still: boolean;
+  /** The policy text, when the page has it (a scanned link is read on the server). */
+  text: string;
   onToggle: (flag: Flag) => void;
 }) {
-  const reduced = useReducedMotion();
-  const instant = still || reduced === true;
-  const list = useRef<HTMLUListElement>(null);
-
-  useEffect(() => {
-    if (!openId) return;
-    const row = list.current?.querySelector<HTMLElement>(`[data-flag-row="${CSS.escape(openId)}"]`);
-    row?.scrollIntoView({ block: "nearest", behavior: reduced ? "auto" : "smooth" });
-  }, [openId, reduced]);
-
   if (flags.length === 0) {
     return (
-      <p className="py-6 text-[14px] text-foam">
-        No flags hoisted. Nothing in this policy tripped the rulebook — read the hold yourself
-        before you trust that.
+      <p className="max-w-[62ch] py-4 text-[15px] text-foam">
+        Nothing in this policy tripped the rulebook. The rulebook can miss things — read the
+        policy yourself before you trust that.
       </p>
     );
   }
 
   return (
-    <ul ref={list} className="divide-y divide-rope">
-      {capRepeats(flags).map((flag, index) => {
+    <ul className="divide-y divide-rope border-y border-rope">
+      {capRepeats(flags).map((flag) => {
         const Icon = CATEGORY_ICON[flag.category];
         const open = openId === flag.id;
         const color = SEVERITY_COLOR[flag.severity];
+        const inText = text.length > 0 && text.slice(flag.start, flag.end) === flag.quote;
+        const context = inText ? surrounding(text, flag.start, flag.end) : null;
 
         return (
-          <motion.li
-            key={flag.id}
-            data-flag-row={flag.id}
-            initial={instant ? false : { y: 12, clipPath: "inset(0 0 100% 0)" }}
-            animate={{ y: 0, clipPath: "inset(0 0 0% 0)" }}
-            transition={{
-              duration: 0.34,
-              ease: [0.16, 1, 0.3, 1],
-              delay: instant ? 0 : index * 0.06,
-            }}
-          >
-            <h4>
+          <li key={flag.id} data-flag-row={flag.id}>
+            <h3>
               <button
                 type="button"
                 aria-expanded={open}
                 onClick={() => onToggle(flag)}
-                className="flex w-full items-start gap-3 py-3 text-left hover:bg-ink-3/50"
+                className={`flex w-full items-start gap-3 px-2 py-3.5 text-left transition-colors ${
+                  open ? "bg-ink-2" : "hover:bg-ink-2"
+                }`}
               >
                 <span
                   aria-hidden
                   className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-[3px] border"
                   style={{ borderColor: color, color }}
                 >
-                  {flag.severity === "critical" ? (
-                    <JollyRouge className="h-4 w-auto" />
-                  ) : (
-                    <Icon className="size-4" strokeWidth={1.75} />
-                  )}
+                  <Icon className="size-4" strokeWidth={1.75} />
                 </span>
 
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[15px] leading-snug text-parchment text-balance">
+                  <span className="block text-[16px] leading-snug text-balance text-parchment">
                     {flag.headline}
                   </span>
-                  <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] leading-none">
+                  <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] leading-none">
                     <span style={{ color }}>{SEVERITY_LABEL[flag.severity]}</span>
-                    <span className="text-rope">·</span>
+                    <span aria-hidden className="text-rope">·</span>
                     <span className="text-amber-dim">{CATEGORY_LABEL[flag.category]}</span>
                     {flag.source === "llm" ? (
                       <>
-                        <span className="text-rope">·</span>
-                        <span className="text-foam">parley</span>
+                        <span aria-hidden className="text-rope">·</span>
+                        <span className="text-foam">found by the AI check</span>
                       </>
                     ) : null}
                   </span>
                 </span>
 
-                <span className="mt-1 shrink-0 font-terminal text-[18px] leading-none text-amber">
-                  {open ? "[−]" : "[+]"}
+                <span className="mt-1.5 flex shrink-0 items-center gap-1 text-[13px] text-amber">
+                  {open ? (
+                    <Minus aria-hidden className="size-3.5" strokeWidth={2} />
+                  ) : (
+                    <Plus aria-hidden className="size-3.5" strokeWidth={2} />
+                  )}
+                  <span className="sr-only sm:not-sr-only">{open ? "Hide" : "Show the sentence"}</span>
                 </span>
               </button>
-            </h4>
+            </h3>
 
             {open ? (
-              <div className="pb-4 pl-10">
-                <p className="mb-3 max-w-[68ch] text-[14px] text-amber-dim">{flag.plainEnglish}</p>
-                <blockquote className="parchment max-w-[68ch] px-3.5 py-3">
-                  <p className="text-[15px] leading-[1.6] text-quill">“{flag.quote}”</p>
-                  <footer className="mt-2 text-[13px] text-quill-dim">
-                    Verbatim, characters {flag.start.toLocaleString("en-US")}–
-                    {flag.end.toLocaleString("en-US")} of the policy.
-                  </footer>
-                </blockquote>
+              <div className="px-2 pt-1 pb-5 sm:pl-13">
+                <p className="mb-3 max-w-[64ch] text-[15px] leading-[1.55] text-parchment">
+                  {flag.plainEnglish}
+                </p>
+                <figure className="parchment max-w-[68ch] px-4 py-3.5">
+                  <blockquote className="text-[15px] leading-[1.65] text-quill">
+                    {context ? <span className="text-quill-dim">{context.before}</span> : "“"}
+                    <mark className="receipt">{flag.quote}</mark>
+                    {context ? <span className="text-quill-dim">{context.after}</span> : "”"}
+                  </blockquote>
+                  <figcaption className="mt-2.5 border-t border-parchment-2 pt-2 text-[13px] text-quill-dim">
+                    Word for word from the policy, characters{" "}
+                    {flag.start.toLocaleString("en-US")}–{flag.end.toLocaleString("en-US")}.
+                  </figcaption>
+                </figure>
                 {flag.decoded ? (
-                  <p className="mt-3 max-w-[68ch] text-[13px] text-amber-dim">
+                  <p className="mt-3 max-w-[64ch] text-[14px] text-amber-dim">
                     <span className="decoded">{flag.decoded.phrase}</span> — {flag.decoded.meaning}
                   </p>
                 ) : null}
               </div>
             ) : null}
-          </motion.li>
+          </li>
         );
       })}
     </ul>

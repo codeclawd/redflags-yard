@@ -1,56 +1,81 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { Flag, ScanError, ScanErrorCode, ScanResult } from "@/lib/types";
-import { Deck } from "@/components/deck";
-import { DecoderRing } from "@/components/decoder-ring";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowDown, Share2 } from "lucide-react";
+import type { Flag, ScanError, ScanErrorCode, ScanMeta, ScanResult } from "@/lib/types";
+import { CheckYourOwn, type Status } from "@/components/check-your-own";
+import { FlagList } from "@/components/flag-list";
 import { FleetMatrix } from "@/components/fleet-matrix";
-import { Harbor } from "@/components/harbor";
-import { Hold } from "@/components/hold";
 import { HowItWorks } from "@/components/how-it-works";
+import { PolicyText } from "@/components/policy-text";
+import { Poster } from "@/components/poster";
+import { pickSource, type Field, type ScanSource } from "@/components/scan-source";
 import { ShareReport } from "@/components/share-report";
-import { StatusBar } from "@/components/status-bar";
+import { WeaselWords } from "@/components/weasel-words";
 import { mockScan } from "@/components/mock-scan";
 import type { FleetMatrix as FleetMatrixData, FleetPolicy } from "@/components/types";
 import matrixJson from "@/public/baked/matrix.json";
 import bakedJson from "@/public/baked/tiktok.json";
 
-// The first frame is a finished boarding. These two files are committed output
-// of the real engine over the real stored policy (`pnpm bake`, rules only, no
-// parley), imported rather than fetched so the result is painted, not awaited.
-// Pressing Board — here or on a ledger row — runs the live scan and replaces it.
+// The first frame is a finished scan. These two files are committed output of
+// the real engine over the real stored policy (`pnpm bake`, rules only),
+// imported rather than fetched so the poster is painted, not awaited. Any scan
+// the visitor starts replaces it.
 const MATRIX = matrixJson as unknown as FleetMatrixData;
 const BAKED = bakedJson as unknown as ScanResult;
 const BAKED_ID = "tiktok";
-const BAKED_SHIP = MATRIX.ships.find((ship) => ship.id === BAKED_ID) ?? MATRIX.ships[0];
-// The cached boarding is history, so it reports as one status line rather than
-// replaying five. A live boarding still types the whole log.
-const BAKED_LOG = [
-  `Boarded ${BAKED_SHIP.name} — ${BAKED.meta.sourceChars.toLocaleString("en-US")} chars searched, no parley, ${BAKED.flags.length} flags hoisted.`,
-];
+const BAKED_APP = MATRIX.ships.find((ship) => ship.id === BAKED_ID) ?? MATRIX.ships[0];
 
-type Phase = "scanning" | "results" | "error";
+const AI_OFF: Record<Exclude<ScanMeta["llm"], "ran">, string> = {
+  "skipped:no-key": "AI check off",
+  "skipped:test": "AI check off",
+  "skipped:timeout": "AI check timed out",
+  "skipped:rate-limit": "AI check busy, try later",
+  "skipped:error": "AI check failed",
+};
+
+function aiLine(llm: ScanMeta["llm"]) {
+  return llm === "ran" ? "rules + AI check" : `rules only, ${AI_OFF[llm]}`;
+}
+
+function formatDay(iso: string) {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function hostOf(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
 type Trouble = { message: string; recovery: string };
 
 const TROUBLE: Record<ScanErrorCode, Trouble> = {
   INVALID_INPUT: {
-    message: "Nothing to board.",
-    recovery: "Pick a ship from the fleet ledger, paste a policy, or hail a URL.",
+    message: "Nothing to scan.",
+    recovery: "Paste a policy, paste a link to one, or pick an app below.",
   },
   FETCH_FAILED: {
-    message: "The ship is bot-walled.",
-    recovery: "Paste the text, or pick a ship from the fleet ledger.",
+    message: "That site would not let us read the page.",
+    recovery: "Open the policy yourself, copy the text and paste it here.",
   },
   BLOCKED_URL: {
     message: "That address is on a private network.",
-    recovery: "Only public http and https addresses can be hailed.",
+    recovery: "Only public http and https links can be scanned.",
   },
   NOT_HTML: {
-    message: "That address is not a web page.",
-    recovery: "Open it yourself, copy the policy, and paste it here.",
+    message: "That link is not a web page.",
+    recovery: "Open it yourself, copy the policy and paste it here.",
   },
   EMPTY_CONTENT: {
-    message: "Too little text to search.",
+    message: "Too little text to check.",
     recovery: "A policy needs at least 200 characters. Paste the whole document.",
   },
   CONTENT_TOO_LARGE: {
@@ -58,45 +83,59 @@ const TROUBLE: Record<ScanErrorCode, Trouble> = {
     recovery: "Paste the privacy policy alone, not the whole terms library.",
   },
   RATE_LIMITED: {
-    message: "Too many boardings from this address.",
-    recovery: "Wait a minute and press Board again.",
+    message: "Too many scans from this address.",
+    recovery: "Wait a minute and try again.",
   },
   SCAN_FAILED: {
     message: "The scan failed partway through.",
-    recovery: "Press Board again. If it keeps happening, paste the text instead.",
+    recovery: "Try again. If it keeps happening, paste the text instead.",
   },
 };
 
+/** What is on the poster and below it. Replaced whole, so the parts never disagree. */
+type Shown = {
+  result: ScanResult;
+  name: string;
+  text: string;
+  appId: string | null;
+  /** The bake date while this is the committed cached scan; null once a live scan replaces it. */
+  cached: string | null;
+  /** Bumped on every live scan so the poster remounts and assembles again. */
+  key: number;
+};
+
+type Target = { kind: "app"; id: string } | ScanSource;
+
 export default function Page() {
-  const [selectedId, setSelectedId] = useState<string | null>(BAKED_ID);
+  const [shown, setShown] = useState<Shown>({
+    result: BAKED,
+    name: BAKED_APP.name,
+    text: "",
+    appId: BAKED_ID,
+    cached: MATRIX.bakedAt,
+    key: 0,
+  });
   const [pasted, setPasted] = useState("");
   const [url, setUrl] = useState("");
-
-  const [phase, setPhase] = useState<Phase>("results");
-  const [log, setLog] = useState<string[]>(BAKED_LOG);
-  const [result, setResult] = useState<ScanResult | null>(BAKED);
-  const [cached, setCached] = useState<string | null>(MATRIX.bakedAt);
-  const [trouble, setTrouble] = useState<Trouble | null>(null);
-  const [shipName, setShipName] = useState(BAKED_SHIP.name);
-  const [sourceText, setSourceText] = useState("");
-  const [holdNote, setHoldNote] = useState<string | null>(null);
+  const [lastEdited, setLastEdited] = useState<Field | null>(null);
+  const [status, setStatus] = useState<Status>({ kind: "idle", line: "" });
 
   const [openFlagId, setOpenFlagId] = useState<string | null>(null);
   const [activePhrase, setActivePhrase] = useState<string | null>(null);
-  const [holdOpen, setHoldOpen] = useState(false);
   const [overlay, setOverlay] = useState<"none" | "how" | "share">("none");
-  const [scanCount, setScanCount] = useState(0);
 
-  // The cached result is complete without it, so the policy text the hold shows
-  // is the one thing that arrives after first paint. A boarding that starts
-  // first owns `sourceText`, and this drops its late answer on the floor.
-  const boarded = useRef(false);
+  const posterRef = useRef<HTMLDivElement>(null);
+  const evidenceRef = useRef<HTMLElement>(null);
+
+  // The cached poster is complete without it; the policy text for the evidence
+  // is the one thing that arrives after first paint. A scan that lands first
+  // owns the text, and this late answer is dropped.
   useEffect(() => {
     let live = true;
     fetch(`/policies/${BAKED_ID}.json`)
       .then((response) => response.json() as Promise<FleetPolicy>)
       .then((policy) => {
-        if (live && !boarded.current) setSourceText(policy.text);
+        if (live) setShown((now) => (now.key === 0 ? { ...now, text: policy.text } : now));
       })
       .catch(() => {});
     return () => {
@@ -104,215 +143,243 @@ export default function Page() {
     };
   }, []);
 
-  const board = useCallback(
-    async (overrideId?: string) => {
-      const id = overrideId ?? selectedId;
-      const ship = MATRIX.ships.find((entry) => entry.id === id) ?? null;
-      const usingPaste = !ship && pasted.trim().length > 0;
-      const name = ship ? ship.name : usingPaste ? "the pasted policy" : url.trim();
-      if (!ship && !usingPaste && url.trim().length === 0) return;
+  const source = pickSource(pasted, url, lastEdited);
 
-      boarded.current = true;
-      setPhase("scanning");
-      setResult(null);
-      setCached(null);
-      setTrouble(null);
-      setOpenFlagId(null);
-      setActivePhrase(null);
-      setShipName(name);
-      setSourceText("");
-      setHoldNote(null);
-      setLog([`Hailing ${name}…`]);
+  const scan = useCallback(async (target: Target) => {
+    const app = target.kind === "app" ? MATRIX.ships.find((s) => s.id === target.id) : undefined;
+    if (target.kind === "app" && !app) return;
+    const name = app
+      ? app.name
+      : target.kind === "paste"
+        ? "the pasted policy"
+        : hostOf(target.kind === "url" ? target.url : "");
 
+    setStatus({ kind: "scanning", name });
+
+    try {
       let text = "";
-      try {
-        if (ship) {
-          const policy = (await fetch(`/policies/${ship.id}.json`).then((r) =>
-            r.json(),
-          )) as FleetPolicy;
-          text = policy.text;
-        } else if (usingPaste) {
-          text = pasted;
-        }
-        if (text.length > 0) {
-          setSourceText(text);
-          setLog((lines) => [
-            ...lines,
-            `Reading the manifest… ${text.length.toLocaleString("en-US")} chars`,
-            "Searching the hold…",
-          ]);
-        } else {
-          setHoldNote(
-            "A hailed URL is read on the server, so the full text is not shown below. Every flag still carries its quote.",
-          );
-          setLog((lines) => [...lines, "Reading the manifest…", "Searching the hold…"]);
-        }
-
-        let scan: ScanResult;
-        const mock = new URLSearchParams(window.location.search).get("mock") === "1";
-        if (mock && text.length > 0) {
-          await new Promise((resolve) => setTimeout(resolve, 900));
-          scan = mockScan(text, ship?.id ?? "pasted");
-        } else {
-          const body = ship
-            ? { policyId: ship.id }
-            : usingPaste
-              ? { text: pasted }
-              : { url: url.trim() };
-          const response = await fetch("/api/scan", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(body),
-          });
-          const payload = (await response.json()) as ScanResult | ScanError;
-          if (!response.ok || "error" in payload) {
-            const code = "code" in payload ? payload.code : "FETCH_FAILED";
-            setTrouble(TROUBLE[code] ?? TROUBLE.FETCH_FAILED);
-            setLog((lines) => [...lines, "Boarding failed."]);
-            setPhase("error");
-            return;
-          }
-          scan = payload;
-        }
-
-        setLog((lines) => [
-          ...lines,
-          scan.meta.llm === "ran"
-            ? "Parley — asked the model for what the rules missed… done"
-            : "No parley — rules only",
-          `${scan.flags.length} flag${scan.flags.length === 1 ? "" : "s"} hoisted.`,
-        ]);
-        setResult(scan);
-        setScanCount((count) => count + 1);
-        setPhase("results");
-      } catch {
-        setTrouble({
-          message: "The scan never came back.",
-          recovery: "Check your connection and press Board again, or paste the text instead.",
-        });
-        setLog((lines) => [...lines, "Boarding failed."]);
-        setPhase("error");
+      if (app) {
+        const policy = (await fetch(`/policies/${app.id}.json`).then((r) => r.json())) as FleetPolicy;
+        text = policy.text;
+      } else if (target.kind === "paste") {
+        text = target.text;
       }
-    },
-    [selectedId, pasted, url],
-  );
 
-  const boardShip = useCallback(
-    (id: string) => {
-      setSelectedId(id);
-      setPasted("");
-      setUrl("");
-      void board(id);
-    },
-    [board],
-  );
+      let result: ScanResult;
+      const mock = new URLSearchParams(window.location.search).get("mock") === "1";
+      if (mock && text.length > 0) {
+        await new Promise((resolve) => setTimeout(resolve, 900));
+        result = mockScan(text, app?.id ?? "pasted");
+      } else {
+        const body = app
+          ? { policyId: app.id }
+          : target.kind === "paste"
+            ? { text: target.text }
+            : { url: target.kind === "url" ? target.url : "" };
+        const response = await fetch("/api/scan", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        const payload = (await response.json()) as ScanResult | ScanError;
+        if (!response.ok || "error" in payload) {
+          const code = "code" in payload ? payload.code : "FETCH_FAILED";
+          setStatus({ kind: "error", ...(TROUBLE[code] ?? TROUBLE.FETCH_FAILED) });
+          return;
+        }
+        result = payload;
+      }
 
-  const toggleFlag = useCallback(
-    (flag: Flag) => {
-      setActivePhrase(null);
-      setOpenFlagId((current) => {
-        const next = current === flag.id ? null : flag.id;
-        if (next && sourceText.length > 0) setHoldOpen(true);
-        return next;
-      });
-    },
-    [sourceText],
-  );
-
-  const selectPhrase = useCallback(
-    (phrase: string) => {
       setOpenFlagId(null);
-      setActivePhrase((current) => {
-        const next = current === phrase ? null : phrase;
-        if (next && sourceText.length > 0) setHoldOpen(true);
-        return next;
+      setActivePhrase(null);
+      setShown((now) => ({
+        result,
+        name,
+        text,
+        appId: app?.id ?? null,
+        cached: null,
+        key: now.key + 1,
+      }));
+      setStatus({
+        kind: "idle",
+        line: `Scanned ${name}: ${result.flags.length} charge${result.flags.length === 1 ? "" : "s"}, ${aiLine(result.meta.llm)}.`,
       });
-    },
-    [sourceText],
-  );
 
-  const ticker = useMemo(() => {
-    if (!result) {
-      return [
-        "Red Flags reads a privacy policy and quotes the parts that take from you.",
-        "Every flag carries the sentence it came from, verbatim.",
-        "Eight policies already scanned in the fleet ledger.",
-      ];
+      // On a phone the poster sits above the controls; bring the new one into view.
+      const poster = posterRef.current;
+      if (poster && poster.getBoundingClientRect().top < 0) {
+        poster.scrollIntoView({ block: "start", behavior: "smooth" });
+      }
+    } catch {
+      setStatus({
+        kind: "error",
+        message: "The scan never came back.",
+        recovery: "Check your connection and try again, or paste the text instead.",
+      });
     }
-    return [
-      `${shipName} — plunder ${result.score.value}/100, ${result.score.rank}`,
-      ...result.flags.slice(0, 3).map((flag) => flag.headline),
-      result.decoder[0]
-        ? `"${result.decoder[0].phrase}" appears ${result.decoder[0].count}×`
-        : "No euphemisms decoded.",
-    ];
-  }, [result, shipName]);
+  }, []);
 
-  const busy = phase === "scanning";
+  const toggleFlag = useCallback((flag: Flag) => {
+    setActivePhrase(null);
+    setOpenFlagId((current) => (current === flag.id ? null : flag.id));
+  }, []);
+
+  const selectPhrase = useCallback((phrase: string) => {
+    setOpenFlagId(null);
+    setActivePhrase((current) => (current === phrase ? null : phrase));
+  }, []);
+
+  const { result, name, text, cached } = shown;
+  const busy = status.kind === "scanning";
+  const provenance = cached
+    ? `Cached real scan · ${formatDay(cached)} · rules only, AI check off`
+    : `Live scan · ${aiLine(result.meta.llm)}`;
 
   return (
     <>
       <div className="sea" aria-hidden />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col gap-2 p-3 lg:h-dvh lg:overflow-hidden">
-        <StatusBar ticker={ticker} scanCount={scanCount} />
+      <div className="relative z-10 mx-auto flex w-full max-w-[1240px] flex-col px-4 sm:px-6">
+        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3.5">
+          <p className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <span className="font-display text-[30px] leading-none tracking-[-0.01em] text-parchment">
+              Red Flags
+            </span>
+            <span className="text-[15px] text-parchment/80">
+              Paste any privacy policy. See what it lets them take.
+            </span>
+          </p>
+          <button
+            type="button"
+            onClick={() => setOverlay("how")}
+            className="text-[14px] text-foam underline decoration-dotted underline-offset-[3px] hover:text-amber"
+          >
+            How it works
+          </button>
+        </header>
 
-        <div className="grid min-h-0 flex-1 grid-cols-1 gap-2 lg:grid-cols-[280px_minmax(0,1fr)_300px] lg:grid-rows-[minmax(0,1fr)_auto]">
-          <Harbor
-            selected={MATRIX.ships.find((ship) => ship.id === selectedId) ?? null}
-            pasted={pasted}
-            url={url}
-            busy={busy}
-            onPaste={(value) => {
-              setPasted(value);
-              if (value.length > 0) setSelectedId(null);
-            }}
-            onUrl={(value) => {
-              setUrl(value);
-              if (value.length > 0) setSelectedId(null);
-            }}
-            onBoard={() => void board()}
-          />
+        <main className="flex flex-col gap-16 pb-10 lg:gap-20">
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 lg:grid-cols-[minmax(0,600px)_minmax(340px,420px)] lg:justify-center lg:gap-12">
+            <div ref={posterRef} className="flex scroll-mt-4 flex-col gap-3">
+              <div
+                aria-busy={busy}
+                className={`transition-[opacity,filter] duration-300 ${busy ? "opacity-45 saturate-50" : ""}`}
+              >
+                <Poster key={shown.key} result={result} name={name} still={cached !== null} />
+              </div>
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5 px-1">
+                <p className="text-[13px] text-amber-dim">{provenance}</p>
+                <button
+                  type="button"
+                  onClick={() => evidenceRef.current?.scrollIntoView({ behavior: "smooth" })}
+                  className="flex items-center gap-1.5 text-[14px] text-foam underline decoration-dotted underline-offset-[3px] hover:text-amber"
+                >
+                  {result.flags.length > 0
+                    ? `See all ${result.flags.length} charges, word for word`
+                    : "Read the policy"}
+                  <ArrowDown aria-hidden className="size-3.5" strokeWidth={2} />
+                </button>
+              </div>
+            </div>
 
-          <Deck
-            phase={phase}
-            log={log}
-            result={result}
-            cached={cached}
-            error={trouble}
-            openFlagId={openFlagId}
-            onToggleFlag={toggleFlag}
-            onShare={() => setOverlay("share")}
-          />
+            <CheckYourOwn
+              apps={MATRIX.ships}
+              activeId={shown.appId}
+              pasted={pasted}
+              url={url}
+              source={source}
+              status={status}
+              onPaste={(value) => {
+                setPasted(value);
+                setLastEdited("paste");
+              }}
+              onUrl={(value) => {
+                setUrl(value);
+                setLastEdited("url");
+              }}
+              onScan={() => {
+                if (source) void scan(source);
+              }}
+              onPick={(id) => void scan({ kind: "app", id })}
+            />
+          </div>
 
-          <DecoderRing
-            decoder={result?.decoder ?? []}
-            activePhrase={activePhrase}
-            onSelect={selectPhrase}
-          />
+          <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-x-10 lg:gap-y-20">
+            <div className="order-1 flex flex-col gap-16 lg:order-none">
+              <section
+                ref={evidenceRef}
+                aria-labelledby="evidence-heading"
+                className="flex scroll-mt-4 flex-col gap-3"
+              >
+                <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+                  <div className="flex flex-col gap-1">
+                    <h2
+                      id="evidence-heading"
+                      className="font-display text-[40px] leading-none tracking-[-0.01em] text-parchment"
+                    >
+                      The evidence
+                    </h2>
+                    <p className="max-w-[60ch] text-[15px] text-amber-dim">
+                      {result.flags.length > 0
+                        ? `${result.flags.length} charges against ${name}, worst first. Each one quotes the policy word for word.`
+                        : `No charges against ${name}.`}
+                    </p>
+                  </div>
+                  {result.flags.length > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setOverlay("share")}
+                      className="flex items-center gap-1.5 rounded-[3px] border border-rope px-2.5 py-1.5 text-[13px] text-parchment hover:border-amber"
+                    >
+                      <Share2 aria-hidden className="size-3.5" strokeWidth={1.75} />
+                      Copy the report
+                    </button>
+                  ) : null}
+                </div>
+                <FlagList
+                  flags={result.flags}
+                  openId={openFlagId}
+                  text={text}
+                  onToggle={toggleFlag}
+                />
+              </section>
 
-          <FleetMatrix matrix={MATRIX} activeId={selectedId} busy={busy} onBoard={boardShip} />
-        </div>
+              <WeaselWords
+                decoder={result.decoder}
+                activePhrase={activePhrase}
+                onSelect={selectPhrase}
+              />
+            </div>
 
-        <Hold
-          text={sourceText}
-          flags={result?.flags ?? []}
-          decoder={result?.decoder ?? []}
-          open={holdOpen}
-          activeFlagId={openFlagId}
-          activePhrase={activePhrase}
-          note={holdNote}
-          onToggle={() => setHoldOpen((open) => !open)}
-        />
+            <aside className="order-3 lg:sticky lg:top-4 lg:order-none">
+              <PolicyText
+                text={text}
+                name={name}
+                flags={result.flags}
+                decoder={result.decoder}
+                activeFlagId={openFlagId}
+                activePhrase={activePhrase}
+              />
+            </aside>
 
-        <footer className="panel flex flex-wrap items-center gap-x-4 gap-y-1 px-3 py-1.5 font-terminal text-[18px] leading-none">
+            <div className="order-2 lg:order-none lg:col-span-2">
+              <FleetMatrix
+                matrix={MATRIX}
+                activeId={shown.appId}
+                busy={busy}
+                onBoard={(id) => void scan({ kind: "app", id })}
+              />
+            </div>
+          </div>
+        </main>
+
+        <footer className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-rope py-4 text-[13px]">
           <a
             href="https://github.com/codeclawd/redflags-yard"
             className="text-foam underline decoration-dotted underline-offset-[3px] hover:text-amber"
           >
             Source
           </a>
-          <span className="text-rope">·</span>
           <button
             type="button"
             onClick={() => setOverlay("how")}
@@ -320,15 +387,14 @@ export default function Page() {
           >
             How it works
           </button>
-          <span className="text-rope">·</span>
           <span className="text-amber-dim">Hackyard Yard #3 — built Sep 21–25 2026</span>
-          <span className="ml-auto text-amber-dim">Best viewed at 1024×768 or better</span>
+          <span className="ml-auto text-amber-dim">Not legal advice.</span>
         </footer>
       </div>
 
       {overlay === "how" ? <HowItWorks onClose={() => setOverlay("none")} /> : null}
-      {overlay === "share" && result ? (
-        <ShareReport result={result} shipName={shipName} onClose={() => setOverlay("none")} />
+      {overlay === "share" ? (
+        <ShareReport result={result} shipName={name} onClose={() => setOverlay("none")} />
       ) : null}
     </>
   );

@@ -1,10 +1,14 @@
-# Design — "Jolly Rouge BBS"
+# Design — "Jolly Rouge BBS": the WANTED poster
 
 <!-- impeccable:design-schema 1 -->
 
-The scanner is a privateer's terminal from a 1997 dial-up BBS. You pick a ship (a company's privacy policy), hail it, board it, search the hold, and hoist a red flag on every clause that would rob the passenger. The historical red pirate flag — the *Jolie Rouge* — meant "no quarter"; that is the joke and the product in one image. The page is a single console. On a laptop it is one composed screen with internal scrolling regions; on a phone the same regions stack and the page scrolls.
+The company is the pirate. The first viewport is a WANTED poster for it: one aged-parchment sheet pinned to a dark sea, wanted **for taking** the things its privacy policy lets it take. That inversion is the joke a stranger gets without a legend. Everything else on the page is plain English. The historical red pirate flag — the *Jolie Rouge*, "no quarter" — survives as the one skull-and-keys mark on the poster.
 
-Mode: **Operate** (the visitor completes a task: pick, scan, read). Personality lives in the copy, the readouts and one boarding animation, never in the way of reading a quote.
+Mode: **Operate** (the visitor completes a task: pick or paste, scan, read the receipts). Personality lives in the poster and one assembly animation, never in a control label or in the way of reading a quote.
+
+## Vocabulary rule (binding)
+
+A pirate word may appear only where the joke carries its own meaning without a legend: **WANTED**, the poster itself, the rank as a small flavour subtitle beside a letter grade ("rank: Ghost ship"), and the skull mark. Every control, heading, status line, empty state and error is plain English. The words Harbor, Hail, Board, anchor, boardings, Deck, parley, hoisted, "the hold", plunder, Fleet ledger and pennant do not appear in user-visible text (code identifiers such as `FleetMatrix` or `hold-ranges` keep their old names). The LLM pass is called the **AI check**; the decoder ring is called **Weasel words**; a finding is a **charge**; the score is a **risk score** out of 100, higher is worse for you, with a letter grade.
 
 ## Palette (tokens — `app/globals.css` `@theme`)
 
@@ -20,62 +24,67 @@ Mode: **Operate** (the visitor completes a task: pick, scan, read). Personality 
 | `--color-blood` | `#D6202B` | critical flags, the pirate flag |
 | `--color-ember` | `#F26B1D` | high |
 | `--color-gold` | `#E4B848` | medium |
-| `--color-parchment` | `#F1E6C8` | quote cards (the captured document) |
+| `--color-parchment` | `#F1E6C8` | the WANTED poster, receipt cards, body text on ink |
 | `--color-parchment-2` | `#E3D3A8` | parchment edge / hover |
 | `--color-quill` | `#2A1F12` | text on parchment |
 | `--color-quill-dim` | `#6B563A` | secondary on parchment (tinted from quill) |
 
-Contrast checked: amber on ink 10.6:1 · amber-dim on ink 5.1:1 · quill on parchment 12.7:1 · quill-dim on parchment 5.3:1 · foam on ink 9.4:1 · blood on ink 4.6:1 (large text / glyphs only; never body).
+Contrast checked: amber on ink 10.6:1 · amber-dim on ink 5.1:1 · quill on parchment 12.7:1 · quill-dim on parchment 5.3:1 · foam on ink 9.4:1 · blood on ink 4.6:1 (large text / glyphs only; never body) · blood on parchment 4.1:1 (poster display type and the grade stamp only) · amber-dim on ink-3 4.2:1, so inputs sit on `ink` (5.1:1 for the placeholder).
 
 ## Type
 
-- Display: **Pirata One** (`next/font/google`, `--font-display`), only ≥ 28 px: the wordmark, rank label, score numerals' caption.
-- Terminal readouts and the boarding log: **VT323** (`--font-terminal`), ≥ 18 px (VT323 is small at nominal size).
+- Display: **Pirata One** (`next/font/google`, `--font-display`), ≥ 20 px (≥ 28 px on desktop): the wordmark, the poster lettering (WANTED / No bounty, the company name, "for taking", the score numerals and the grade stamp) and section headings (Check your own, The evidence, Weasel words, Compare 8 apps, The policy, word for word).
+- **VT323** (`--font-terminal`), ≥ 18 px, survives only in the overlays (How it works step names, the copy-report confirmation).
 - UI, labels, body, quotes: **IBM Plex Mono** (`--font-mono`), 14–16 px body, tracking 0. Monospace is the world here (a terminal), not a costume — but the parchment quote cards set IBM Plex Mono at 15 px / 1.6 with a 68ch measure so a legal sentence reads like a document.
-- Scale: 13 / 14 / 16 / 18 / 22 / 28 / 40 / 64. Headings balanced (`text-wrap: balance`). Display tracking -0.01em.
+- Poster type is sized in container units of the poster (`cqw`) capped by viewport height (`dvh`), so WANTED, the name, the number and the skull stay legible when the whole frame is downscaled to a 400 px card. Page scale: 13 / 14 / 15 / 16 / 28 / 34 / 40. Headings balanced (`text-wrap: balance`). Display tracking -0.01em.
 
-## Composition (desktop ≥ 1024)
+## Composition
+
+One page, no routes. Scrolling is allowed; overlays are used only for How it works and Copy the report.
 
 ```
-┌ STATUS BAR ─ marquee ticker · UTC clock · "visitors: 000013" · Best viewed 1024×768 ┐
-├──────────────┬────────────────────────────────────────┬────────────────────────────┤
-│ HARBOR       │ DECK                                   │ DECODER RING               │
-│ paste box    │ boarding log (terminal) →              │ phrase → what it permits   │
-│ URL field    │ PLUNDER readout + rank + grade         │ (count) ; hover underlines │
-│ [BOARD]      │ flags: hoisted red flags with          │ in the Hold                │
-│              │ parchment quote cards                  │                            │
-├──────────────┴────────────────────────────────────────┴────────────────────────────┤
-│ FLEET LEDGER — 8 ships x 8 categories, pennant per category, score/grade/rank      │
-├────────────────────────────────────────────────────────────────────────────────────┤
-│ THE HOLD — full policy text, flagged sentences highlighted (collapsed by default)  │
-└────────────────────────────────────────────────────────────────────────────────────┘
+header ─ "Red Flags" wordmark · "Paste any privacy policy. See what it lets them take." · How it works
+┌──────────── first viewport (desktop ≥ 1024) ────────────┐
+│  WANTED POSTER (≤ 600 px)        │  CHECK YOUR OWN panel  │
+│  skull-and-keys mark (once)      │  Paste a privacy policy│
+│  WANTED                          │  …or paste a link to one
+│  <Company>                       │  [Scan the link / Scan │
+│  for taking                      │   the pasted text]     │
+│  3–4 plain-English charges       │  status line           │
+│  84/100  (F) stamp               │  Or try one: 8 chips   │
+│  risk score · rank: Ghost ship   │                        │
+│  provenance · "See all N charges ↓"                       │
+└───────────────────────────────────────────────────────────┘
+THE EVIDENCE (list, in-flow expansion)   │ THE POLICY, WORD FOR WORD
+WEASEL WORDS                              │ (sticky pane, scrolls itself
+                                          │  to the opened charge/phrase)
+COMPARE 8 APPS (full width; a row scans that app)
+footer ─ Source · How it works · Hackyard Yard #3 · Not legal advice
 ```
-Revised 2026-09-22: the first paint is a finished boarding (a cached real scan), never an
-empty state — a reader who is skimming must see the payoff, not the ask. The eight ships
-live in the **fleet ledger** below the three columns rather than as cards in the Harbor,
-which now holds only bring-your-own input; listing them twice starved the Harbor and broke
-its layout.
 
-Grid: `grid-cols-[280px_minmax(0,1fr)_300px]`, gaps 12 px, panels have 1 px `rope` borders with a 2 px inset amber corner tick (drawn with `::before`), 4 px radius. No cards-inside-cards: a flag is a list row; only the quote is a parchment card.
-
-Mobile (< 1024): status bar → harbor → deck → decoder → hold, stacked; fleet becomes a horizontal snap-scroll row.
+- **Poster.** Charges are the most severe distinct categories found (`topCharges`, max 4), in the reader's words ("your face and voice", "your words to train AI", "where you are"). A policy with **no** findings never gets a WANTED poster: it reads **No bounty**, no skull, "Nothing in this policy tripped the rulebook. Read it yourself before you trust that.", and a quill-coloured grade stamp.
+- **Provenance** sits under the poster: "Cached real scan · 22 Sept 2026 · rules only, AI check off" on the committed first paint; "Live scan · rules + AI check" (or why the AI check was off) after a live scan.
+- **Check your own.** The field edited last is the one scanned (`pickSource` in `components/scan-source.ts`); if both fields hold text the idle one dims and says "not used", and the button names its source. A chip scans that app immediately.
+- **The evidence.** Each charge row opens in place and pushes content down — nothing is height-constrained, so opening one never squeezes the input panel. Open, it shows the plain-English meaning, then the receipt: a parchment card with the exact quoted sentence highlighted inside ~220 characters of its surrounding policy text, and the character offsets. On desktop the sticky policy pane beside it scrolls (itself, never the page) to the same sentence.
+- **Mobile (< 1024).** header → poster → Check your own → The evidence → Weasel words → Compare 8 apps (horizontal scroll) → the policy text.
 
 ## Materials & browser surfaces
 
 - Sea: a fixed SVG dither pattern at 4 % opacity on the ink ground, plus a very slow horizontal drift (60 s), off under reduced motion.
-- CRT: 1 px scanlines at 6 % opacity over the Deck only; off under reduced motion.
+- Parchment poster: `--color-parchment` ground, an edge burn (radial gradient), fine grain plus long fibres from two inline SVG `feTurbulence` filters multiplied into the paper, a seeded deckled `clip-path` edge (same outline on server and client), two drawn tacks, and a soft offset `drop-shadow`. No raster images.
+- Grade stamp: a ring and an inner ring in `--color-blood`, multiplied into the paper.
 - Selection: amber ground / ink text. Caret: amber. Scrollbars: 10 px, `rope` thumb on `ink-2`. Focus ring: 2 px amber, 2 px offset. Underline offset 3 px for decoder phrases (dotted gold).
 - Shadows: parchment cards `0 2px 0 var(--color-parchment-2), 0 10px 24px -12px rgba(0,0,0,.6)`.
-- Icons: lucide (`ship`, `ship-wheel`, `skull`, `anchor`, `flag`, `scroll-text`, `telescope`, `swords`, `scan-eye`, `fingerprint`, `eye-off`, `cookie`, `database`, `handshake`, `baby`, `hourglass`, `share-2`, `shield-alert`, `siren`, `globe`, `coins`, `crown`). One authored SVG: the Jolly Rouge flag (red field, white skull-and-crossed-keys) used as the wordmark and as each critical flag's glyph. No emoji anywhere.
+- Icons: lucide, one per charge category (`fingerprint`, `database`, `scan-eye`, `globe`, `coins`, `handshake`, …) coloured by severity, plus `scan-search`, `plus`/`minus`, `arrow-down`, `share-2`. One authored SVG: the Jolly Rouge flag (red field, white skull-and-crossed-keys), used **once**, large, on the poster. The Compare table's "found" mark is a small drawn red flag. No emoji anywhere.
 
-## Motion — one authored moment: the boarding
+## Motion — one authored moment: the poster assembles
 
-On Board: the Deck clears, the terminal log types lines at ~28 ms/char with a blinking block cursor (`Hailing TikTok…`, `Reading the manifest… 27,555 chars`, `Searching the hold…`, `Parley with the quartermaster…` (LLM) / `No parley — rules only` (skipped), `3 flags hoisted.`). Then the PLUNDER numerals count up (exponential ease-out, 900 ms) and land exactly on the value; the rank label drops in with a 4 px overshoot; flags rise one by one (translateY 12 px → 0, clip-path inset bottom 100 % → 0, 60 ms stagger). Everything else is instant. Reduced motion: log appears complete, numerals static, no stagger.
+On a live scan the old poster dims while the scan runs (a striped progress bar under the button). When the result lands the poster remounts and assembles: the skull flag stamps down (scale 1.6 → 1, rotate −14° → −3°), the charges rise and unblur one by one (80 ms stagger), the number counts up with an exponential ease-out over 900 ms and snaps to the exact score on its last frame, and the grade stamp lands last (scale 1.8 → 1, rotate 24° → 8°). Everything else is instant. The cached first paint does **not** animate, and neither does anything under `prefers-reduced-motion`.
 
 ## Copy voice
 
-Terminal-deadpan with pirate nouns, never pirate spelling ("arr" is banned). Controls name actions: **Board**, **Paste a policy**, **Hail a URL**, **Open the hold**, **Copy the report**. Errors name the problem and the recovery: "The ship is bot-walled (403). Paste the text or pick one from the fleet." Score caption: "Plunder — how much of you they are allowed to take." LLM-off notice: "Parley skipped (rate-limited) — these flags are from the rulebook alone."
+Plain, deadpan English. Controls name actions: **Scan the link**, **Scan the pasted text**, **Show the sentence**, **Copy the report**. Errors name the problem and the recovery: "That site would not let us read the page. Open the policy yourself, copy the text and paste it here."
 
-## Retro-internet set dressing (all drawn, all functional)
+## Removed set dressing (2026-09-22)
 
-Marquee ticker (real `overflow` + `translateX` keyframe, paused on hover, off under reduced motion) carrying rotating facts from the results; a visitor counter that is the real session scan count in seven-segment VT323; an "Under boarding" barricade stripe as the scanning progress bar; a "webring" footer strip inside the screen: **Source** (repo) · **How it works** (overlay) · **Hackyard Yard #3 — built Sep 21–25 2026**. No `<blink>`, no GIFs, no fake "you are the 1,000,000th visitor".
+The marquee ticker, the UTC clock and the "boardings" counter are gone: cold reviewers read them as manufactured urgency competing with the score. The skull is no longer a bullet on every critical row. The sea dither drift and the footer strip remain.
