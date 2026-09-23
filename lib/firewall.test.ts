@@ -97,3 +97,13 @@ describe("legal-process and consent guards accept plurals and passive consent", 
   it("consent: 'explicitly permitted by you' is consent-gated", () =>
     expect(isConsentGated("We use precise location data (where available and explicitly permitted by you).")).toBe(true));
 });
+
+// "You may choose whether or not you include sensitive personal information" is the
+// reader's choice, not a collection. It led TikTok's "your face and voice" charge, so the
+// strongest-looking click in the product opened on its weakest sentence.
+describe("a choice the reader makes is not a practice", () => {
+  it("suppresses 'you may choose whether or not you include…'", () =>
+    expect(isConditional("You may choose whether or not you include sensitive personal information in your user content or in other information you voluntarily submit.")).toBe(true));
+  it("still flags 'we may collect biometric identifiers'", () =>
+    expect(isConditional("We may collect biometric identifiers and biometric information as defined under US laws, such as faceprints and voiceprints, from your user content.")).toBe(false));
+});

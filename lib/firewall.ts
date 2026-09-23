@@ -107,6 +107,10 @@ export const PROTECTIVE_GUARDS: RegExp[] = [
  * these describe the escape hatch, not the trap.
  */
 export const USER_CONTROL_GUARDS: RegExp[] = [
+  // The reader's own choice, not a practice: "You may choose whether or not you include
+  // sensitive personal information in your user content". Narrow on purpose ("whether"),
+  // so "you may choose to share X, which we then sell" is not swallowed.
+  /\byou\s+(?:may|can)\s+choose\s+whether\b/i,
   /\byou\s+(?:can|may)\s+(?:opt\s*-?\s*out|turn\s+off|disable|manage|control|adjust|change|limit|review|access|download|delete)\b/i,
   /\bif\s+you\s+turn\s+(?:off|these\s+settings)\b/i,
   /\b(?:cookie|privacy|ad(?:vertising)?|account)\s+settings\b/i,

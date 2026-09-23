@@ -43,13 +43,13 @@
       "fetchedAt": "2026-09-21",
       "chars": 27555,
       "score": {
-        "value": 84,
+        "value": 83,
         "grade": "F",
         "rank": "Ghost ship"
       },
-      "flagCount": 29,
+      "flagCount": 28,
       "counts": {
-        "biometric_sensitive": 4,
+        "biometric_sensitive": 3,
         "ai_training": 1,
         "cross_site_tracking": 4,
         "precise_location": 1,
