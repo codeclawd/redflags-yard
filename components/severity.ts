@@ -78,3 +78,36 @@ export const CATEGORY_LABEL: Record<CategoryId, string> = {
   security_vague: "Vague security",
   vague_euphemism: "Euphemism",
 };
+
+/** What the company is "wanted for taking", in the reader's words. Short enough for a poster line. */
+export const CATEGORY_CHARGE: Record<CategoryId, string> = {
+  sells_shares: "your data, to sell",
+  cross_site_tracking: "what you do on other sites",
+  biometric_sensitive: "your face and voice",
+  precise_location: "where you are",
+  ai_training: "your words to train AI",
+  affiliate_sharing: "your data, for unnamed companies",
+  no_deletion: "your data, for good",
+  perpetual_license: "the rights to your posts",
+  arbitration: "your right to sue",
+  childrens_data: "your kids' data",
+  business_transfer: "you, as a company asset",
+  contacts_harvest: "your contacts",
+  human_review: "your messages, read by staff",
+  silent_changes: "the right to change the deal",
+  implied_consent: "your consent, by default",
+  dark_pattern_optout: "your yes, unless you opt out",
+  security_vague: "no real security promise",
+  vague_euphemism: "the benefit of the doubt",
+};
+
+/** The most severe distinct charges, in the engine's ranked order (flags arrive worst first). */
+export function topCharges(flags: readonly { category: CategoryId }[], max = 4): string[] {
+  const seen = new Set<CategoryId>();
+  for (const flag of flags) {
+    if (flag.category !== "vague_euphemism") seen.add(flag.category);
+    if (seen.size === max) break;
+  }
+  if (seen.size === 0 && flags.length > 0) seen.add(flags[0].category);
+  return [...seen].map((category) => CATEGORY_CHARGE[category]);
+}

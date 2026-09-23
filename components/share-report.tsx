@@ -8,8 +8,8 @@ import { Overlay } from "./overlay";
 export function buildReport(result: ScanResult, shipName: string): string {
   const lines = [
     `RED FLAGS — ${shipName}`,
-    `Plunder ${result.score.value}/100 · grade ${result.score.grade} · ${result.score.rank}`,
-    `${result.flags.length} flags across ${result.meta.sourceChars.toLocaleString("en-US")} characters.`,
+    `Risk score ${result.score.value}/100 (higher is worse) · grade ${result.score.grade}`,
+    `${result.flags.length} charges across ${result.meta.sourceChars.toLocaleString("en-US")} characters.`,
     "",
   ];
 
