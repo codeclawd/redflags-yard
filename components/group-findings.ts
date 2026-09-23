@@ -1,5 +1,7 @@
 import type { CategoryId, Flag, Severity } from "@/lib/types";
 
+const EVIDENCE_RANK: Record<Flag["source"], number> = { rule: 0, llm: 1, lexicon: 2 };
+
 /** One charge: every sentence the engine flagged under the same headline. */
 export interface ChargeGroup {
   headline: string;
@@ -37,7 +39,12 @@ export function groupFindings(flags: readonly Flag[]): ChargeGroup[] {
   }
 
   const ordered = [...groups.values()];
-  for (const group of ordered) group.flags.sort((a, b) => a.start - b.start);
+  // Strongest evidence first: the first sentence is what a reader sees on click. A direct
+  // rule match outranks an AI finding, which outranks a supporting weasel-word match;
+  // policy order breaks ties within each kind.
+  for (const group of ordered) {
+    group.flags.sort((a, b) => EVIDENCE_RANK[a.source] - EVIDENCE_RANK[b.source] || a.start - b.start);
+  }
   // Array.prototype.sort is stable, so equal groups keep first-seen order.
   return ordered.sort(
     (a, b) => RANK[a.severity] - RANK[b.severity] || b.flags.length - a.flags.length,

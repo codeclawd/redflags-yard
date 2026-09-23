@@ -85,3 +85,21 @@ describe("groupFindings", () => {
     });
   });
 });
+
+// Inside a charge, the first sentence is the one a reader sees when they click it. A
+// supporting weasel-word match that happened to come earlier in the policy led TikTok's
+// "your face and voice" charge with "User content, including... audio recordings... that
+// you choose to create", ahead of "We may collect biometric identifiers... faceprints".
+describe("the strongest sentence leads its charge", () => {
+  it("puts a direct rule match before an earlier weasel-word match", () => {
+    const lexicon = { ...flag("face", "critical", 10), id: "lex", source: "lexicon" as const };
+    const rule = { ...flag("face", "critical", 90), id: "rule", source: "rule" as const };
+    const [group] = groupFindings([lexicon, rule]);
+    expect(group.flags.map((f) => f.id)).toEqual(["rule", "lex"]);
+  });
+  it("keeps policy order within the same kind of evidence", () => {
+    const a = { ...flag("x", "high", 50), id: "a" };
+    const b = { ...flag("x", "high", 20), id: "b" };
+    expect(groupFindings([a, b])[0].flags.map((f) => f.id)).toEqual(["b", "a"]);
+  });
+});
