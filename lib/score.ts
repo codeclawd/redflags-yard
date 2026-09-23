@@ -39,13 +39,19 @@ export function rawPlunder(flags: Flag[], lexiconHitsNotAlreadyFlagged: number):
   return raw;
 }
 
-export function curve(raw: number): number {
+/**
+ * The entry cost is what makes a single real finding count. It is charged only when
+ * there IS a finding: decoder phrases on their own ("at any time", "similar
+ * technologies") are context, and used to lift a zero-finding policy to 16/100.
+ */
+export function curve(raw: number, hasFindings = true): number {
   if (raw <= 0) return 0;
-  return Math.min(100, Math.max(0, Math.round(ENTRY + SLOPE * raw)));
+  const entry = hasFindings ? ENTRY : 0;
+  return Math.min(100, Math.max(0, Math.round(entry + SLOPE * raw)));
 }
 
 export function scoreScan(flags: Flag[], lexiconHitsNotAlreadyFlagged: number): ScanScore {
-  const value = curve(rawPlunder(flags, lexiconHitsNotAlreadyFlagged));
+  const value = curve(rawPlunder(flags, lexiconHitsNotAlreadyFlagged), flags.length > 0);
   return { value, grade: gradeFor(value), rank: rankFor(value) };
 }
 

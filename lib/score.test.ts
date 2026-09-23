@@ -96,3 +96,17 @@ describe("bands", () => {
     }
   });
 });
+
+// A policy with no findings must read as clean. The entry cost exists to make one
+// real finding count; harmless decoder phrases alone ("at any time") used to trip it
+// and a zero-finding policy scored 16/100.
+describe("a policy with no findings", () => {
+  it("scores near zero even when it contains decoder phrases", () => {
+    const s = scoreScan([], 3);
+    expect(s.value).toBeLessThan(5);
+    expect(s.grade).toBe("A");
+  });
+  it("one real finding still pays the entry cost", () => {
+    expect(scoreScan([flag("critical")], 0).value).toBe(21);
+  });
+});
