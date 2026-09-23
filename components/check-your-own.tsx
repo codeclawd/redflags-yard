@@ -89,7 +89,7 @@ export function CheckYourOwn({
         type="button"
         disabled={busy || !source}
         onClick={onScan}
-        className="flex items-center justify-center gap-2 rounded-[3px] border border-amber bg-amber px-3 py-3 text-[16px] font-semibold text-ink transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:border-rope disabled:bg-ink-3 disabled:text-amber-dim"
+        className="flex items-center justify-center gap-2 rounded-[3px] border border-amber bg-amber px-3 py-3 text-[16px] font-semibold text-ink transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:opacity-45 disabled:hover:bg-amber"
       >
         <ScanSearch aria-hidden className="size-[18px]" strokeWidth={2} />
         {busy

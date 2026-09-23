@@ -86,7 +86,7 @@ export const CATEGORY_CHARGE: Record<CategoryId, string> = {
   biometric_sensitive: "your face and voice",
   precise_location: "where you are",
   ai_training: "your words to train AI",
-  affiliate_sharing: "your data, for unnamed companies",
+  affiliate_sharing: "your data, for partners it won't name",
   no_deletion: "your data, for good",
   perpetual_license: "the rights to your posts",
   arbitration: "your right to sue",
@@ -97,7 +97,7 @@ export const CATEGORY_CHARGE: Record<CategoryId, string> = {
   silent_changes: "the right to change the deal",
   implied_consent: "your consent, by default",
   dark_pattern_optout: "your yes, unless you opt out",
-  security_vague: "no real security promise",
+  security_vague: "your data, with no security promise",
   vague_euphemism: "the benefit of the doubt",
 };
 
