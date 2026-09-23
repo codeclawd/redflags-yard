@@ -1,0 +1,14 @@
+commit	metric	fp	fn	status	description
+82af260	64.2208	82	13	baseline	round 0 — shipped detector [re-derived under corrected F0.5 metric]
+0e97a37	62.5230	76	13	keep	protective-statement guard [re-derived]
+4547440	60.3327	69	13	keep	user-control + pointer guard [re-derived]
+be487ea	54.5455	52	14	keep	vague_euphemism decoder-only (design change) [re-derived]
+(r4)	53.0035	47	15	keep	glossary + hypothetical guard [re-derived]
+(r5)	50.9537	43	15	keep	statutory-reference guard [re-derived]
+(reverted)	51.1399	34	21	discard	lexicon critical-only — LOSS under corrected metric; recall 70.6->58.8
+834eb28	50.9537	43	15	baseline	corrected metric in force; current HEAD
+d0d37fb	45.5696	43	8	keep	recall patterns (retention/off-service/in-app browser/3p cookies/no-guarantee)
+5d827e6	43.2718	39	8	keep	word-sense guards + named-subject negation
+d4b1d5c	41.9525	38	7	keep	heading-seam splitting (also fixes mangled quotes shown to readers)
+(reverted)	41.6910	33	11	discard	cap repeated verdicts in engine — 0.26 gain for 8pt recall loss; cosmetic fix belongs in UI
+01ddfd1	41.3333	37	7	keep	subject-agnostic negation over harm verbs (reviewer-found Mozilla FP)

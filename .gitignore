@@ -45,5 +45,4 @@ next-env.d.ts
 !.env.example
 eval/metric.out
 eval/last-errors.txt
-eval/results.tsv
 run.log
