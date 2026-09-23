@@ -117,3 +117,14 @@ describe("a protection the company applies to itself is not a finding", () => {
   it("still flags a real location practice", () =>
     expect(isConditional("We collect your precise location to show you nearby ads.")).toBe(false));
 });
+
+// The protective guard must mean "shielded from the company itself". "from our <anyone>"
+// hid real admissions: sharing with advertisers, selling location to data brokers.
+describe("the shield guard is scoped to the company itself", () => {
+  it("does not hide sharing behind 'shield ... from our partners'", () =>
+    expect(isConditional("We share your data with advertisers, and we shield some fields from our partners.")).toBe(false));
+  it("does not hide a sale behind 'hide ... from our content providers'", () =>
+    expect(isConditional("We hide your precise location from our content providers but sell it to data brokers.")).toBe(false));
+  it("still suppresses DuckDuckGo's 'shield your precise location from us'", () =>
+    expect(isConditional("For local search results in particular, we've further engineered a solution to shield your precise location from us and our content providers that sends us a random location nearish to you, which we also never log to disk.")).toBe(true));
+});

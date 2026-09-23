@@ -92,7 +92,9 @@ export const DEFINITIONAL_GUARDS: RegExp[] = [
 export const PROTECTIVE_GUARDS: RegExp[] = [
   // Shielding something from the company itself: DuckDuckGo "engineered a solution to
   // shield your precise location from us" was flagged Critical for tracking location.
-  /\b(?:shield|protect|hide|mask|obscure|withhold)\s+[^.]{0,50}?\bfrom\s+(?:us|ourselves|our\b)/i,
+  // \"from us\" only: \"from our <partners>\" hid real admissions (\"...hide your location from our
+  // content providers but sell it to data brokers\"). The meaning is shielded from the company itself.
+  /\b(?:shield|protect|hide|mask|obscure|withhold)\s+[^.]{0,50}?\bfrom\s+(?:us|ourselves)\b/i,
   /\b(?:are|is)\s+not\s+(?:permitted|allowed|eligible)\s+to\b/i,
   /\bmay\s+not\s+(?:use|register|create\s+an\s+account)\b/i,
   /\bif\s+(?:we|you)\s+(?:learn|become\s+aware|discover|find\s+out)\b/i,
