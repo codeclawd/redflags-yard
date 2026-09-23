@@ -56,3 +56,29 @@ describe("the conditionality firewall", () => {
     }
   });
 });
+
+// Reproduced by an independent reviewer on the live mozilla.org policy: the first flag
+// shown was a Critical "follows you across other sites" quoting Mozilla's own denial.
+describe("negation names the subject and the verb of every category", () => {
+  const denials = [
+    "Mozilla does not track users across third-party websites to provide targeted advertising.",
+    "The service does not monitor your messages.",
+    "We do not profile you for advertising.",
+    "Zoom does not record meetings without the host's permission.",
+    "The app will not access your contacts.",
+    "We never train our models on your private files.",
+  ];
+  for (const s of denials) {
+    it(`suppresses: ${s.slice(0, 60)}`, () => expect(isNegated(s)).toBe(true));
+  }
+
+  // F2 — widening the guard must not swallow a real admission.
+  const admissions = [
+    "We share data with partners who track you across other sites.",
+    "We and our partners use cookies to track your activity across websites.",
+    "We record your voice when you use the assistant.",
+  ];
+  for (const s of admissions) {
+    it(`still flags: ${s.slice(0, 60)}`, () => expect(isNegated(s)).toBe(false));
+  }
+});

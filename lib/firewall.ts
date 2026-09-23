@@ -6,6 +6,14 @@
 // red flags, and flagging them is the fastest way to lose a reader's trust.
 // This module over-suppresses on purpose.
 
+/** Actions the rules accuse a company of. A denial of any of them is not a finding. */
+const HARM_VERBS = [
+  "track", "monitor", "profile", "target", "combine", "link", "record", "store", "keep",
+  "access", "read", "listen", "scan", "analy[sz]e", "train", "transfer", "buy", "license",
+  "infer", "fingerprint", "sell", "share", "disclose", "rent", "trade", "use", "collect",
+  "retain", "process",
+].join("|");
+
 /** "We do NOT sell..." — the capability is being denied. */
 export const NEGATION_GUARDS: RegExp[] = [
   /\bwe\s+(?:do|does|did)\s+not\b/i,
@@ -22,6 +30,15 @@ export const NEGATION_GUARDS: RegExp[] = [
   /\bno\s+(?:sale|sales)\s+of\b/i,
   /\bprohibit(?:s|ed)?\s+from\b/i,
   /\bwe\s+will\s+not\b/i,
+  // Subject-agnostic, over the harm verbs of every category. The guards above name
+  // "we" or name the verb; a policy that names ITSELF ("Mozilla does not track...")
+  // with a verb outside that list slipped through and was flagged Critical for the
+  // exact thing it denies. The verb list is the set of actions the rules accuse.
+  new RegExp(
+    String.raw`\b(?:do|does|did|will|would|shall|may)\s+not\s+(?:${HARM_VERBS})\b`,
+    "i",
+  ),
+  new RegExp(String.raw`\bnever\s+(?:${HARM_VERBS})\b`, "i"),
 ];
 
 /** Compelled disclosure — a legal obligation, not a business choice. */
