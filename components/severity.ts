@@ -102,12 +102,15 @@ export const CATEGORY_CHARGE: Record<CategoryId, string> = {
 };
 
 /** The most severe distinct charges, in the engine's ranked order (flags arrive worst first). */
-export function topCharges(flags: readonly { category: CategoryId }[], max = 4): string[] {
+export function topCharges(
+  flags: readonly { category: CategoryId }[],
+  max = 4,
+): Array<{ category: CategoryId; charge: string }> {
   const seen = new Set<CategoryId>();
   for (const flag of flags) {
     if (flag.category !== "vague_euphemism") seen.add(flag.category);
     if (seen.size === max) break;
   }
   if (seen.size === 0 && flags.length > 0) seen.add(flags[0].category);
-  return [...seen].map((category) => CATEGORY_CHARGE[category]);
+  return [...seen].map((category) => ({ category, charge: CATEGORY_CHARGE[category] }));
 }

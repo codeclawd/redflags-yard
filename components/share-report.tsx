@@ -2,21 +2,33 @@
 
 import { useState } from "react";
 import type { ScanResult } from "@/lib/types";
+import { chargeCount, groupFindings } from "./group-findings";
 import { SEVERITY_LABEL } from "./severity";
+
+/** The worst charges spelled out in full; the rest are counted. */
+const SHOWN = 5;
 import { Overlay } from "./overlay";
 
 export function buildReport(result: ScanResult, shipName: string): string {
+  const groups = groupFindings(result.flags);
+  const count = chargeCount(groups);
   const lines = [
-    `RED FLAGS — ${shipName}`,
+    `RED FLAGS: ${shipName}`,
     `Risk score ${result.score.value}/100 (higher is worse) · grade ${result.score.grade}`,
-    `${result.flags.length} charges across ${result.meta.sourceChars.toLocaleString("en-US")} characters.`,
+    `${count.charges}, found in ${count.sentences} of a ${result.meta.sourceChars.toLocaleString("en-US")}-character policy.`,
     "",
   ];
 
-  for (const flag of result.flags.slice(0, 5)) {
-    lines.push(`[${SEVERITY_LABEL[flag.severity].toUpperCase()}] ${flag.headline}`);
-    lines.push(`  "${flag.quote}"`);
+  for (const group of groups.slice(0, SHOWN)) {
+    const n = group.flags.length;
+    lines.push(
+      `[${SEVERITY_LABEL[group.severity].toUpperCase()}] ${group.headline}${n > 1 ? ` (found in ${n} sentences)` : ""}`,
+    );
+    lines.push(`  "${group.flags[0].quote}"`);
     lines.push("");
+  }
+  if (groups.length > SHOWN) {
+    lines.push(`And ${groups.length - SHOWN} more charges.`, "");
   }
 
   lines.push("Quotes are verbatim from the published policy. Not legal advice.");

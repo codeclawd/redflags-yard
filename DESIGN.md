@@ -8,7 +8,7 @@ Mode: **Operate** (the visitor completes a task: pick or paste, scan, read the r
 
 ## Vocabulary rule (binding)
 
-A pirate word may appear only where the joke carries its own meaning without a legend: **WANTED**, the poster itself, the rank as a small flavour subtitle beside a letter grade ("rank: Ghost ship"), and the skull mark. Every control, heading, status line, empty state and error is plain English. The words Harbor, Hail, Board, anchor, boardings, Deck, parley, hoisted, "the hold", plunder, Fleet ledger and pennant do not appear in user-visible text (code identifiers such as `FleetMatrix` or `hold-ranges` keep their old names). The LLM pass is called the **AI check**; the decoder ring is called **Weasel words**; a finding is a **charge**; the score is a **risk score** out of 100, higher is worse for you, with a letter grade.
+A pirate word may appear only where the joke carries its own meaning without a legend: **WANTED**, the poster itself, the rank as a small flavour line under the score that explains itself in place ("Rank: Ghost ship, the worst of five ranks", with a five-step ladder and the current step filled), and the skull mark. Every control, heading, status line, empty state and error is plain English. The words Harbor, Hail, Board, anchor, boardings, Deck, parley, hoisted, "the hold", plunder, Fleet ledger and pennant do not appear in user-visible text (code identifiers such as `FleetMatrix` or `hold-ranges` keep their old names). The LLM pass is called the **AI check**; the decoder ring is called **Weasel words**; a **charge** is one distinct headline, and each charge is **found in** one or more **sentences** (the engine's flags); every count on the page says "N charges, found in M sentences" or "See all N charges", never a flag count as a charge count; never write toggle-speak such as "rules only" or "AI check off"; the score is a **risk score** out of 100, higher is worse for you, with a letter grade.
 
 ## Palette (tokens — `app/globals.css` `@theme`)
 
@@ -52,21 +52,23 @@ header ─ "Red Flags" wordmark · "Paste any privacy policy. See what it lets t
 │  for taking                      │   the pasted text]     │
 │  3–4 plain-English charges       │  status line           │
 │  84/100  (F) stamp               │  Or try one: 8 chips   │
-│  risk score · rank: Ghost ship   │                        │
-│  provenance · "See all N charges ↓"                       │
+│  Risk score out of 100 · …       │                        │
+│  ▢▢▢▢■ Rank: Ghost ship, the worst of five ranks          │
+│  "Saved scan of TikTok's policy, <date>" · "See all N charges ↓"
 └───────────────────────────────────────────────────────────┘
 THE EVIDENCE (list, in-flow expansion)   │ THE POLICY, WORD FOR WORD
 WEASEL WORDS                              │ (sticky pane, scrolls itself
                                           │  to the opened charge/phrase)
-COMPARE 8 APPS (full width; a row scans that app)
+COMPARE 8 APPS (full width; a row scans that app; below lg the app + score
+               stay pinned and the 8 columns scroll sideways under a hint + edge fade)
 footer ─ Source · How it works · Hackyard Yard #3 · Not legal advice
 ```
 
-- **Poster.** Charges are the most severe distinct categories found (`topCharges`, max 4), in the reader's words ("your face and voice", "your words to train AI", "where you are"). A policy with **no** findings never gets a WANTED poster: it reads **No bounty**, no skull, "Nothing in this policy tripped the rulebook. Read it yourself before you trust that.", and a quill-coloured grade stamp.
-- **Provenance** sits under the poster: "Cached real scan · 22 Sept 2026 · rules only, AI check off" on the committed first paint; "Live scan · rules + AI check" (or why the AI check was off) after a live scan.
+- **Poster.** Charges are the most severe distinct categories found (`topCharges`, max 4), in the reader's words ("your face and voice", "your words to train AI", "where you are"). Each charge line is a button (a faint dotted quill underline, solid on hover and focus, a quill focus ring since amber vanishes on parchment): it scrolls to The evidence, opens that charge's group, shows its first sentence in context and marks it in the policy pane, and moves focus to the opened row. A policy with **no** findings never gets a WANTED poster: it reads **No bounty**, no skull, "Nothing in this policy tripped the rulebook. Read it yourself before you trust that.", and a quill-coloured grade stamp.
+- **Provenance** sits under the poster in plain words: "Saved scan of TikTok's policy, 23 Sept 2026" on the committed first paint, "Scanned just now" after a live scan. Whether the AI check ran is said once, where it matters, at the end of The evidence's lede: "The AI check didn't run this time: these come from the rules alone." (or "ran out of time", "was busy", "failed this time"). The Compare footnote says the same of the saved scans.
 - **Check your own.** The field edited last is the one scanned (`pickSource` in `components/scan-source.ts`); if both fields hold text the idle one dims and says "not used", and the button names its source. A chip scans that app immediately.
-- **The evidence.** Each charge row opens in place and pushes content down — nothing is height-constrained, so opening one never squeezes the input panel. Open, it shows the plain-English meaning, then the receipt: a parchment card with the exact quoted sentence highlighted inside ~220 characters of its surrounding policy text, and the character offsets. On desktop the sticky policy pane beside it scrolls (itself, never the page) to the same sentence.
-- **Mobile (< 1024).** header → poster → Check your own → The evidence → Weasel words → Compare 8 apps (horizontal scroll) → the policy text.
+- **The evidence.** One row per charge (distinct headline), grouped by the pure `groupFindings` in `components/group-findings.ts`: worst severity first, then most sentences, and the row's meta line says "found in 9 sentences". The lede reads "15 charges against TikTok, found in 30 sentences, worst first", and the poster's "See all 15 charges" uses the same count. A row opens in place and pushes content down (nothing is height-constrained, so opening one never squeezes the input panel). Open, it shows the plain-English meaning, then one parchment receipt per sentence in policy order ("Sentence 3 of 9 · characters 12,945–13,087"). The active receipt, the first on opening, shows its quote highlighted inside ~220 characters of the surrounding policy text; the others show the sentence alone with "Show it in context", and clicking one makes it active. On desktop the sticky policy pane beside it scrolls (itself, never the page) to the active sentence. "Copy the report" lists the worst five charges with their sentence counts and counts the rest.
+- **Mobile (< 1024).** header → poster → Check your own → The evidence → Weasel words → Compare 8 apps → the policy text. Compare keeps all 8 columns: the app name and score are sticky on the left, the columns scroll sideways, a "Swipe sideways for all 8 columns" hint shows whenever they overflow, and an ink edge fade sits on the right until the last column is in view.
 
 ## Materials & browser surfaces
 

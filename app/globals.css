@@ -146,6 +146,11 @@ button {
     0 10px 24px -12px rgba(0, 0, 0, 0.6);
 }
 
+/* A receipt that opens in context on a click. */
+button.parchment:hover {
+  border-color: var(--color-quill-dim);
+}
+
 /* ── the policy text ─────────────────────────────────────────────────────── */
 
 mark.charge {
@@ -195,6 +200,11 @@ mark.receipt {
 
 .poster > *:not(svg) {
   z-index: 1;
+}
+
+/* Amber vanishes on parchment; the poster's own buttons ring in quill. */
+.poster :focus-visible {
+  outline-color: var(--color-quill);
 }
 
 .tack {

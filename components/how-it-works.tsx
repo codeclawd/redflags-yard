@@ -13,7 +13,7 @@ const STEPS: Array<[string, string]> = [
   ],
   [
     "Weasel words",
-    "A lexicon of phrases that sound harmless — affiliates, as long as necessary, similar technologies — is matched separately and translated into what it permits, not what the company does.",
+    "A lexicon of phrases that sound harmless (affiliates, as long as necessary, similar technologies) is matched separately and translated into what it permits, not what the company does.",
   ],
   [
     "AI check",

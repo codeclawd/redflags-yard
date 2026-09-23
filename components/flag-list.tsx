@@ -2,24 +2,8 @@
 
 import { Plus, Minus } from "lucide-react";
 import type { Flag } from "@/lib/types";
+import type { ChargeGroup } from "./group-findings";
 import { CATEGORY_ICON, CATEGORY_LABEL, SEVERITY_COLOR, SEVERITY_LABEL } from "./severity";
-
-/**
- * Display-only: a verdict repeated verbatim reads as a broken list rather than a
- * stronger finding. The engine keeps every grounded flag — "Copy the report" and
- * the policy-text highlighting still use all of them — but the list shows at most
- * three of any one headline.
- */
-const MAX_PER_HEADLINE = 3;
-
-function capRepeats<T extends { headline: string }>(flags: T[]): T[] {
-  const seen = new Map<string, number>();
-  return flags.filter((f) => {
-    const n = seen.get(f.headline) ?? 0;
-    seen.set(f.headline, n + 1);
-    return n < MAX_PER_HEADLINE;
-  });
-}
 
 const CONTEXT = 220;
 
@@ -35,22 +19,31 @@ function surrounding(text: string, start: number, end: number) {
   };
 }
 
+const span = (flag: Flag) =>
+  `${flag.start.toLocaleString("en-US")}–${flag.end.toLocaleString("en-US")}`;
+
 export function FlagList({
-  flags,
-  openId,
+  groups,
+  openHeadline,
+  activeFlagId,
   text,
   onToggle,
+  onPick,
 }: {
-  flags: Flag[];
-  openId: string | null;
+  groups: ChargeGroup[];
+  /** The charge whose sentences are showing. */
+  openHeadline: string | null;
+  /** The sentence shown in context here and marked in the policy pane. */
+  activeFlagId: string | null;
   /** The policy text, when the page has it (a scanned link is read on the server). */
   text: string;
-  onToggle: (flag: Flag) => void;
+  onToggle: (group: ChargeGroup) => void;
+  onPick: (flag: Flag) => void;
 }) {
-  if (flags.length === 0) {
+  if (groups.length === 0) {
     return (
       <p className="max-w-[62ch] py-4 text-[15px] text-foam">
-        Nothing in this policy tripped the rulebook. The rulebook can miss things — read the
+        Nothing in this policy tripped the rulebook. The rulebook can miss things, so read the
         policy yourself before you trust that.
       </p>
     );
@@ -58,20 +51,21 @@ export function FlagList({
 
   return (
     <ul className="divide-y divide-rope border-y border-rope">
-      {capRepeats(flags).map((flag) => {
-        const Icon = CATEGORY_ICON[flag.category];
-        const open = openId === flag.id;
-        const color = SEVERITY_COLOR[flag.severity];
-        const inText = text.length > 0 && text.slice(flag.start, flag.end) === flag.quote;
-        const context = inText ? surrounding(text, flag.start, flag.end) : null;
+      {groups.map((group) => {
+        const Icon = CATEGORY_ICON[group.category];
+        const open = openHeadline === group.headline;
+        const color = SEVERITY_COLOR[group.severity];
+        const count = group.flags.length;
+        const panelId = `charge-${group.flags[0].id}`;
 
         return (
-          <li key={flag.id} data-flag-row={flag.id}>
+          <li key={group.headline} data-group-row={group.headline} className="scroll-mt-4">
             <h3>
               <button
                 type="button"
                 aria-expanded={open}
-                onClick={() => onToggle(flag)}
+                aria-controls={panelId}
+                onClick={() => onToggle(group)}
                 className={`flex w-full items-start gap-3 px-2 py-3.5 text-left transition-colors ${
                   open ? "bg-ink-2" : "hover:bg-ink-2"
                 }`}
@@ -86,18 +80,19 @@ export function FlagList({
 
                 <span className="min-w-0 flex-1">
                   <span className="block text-[16px] leading-snug text-balance text-parchment">
-                    {flag.headline}
+                    {group.headline}
                   </span>
-                  <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[13px] leading-none">
-                    <span style={{ color }}>{SEVERITY_LABEL[flag.severity]}</span>
-                    <span aria-hidden className="text-rope">·</span>
-                    <span className="text-amber-dim">{CATEGORY_LABEL[flag.category]}</span>
-                    {flag.source === "llm" ? (
-                      <>
-                        <span aria-hidden className="text-rope">·</span>
-                        <span className="text-foam">found by the AI check</span>
-                      </>
-                    ) : null}
+                  {/* Each separator travels with the item after it, so a wrap never strands a dot. */}
+                  <span className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] leading-none">
+                    <span style={{ color }}>{SEVERITY_LABEL[group.severity]}</span>
+                    <span className="whitespace-nowrap text-amber-dim">
+                      <span aria-hidden className="text-rope">· </span>
+                      {CATEGORY_LABEL[group.category]}
+                    </span>
+                    <span className="whitespace-nowrap tabular-nums text-parchment/80">
+                      <span aria-hidden className="text-rope">· </span>
+                      found in {count} sentence{count === 1 ? "" : "s"}
+                    </span>
                   </span>
                 </span>
 
@@ -107,37 +102,97 @@ export function FlagList({
                   ) : (
                     <Plus aria-hidden className="size-3.5" strokeWidth={2} />
                   )}
-                  <span className="sr-only sm:not-sr-only">{open ? "Hide" : "Show the sentence"}</span>
+                  <span className="sr-only sm:not-sr-only">
+                    {open ? "Hide" : count === 1 ? "Show the sentence" : `Show all ${count}`}
+                  </span>
                 </span>
               </button>
             </h3>
 
             {open ? (
-              <div className="px-2 pt-1 pb-5 sm:pl-13">
+              <div id={panelId} className="px-2 pt-1 pb-5 sm:pl-13">
                 <p className="mb-3 max-w-[64ch] text-[15px] leading-[1.55] text-parchment">
-                  {flag.plainEnglish}
+                  {group.plainEnglish}
                 </p>
-                <figure className="parchment max-w-[68ch] px-4 py-3.5">
-                  <blockquote className="text-[15px] leading-[1.65] text-quill">
-                    {context ? <span className="text-quill-dim">{context.before}</span> : "“"}
-                    <mark className="receipt">{flag.quote}</mark>
-                    {context ? <span className="text-quill-dim">{context.after}</span> : "”"}
-                  </blockquote>
-                  <figcaption className="mt-2.5 border-t border-parchment-2 pt-2 text-[13px] text-quill-dim">
-                    Word for word from the policy, characters{" "}
-                    {flag.start.toLocaleString("en-US")}–{flag.end.toLocaleString("en-US")}.
-                  </figcaption>
-                </figure>
-                {flag.decoded ? (
-                  <p className="mt-3 max-w-[64ch] text-[14px] text-amber-dim">
-                    <span className="decoded">{flag.decoded.phrase}</span> — {flag.decoded.meaning}
-                  </p>
-                ) : null}
+                <ol className="flex flex-col gap-3">
+                  {group.flags.map((flag, index) => (
+                    <Receipt
+                      key={flag.id}
+                      flag={flag}
+                      index={index}
+                      total={count}
+                      text={text}
+                      active={flag.id === activeFlagId}
+                      onPick={onPick}
+                    />
+                  ))}
+                </ol>
               </div>
             ) : null}
           </li>
         );
       })}
     </ul>
+  );
+}
+
+/**
+ * One sentence of a charge, on parchment. The active one sits in its
+ * surrounding policy text; the others show the sentence alone and open in
+ * context on a click.
+ */
+function Receipt({
+  flag,
+  index,
+  total,
+  text,
+  active,
+  onPick,
+}: {
+  flag: Flag;
+  index: number;
+  total: number;
+  text: string;
+  active: boolean;
+  onPick: (flag: Flag) => void;
+}) {
+  const inText = text.length > 0 && text.slice(flag.start, flag.end) === flag.quote;
+  const context = active && inText ? surrounding(text, flag.start, flag.end) : null;
+  const where =
+    total > 1
+      ? `Sentence ${index + 1} of ${total} · characters ${span(flag)}`
+      : `Word for word from the policy, characters ${span(flag)}`;
+
+  return (
+    <li className="max-w-[68ch]" data-receipt={flag.id}>
+      <button
+        type="button"
+        aria-pressed={active}
+        onClick={() => onPick(flag)}
+        className="parchment block w-full px-4 py-3.5 text-left transition-colors"
+      >
+        <span className="block text-[15px] leading-[1.65] text-quill">
+          {context ? <span className="text-quill-dim">{context.before}</span> : "“"}
+          <mark className="receipt">{flag.quote}</mark>
+          {context ? <span className="text-quill-dim">{context.after}</span> : "”"}
+        </span>
+        <span className="mt-2.5 flex flex-wrap justify-between gap-x-3 gap-y-1 border-t border-parchment-2 pt-2 text-[13px] text-quill-dim">
+          <span className="tabular-nums">
+            {where}
+            {flag.source === "llm" ? " · found by the AI check" : ""}
+          </span>
+          {active ? null : (
+            <span className="text-quill underline decoration-dotted underline-offset-[3px]">
+              Show it in context
+            </span>
+          )}
+        </span>
+      </button>
+      {active && flag.decoded ? (
+        <p className="mt-3 max-w-[64ch] text-[14px] text-amber-dim">
+          <span className="decoded">{flag.decoded.phrase}</span>: {flag.decoded.meaning}
+        </p>
+      ) : null}
+    </li>
   );
 }

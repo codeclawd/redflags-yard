@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { animate, motion, useReducedMotion } from "motion/react";
-import type { ScanResult } from "@/lib/types";
+import type { CategoryId, Rank, ScanResult } from "@/lib/types";
 import { JollyRouge } from "./jolly-rouge";
 import { topCharges } from "./severity";
 
@@ -28,22 +28,36 @@ const DECKLE = (() => {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+/** The five ranks, best to worst, and where each sits, in words. */
+const RANKS: Rank[] = ["Honest merchant", "Smuggler", "Privateer", "Pirate", "Ghost ship"];
+const PLACE = [
+  "the best of five ranks",
+  "second best of five ranks",
+  "the middle of five ranks",
+  "second worst of five ranks",
+  "the worst of five ranks",
+];
+
 export function Poster({
   result,
   name,
   still,
+  onCharge,
 }: {
   result: ScanResult;
   /** Who the poster is for: an app name, a host name, or "The pasted policy". */
   name: string;
   /** The cached first paint is history: it arrives whole, with no assembly. */
   still: boolean;
+  /** A charge line was clicked: show its evidence. */
+  onCharge: (category: CategoryId) => void;
 }) {
   const reduced = useReducedMotion();
   const instant = still || reduced === true;
   const wanted = result.flags.length > 0;
   const charges = topCharges(result.flags);
   const { value, grade, rank } = result.score;
+  const place = RANKS.indexOf(rank);
 
   const [counted, setCounted] = useState(0);
   const shown = instant ? value : counted;
@@ -109,13 +123,21 @@ export function Poster({
               for taking
             </p>
             <ul className="mt-[1.2cqw] space-y-[0.4cqw]">
-              {charges.map((charge, index) => (
+              {charges.map(({ category, charge }, index) => (
                 <motion.li
-                  key={charge}
+                  key={category}
                   className="text-[length:min(4cqw,2.6dvh)] leading-[1.3] font-semibold"
                   {...enter(0.25 + index * 0.08, { opacity: 0, y: 8, filter: "blur(4px)" })}
                 >
-                  {charge}
+                  <button
+                    type="button"
+                    data-charge={category}
+                    aria-label={`${charge}: show the evidence`}
+                    onClick={() => onCharge(category)}
+                    className="cursor-pointer rounded-[2px] font-semibold underline decoration-quill/35 decoration-dotted decoration-[0.07em] underline-offset-[0.2em] transition-colors hover:decoration-quill hover:decoration-solid focus-visible:decoration-quill focus-visible:decoration-solid"
+                  >
+                    {charge}
+                  </button>
                 </motion.li>
               ))}
             </ul>
@@ -148,7 +170,22 @@ export function Poster({
         </div>
 
         <p className="relative mt-[1.6cqw] text-[length:min(2.8cqw,14px)] leading-snug text-quill-dim">
-          Risk score · higher is worse for you · rank: {rank}
+          Risk score out of 100 · higher is worse for you
+        </p>
+        <p className="relative mt-[0.8cqw] flex items-center gap-[1.4cqw] text-[length:min(2.8cqw,14px)] leading-snug text-quill-dim">
+          <span aria-hidden className="flex gap-[0.6cqw]">
+            {RANKS.map((step, index) => (
+              <span
+                key={step}
+                className={`block size-[min(1.7cqw,9px)] border border-quill ${
+                  index === place ? (wanted ? "bg-blood" : "bg-quill") : "opacity-45"
+                }`}
+              />
+            ))}
+          </span>
+          <span>
+            Rank: <span className="font-semibold text-quill">{rank}</span>, {PLACE[place]}
+          </span>
         </p>
       </article>
     </div>

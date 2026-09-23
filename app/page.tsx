@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowDown, Share2 } from "lucide-react";
-import type { Flag, ScanError, ScanErrorCode, ScanMeta, ScanResult } from "@/lib/types";
+import type { CategoryId, Flag, ScanError, ScanErrorCode, ScanMeta, ScanResult } from "@/lib/types";
 import { CheckYourOwn, type Status } from "@/components/check-your-own";
 import { FlagList } from "@/components/flag-list";
 import { FleetMatrix } from "@/components/fleet-matrix";
+import { chargeCount, groupFindings, type ChargeGroup } from "@/components/group-findings";
 import { HowItWorks } from "@/components/how-it-works";
 import { PolicyText } from "@/components/policy-text";
 import { Poster } from "@/components/poster";
@@ -18,7 +19,7 @@ import matrixJson from "@/public/baked/matrix.json";
 import bakedJson from "@/public/baked/tiktok.json";
 
 // The first frame is a finished scan. These two files are committed output of
-// the real engine over the real stored policy (`pnpm bake`, rules only),
+// the real engine over the real stored policy (`pnpm bake`, no AI check),
 // imported rather than fetched so the poster is painted, not awaited. Any scan
 // the visitor starts replaces it.
 const MATRIX = matrixJson as unknown as FleetMatrixData;
@@ -26,16 +27,20 @@ const BAKED = bakedJson as unknown as ScanResult;
 const BAKED_ID = "tiktok";
 const BAKED_APP = MATRIX.ships.find((ship) => ship.id === BAKED_ID) ?? MATRIX.ships[0];
 
-const AI_OFF: Record<Exclude<ScanMeta["llm"], "ran">, string> = {
-  "skipped:no-key": "AI check off",
-  "skipped:test": "AI check off",
-  "skipped:timeout": "AI check timed out",
-  "skipped:rate-limit": "AI check busy, try later",
-  "skipped:error": "AI check failed",
+/** Why the AI check has nothing to say, in words a visitor needs no manual for. */
+const AI_MISSING: Record<Exclude<ScanMeta["llm"], "ran">, string> = {
+  "skipped:no-key": "The AI check didn't run this time",
+  "skipped:test": "The AI check didn't run this time",
+  "skipped:timeout": "The AI check ran out of time",
+  "skipped:rate-limit": "The AI check was busy",
+  "skipped:error": "The AI check failed this time",
 };
 
-function aiLine(llm: ScanMeta["llm"]) {
-  return llm === "ran" ? "rules + AI check" : `rules only, ${AI_OFF[llm]}`;
+function aiNote(llm: ScanMeta["llm"], any: boolean) {
+  if (llm === "ran") return "";
+  return any
+    ? ` ${AI_MISSING[llm]}: these come from the rules alone.`
+    : ` ${AI_MISSING[llm]}, so only the rules read it.`;
 }
 
 function formatDay(iso: string) {
@@ -120,7 +125,8 @@ export default function Page() {
   const [lastEdited, setLastEdited] = useState<Field | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle", line: "" });
 
-  const [openFlagId, setOpenFlagId] = useState<string | null>(null);
+  const [openHeadline, setOpenHeadline] = useState<string | null>(null);
+  const [activeFlagId, setActiveFlagId] = useState<string | null>(null);
   const [activePhrase, setActivePhrase] = useState<string | null>(null);
   const [overlay, setOverlay] = useState<"none" | "how" | "share">("none");
 
@@ -190,7 +196,8 @@ export default function Page() {
         result = payload;
       }
 
-      setOpenFlagId(null);
+      setOpenHeadline(null);
+      setActiveFlagId(null);
       setActivePhrase(null);
       setShown((now) => ({
         result,
@@ -200,9 +207,13 @@ export default function Page() {
         cached: null,
         key: now.key + 1,
       }));
+      const count = chargeCount(groupFindings(result.flags));
       setStatus({
         kind: "idle",
-        line: `Scanned ${name}: ${result.flags.length} charge${result.flags.length === 1 ? "" : "s"}, ${aiLine(result.meta.llm)}.`,
+        line:
+          result.flags.length > 0
+            ? `Scanned ${name}: ${count.charges}, found in ${count.sentences}.`
+            : `Scanned ${name}: no charges.`,
       });
 
       // On a phone the poster sits above the controls; bring the new one into view.
@@ -219,21 +230,56 @@ export default function Page() {
     }
   }, []);
 
-  const toggleFlag = useCallback((flag: Flag) => {
-    setActivePhrase(null);
-    setOpenFlagId((current) => (current === flag.id ? null : flag.id));
-  }, []);
-
-  const selectPhrase = useCallback((phrase: string) => {
-    setOpenFlagId(null);
-    setActivePhrase((current) => (current === phrase ? null : phrase));
-  }, []);
-
   const { result, name, text, cached } = shown;
   const busy = status.kind === "scanning";
-  const provenance = cached
-    ? `Cached real scan · ${formatDay(cached)} · rules only, AI check off`
-    : `Live scan · ${aiLine(result.meta.llm)}`;
+  const groups = useMemo(() => groupFindings(result.flags), [result.flags]);
+  const count = chargeCount(groups);
+  const provenance = cached ? `Saved scan of ${name}'s policy, ${formatDay(cached)}` : "Scanned just now";
+
+  // Opening a charge shows its first sentence in context and in the policy pane.
+  const openGroup = useCallback((group: ChargeGroup | null) => {
+    setActivePhrase(null);
+    setOpenHeadline(group?.headline ?? null);
+    setActiveFlagId(group?.flags[0].id ?? null);
+  }, []);
+
+  const toggleGroup = useCallback(
+    (group: ChargeGroup) => openGroup(openHeadline === group.headline ? null : group),
+    [openGroup, openHeadline],
+  );
+
+  const pickFlag = useCallback((flag: Flag) => setActiveFlagId(flag.id), []);
+
+  // A charge on the poster opens its evidence: the charge's group, first sentence showing.
+  const showCharge = useCallback(
+    (category: CategoryId) => {
+      const first = result.flags.find((flag) => flag.category === category);
+      const group = groups.find((g) => g.headline === first?.headline);
+      if (!group) return;
+      openGroup(group);
+      requestAnimationFrame(() => {
+        const section = evidenceRef.current;
+        const row = section?.querySelector<HTMLElement>(
+          `[data-group-row="${CSS.escape(group.headline)}"]`,
+        );
+        if (!section || !row) return;
+        // Land on the heading when the row shows under it; otherwise on the row itself.
+        const deep = row.getBoundingClientRect().top - section.getBoundingClientRect().top;
+        (deep < window.innerHeight * 0.6 ? section : row).scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        row.querySelector("button")?.focus({ preventScroll: true });
+      });
+    },
+    [result.flags, groups, openGroup],
+  );
+
+  const selectPhrase = useCallback((phrase: string) => {
+    setOpenHeadline(null);
+    setActiveFlagId(null);
+    setActivePhrase((current) => (current === phrase ? null : phrase));
+  }, []);
 
   return (
     <>
@@ -265,7 +311,13 @@ export default function Page() {
                 aria-busy={busy}
                 className={`transition-[opacity,filter] duration-300 ${busy ? "opacity-45 saturate-50" : ""}`}
               >
-                <Poster key={shown.key} result={result} name={name} still={cached !== null} />
+                <Poster
+                  key={shown.key}
+                  result={result}
+                  name={name}
+                  still={cached !== null}
+                  onCharge={showCharge}
+                />
               </div>
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5 px-1">
                 <p className="text-[13px] text-amber-dim">{provenance}</p>
@@ -274,9 +326,7 @@ export default function Page() {
                   onClick={() => evidenceRef.current?.scrollIntoView({ behavior: "smooth" })}
                   className="flex items-center gap-1.5 text-[14px] text-foam underline decoration-dotted underline-offset-[3px] hover:text-amber"
                 >
-                  {result.flags.length > 0
-                    ? `See all ${result.flags.length} charges, word for word`
-                    : "Read the policy"}
+                  {groups.length > 0 ? `See all ${count.charges}` : "Read the policy"}
                   <ArrowDown aria-hidden className="size-3.5" strokeWidth={2} />
                 </button>
               </div>
@@ -320,9 +370,10 @@ export default function Page() {
                       The evidence
                     </h2>
                     <p className="max-w-[60ch] text-[15px] text-amber-dim">
-                      {result.flags.length > 0
-                        ? `${result.flags.length} charges against ${name}, worst first. Each one quotes the policy word for word.`
+                      {groups.length > 0
+                        ? `${count.charges} against ${name}, found in ${count.sentences}, worst first. Each sentence is quoted word for word.`
                         : `No charges against ${name}.`}
+                      {aiNote(result.meta.llm, groups.length > 0)}
                     </p>
                   </div>
                   {result.flags.length > 0 ? (
@@ -337,10 +388,12 @@ export default function Page() {
                   ) : null}
                 </div>
                 <FlagList
-                  flags={result.flags}
-                  openId={openFlagId}
+                  groups={groups}
+                  openHeadline={openHeadline}
+                  activeFlagId={activeFlagId}
                   text={text}
-                  onToggle={toggleFlag}
+                  onToggle={toggleGroup}
+                  onPick={pickFlag}
                 />
               </section>
 
@@ -357,7 +410,7 @@ export default function Page() {
                 name={name}
                 flags={result.flags}
                 decoder={result.decoder}
-                activeFlagId={openFlagId}
+                activeFlagId={activeFlagId}
                 activePhrase={activePhrase}
               />
             </aside>
@@ -387,7 +440,7 @@ export default function Page() {
           >
             How it works
           </button>
-          <span className="text-amber-dim">Hackyard Yard #3 — built Sep 21–25 2026</span>
+          <span className="text-amber-dim">Hackyard Yard #3, built Sep 21–25 2026</span>
           <span className="ml-auto text-amber-dim">Not legal advice.</span>
         </footer>
       </div>
