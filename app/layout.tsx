@@ -24,6 +24,7 @@ const mono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://redflags-yard.vercel.app"),
   title: "Red Flags: see what a privacy policy lets them take",
   description:
     "Paste any privacy policy and see what it lets the company take, quoted word for word.",
