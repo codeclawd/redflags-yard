@@ -4,24 +4,24 @@ import { Overlay } from "./overlay";
 
 const STEPS: Array<[string, string]> = [
   [
-    "Split",
-    "The policy is normalised and cut into sentences with their character offsets kept, so every later claim can point at an exact span.",
+    "Read",
+    "The policy is split into sentences. Each one remembers exactly where it sits in the text, so every charge can point back to it.",
   ],
   [
-    "Rulebook",
-    "Eighteen categories of harm, each with its own patterns, run over every sentence. A firewall drops sentences that are negated, conditional, or about legal process, so “we do not sell your data” never reads as selling.",
+    "Rules",
+    "Seventeen kinds of harm, each with its own patterns, are checked against every sentence. A sentence that denies the harm (“we do not sell your data”), depends on your consent, or describes a legal requirement is skipped, so a denial is never read as a confession.",
   ],
   [
     "Weasel words",
-    "A lexicon of phrases that sound harmless (affiliates, as long as necessary, similar technologies) is matched separately and translated into what it permits, not what the company does.",
+    "Sixty-five phrases that sound harmless (affiliates, as long as necessary, similar technologies) are found separately and translated into what they allow.",
   ],
   [
     "AI check",
-    "When a model is available it reads the same text for what the rules missed. Every quote it returns must be found verbatim in the source or it is dropped. When it is rate-limited the deterministic result stands on its own.",
+    "When it is available, an AI model reads the same text for anything the rules missed. It can only quote the policy: a quote that is not in the text word for word is thrown away. When the AI is busy, the rules stand on their own.",
   ],
   [
     "Score",
-    "Each category counts once at full weight; repeats add a fifth each, up to double. The total becomes a risk score out of 100 (higher is worse for you) and a letter grade.",
+    "Each kind of harm counts once at full weight; repeats add a little, up to double. The total becomes a risk score out of 100 (higher is worse for you), a letter grade, and a rank: Honest merchant, Smuggler, Privateer, Pirate, or Ghost ship.",
   ],
 ];
 
@@ -29,8 +29,8 @@ export function HowItWorks({ onClose }: { onClose: () => void }) {
   return (
     <Overlay title="How it works" onClose={onClose}>
       <p className="mb-4 max-w-[68ch] text-[14px] text-amber-dim">
-        Red Flags never paraphrases a policy. Every flag carries the sentence it came from and the
-        offset it sits at, so you can check it in the policy text.
+        Red Flags never rewords a policy. Every charge shows the exact sentence it came from, so
+        you can check it in the full text yourself.
       </p>
       <ol className="divide-y divide-rope">
         {STEPS.map(([name, body]) => (

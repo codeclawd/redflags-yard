@@ -404,7 +404,11 @@ export default function Page() {
               />
             </div>
 
-            <aside className="order-3 lg:sticky lg:top-4 lg:order-none">
+            {/* Sticky on an inner wrapper, with the aside stretched to its own row: a sticky
+                element is bounded by its containing block, and this grid also holds the
+                Compare row, so a sticky aside rode down over the Compare table. */}
+            <aside className="order-3 lg:order-none lg:self-stretch">
+              <div className="lg:sticky lg:top-4">
               <PolicyText
                 text={text}
                 name={name}
@@ -413,6 +417,7 @@ export default function Page() {
                 activeFlagId={activeFlagId}
                 activePhrase={activePhrase}
               />
+              </div>
             </aside>
 
             <div className="order-2 lg:order-none lg:col-span-2">
@@ -440,7 +445,7 @@ export default function Page() {
           >
             How it works
           </button>
-          <span className="text-amber-dim">Hackyard Yard #3, built Sep 21–25 2026</span>
+          <span className="text-amber-dim">Built for Hackyard&rsquo;s Yard #3, Sep 21–25 2026</span>
           <span className="ml-auto text-amber-dim">Not legal advice.</span>
         </footer>
       </div>
