@@ -44,8 +44,9 @@ export const NEGATION_GUARDS: RegExp[] = [
 /** Compelled disclosure — a legal obligation, not a business choice. */
 export const LEGAL_PROCESS_GUARDS: RegExp[] = [
   /\blaw\s+enforcement\b/i,
-  /\blegal\s+(?:process|obligation|request|requirement|proceeding|claim|authority)\b/i,
-  /\b(?:court|judicial)\s+(?:order|process|proceeding)\b/i,
+  // Plural-safe: a \b after the singular made \"legal obligations\" and \"legal claims\" miss.
+  /\blegal\s+(?:process(?:es)?|obligations?|requests?|requirements?|proceedings?|claims?|authorit(?:y|ies))\b/i,
+  /\b(?:court|judicial)\s+(?:orders?|process(?:es)?|proceedings?)\b/i,
   /\bsubpoena|warrant|summons\b/i,
   /\brequired\s+(?:by|under)\s+(?:law|applicable\s+law|regulation)\b/i,
   /\bcompelled\s+(?:by|to)\b/i,
@@ -68,6 +69,8 @@ export const CONSENT_GUARDS: RegExp[] = [
   /\bat\s+your\s+(?:direction|request|option)\b/i,
   /\byou\s+(?:can|may)\s+(?:turn\s+(?:it\s+)?off|disable|revoke|withdraw|delete|decline|refuse)\b/i,
   /\bwith\s+your\s+permission\b/i,
+  // Passive voice: \"where available and explicitly permitted by you\".
+  /\b(?:explicitly\s+|expressly\s+)?(?:permitted|allowed|authori[sz]ed|enabled|approved)\s+by\s+you\b/i,
   /\bopt\s*-?\s*in\b/i,
 ];
 
@@ -167,10 +170,18 @@ export const isStatutory = (sentence: string) => anyMatch(STATUTORY_GUARDS, sent
  * True when a sentence must not become a flag: it denies the capability, or
  * attributes it to legal compulsion, or gates it behind your own choice.
  */
-export function isConditional(sentence: string): boolean {
+/**
+ * Categories where a legal reason does not excuse the practice. The legal-process
+ * guard exists for compelled DISCLOSURE ("we share with police when required by law").
+ * Keeping your data "to defend legal claims" is still keeping it.
+ */
+export const LEGAL_REASON_STILL_HARMS: ReadonlySet<string> = new Set(["no_deletion"]);
+
+export function isConditional(sentence: string, category?: string): boolean {
+  const legalExcuses = !(category && LEGAL_REASON_STILL_HARMS.has(category));
   return (
     isNegated(sentence) ||
-    isLegalProcess(sentence) ||
+    (legalExcuses && isLegalProcess(sentence)) ||
     isConsentGated(sentence) ||
     isDefinitional(sentence) ||
     isProtective(sentence) ||

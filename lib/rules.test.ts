@@ -141,3 +141,21 @@ describe("runRules output shape", () => {
     expect(classifySpecificity("We retain your email address for seven years.")).toBe("specific");
   });
 });
+
+// "\bprecise" matched inside "non-precise" (the hyphen is a word boundary), so Spotify's
+// "non-precise location data (e.g., country or region, city, state)" was flagged Critical
+// as "they can pinpoint exactly where you are": the opposite of what it says.
+describe("precise location is not matched inside 'non-precise'", () => {
+  const cat = (text: string) => runRules(splitSentences(text)).map((f) => f.category);
+  it("does not flag non-precise location", () =>
+    expect(cat("This includes mapping IP addresses to non-precise location data (e.g., country or region, city, state).")).not.toContain("precise_location"));
+  it("still flags precise location", () =>
+    expect(cat("We collect your precise location from your device whenever the app is open.")).toContain("precise_location"));
+});
+
+describe("legal process still suppresses a disclosure", () => {
+  it("does not flag sharing done to meet legal obligations", () => {
+    const text = "To comply with our legal obligations and defend our legal rights and commercial interests, and those of our affiliates, users, and the public.";
+    expect(runRules(splitSentences(text)).map((f) => f.category)).not.toContain("affiliate_sharing");
+  });
+});

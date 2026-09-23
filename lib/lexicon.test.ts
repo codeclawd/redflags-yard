@@ -128,3 +128,15 @@ describe("vague_euphemism survives as decoder-only", () => {
     expect(decoder.some((d) => d.category === "vague_euphemism")).toBe(true);
   });
 });
+
+// The legal-process guard exists for compelled DISCLOSURE ("we share with police when
+// required"). Keeping data "to defend legal claims" is still keeping it: once the guard
+// learned plurals it began suppressing this Temu retention sentence, which the eval
+// corpus labels as open-ended retention.
+describe("a legal reason does not excuse retention", () => {
+  const temu = "We generally retain personal information as long as necessary to fulfill the purposes for which we collected it, as well as for the purposes of satisfying any applicable U.S. legal, accounting, or reporting requirements, to establish, exercise or defend legal claims, or for fraud prevention purposes.";
+  it("still flags retention justified by legal claims", () => {
+    const { flags } = runLexicon(temu, splitSentences(temu));
+    expect(flags.map((f) => f.category)).toContain("no_deletion");
+  });
+});

@@ -188,7 +188,7 @@ export async function fetchPolicyText(
   }
   if (!response.ok) {
     throw new FetchFailure({
-      error: `That site answered ${response.status}. Many policy pages block bots — paste the text instead.`,
+      error: `That site answered ${response.status}. Many policy pages block bots, so paste the text instead.`,
       code: "FETCH_FAILED",
       retryable: false,
     });

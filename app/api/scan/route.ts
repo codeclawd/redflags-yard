@@ -119,7 +119,7 @@ export async function POST(request: Request): Promise<Response> {
   const started = Date.now();
   if (!takeToken(clientIp(request))) {
     return fail({
-      error: `Too many scans — ${RATE_LIMIT} a minute is the limit. Try again shortly.`,
+      error: `Too many scans: ${RATE_LIMIT} a minute is the limit. Try again shortly.`,
       code: "RATE_LIMITED",
       retryable: true,
     });

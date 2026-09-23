@@ -73,10 +73,15 @@ describe("groupFindings", () => {
     },
   );
 
-  it("counts TikTok's cached scan as 15 charges in 30 sentences", () => {
-    expect(chargeCount(groupFindings(baked("tiktok").flags))).toEqual({
-      charges: "15 charges",
-      sentences: "30 sentences",
+  // Derived, not pinned: a snapshot number ("30 sentences") broke every time the engine
+  // legitimately dropped a false positive. The grouping invariant is what this guards.
+  it("counts TikTok's cached scan as one charge per distinct headline, one sentence per finding", () => {
+    const flags = baked("tiktok").flags;
+    const distinct = new Set(flags.map((f) => f.headline)).size;
+    expect(distinct).toBeLessThan(flags.length); // the grouping has something to collapse
+    expect(chargeCount(groupFindings(flags))).toEqual({
+      charges: `${distinct} charges`,
+      sentences: `${flags.length} sentences`,
     });
   });
 });

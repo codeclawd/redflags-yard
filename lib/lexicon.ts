@@ -495,12 +495,15 @@ export function runLexicon(source: string, sentences: Sentence[]): LexiconRun {
   const flags: Flag[] = [];
   const seenFlag = new Set<string>();
 
-  const suppressed = new Map<number, boolean>();
-  const isSuppressed = (s: Sentence) => {
-    let v = suppressed.get(s.start);
+  // Keyed by sentence AND category: a legal reason excuses a disclosure but not
+  // retention (see LEGAL_REASON_STILL_HARMS), so one verdict per sentence is wrong.
+  const suppressed = new Map<string, boolean>();
+  const isSuppressed = (s: Sentence, category: string) => {
+    const key = `${s.start}:${category}`;
+    let v = suppressed.get(key);
     if (v === undefined) {
-      v = isNegated(s.text) || isConditional(s.text);
-      suppressed.set(s.start, v);
+      v = isNegated(s.text) || isConditional(s.text, category);
+      suppressed.set(key, v);
     }
     return v;
   };
@@ -529,7 +532,7 @@ export function runLexicon(source: string, sentences: Sentence[]): LexiconRun {
 
     for (const [at] of positions) {
       const sentence = sentences.find((s) => at >= s.start && at < s.end);
-      if (!sentence || isSuppressed(sentence)) continue;
+      if (!sentence || isSuppressed(sentence, entry.category)) continue;
       const key = `${entry.category}:${sentence.start}`;
       if (seenFlag.has(key)) continue;
       seenFlag.add(key);

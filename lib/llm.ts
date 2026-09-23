@@ -132,7 +132,7 @@ export function groundFindings(source: string, findings: unknown[], existing: Fl
     if (!at) continue;
 
     const verbatim = source.slice(at.start, at.end);
-    if (isNegated(verbatim) || isConditional(verbatim)) continue;
+    if (isNegated(verbatim) || isConditional(verbatim, category)) continue;
 
     const key = `${category}:${normalizeForMatch(verbatim)}`;
     if (seen.has(key)) continue;

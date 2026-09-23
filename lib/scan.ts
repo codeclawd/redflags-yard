@@ -105,7 +105,7 @@ export async function scan(rawText: string, opts: ScanOptions = {}): Promise<Sca
   }
   if (rawText.trim().length < MIN_CHARS) {
     throw new ScanFailure({
-      error: `There is not enough text to scan — at least ${MIN_CHARS} characters are needed.`,
+      error: `There is not enough text to scan: at least ${MIN_CHARS} characters are needed.`,
       code: "EMPTY_CONTENT",
       retryable: false,
     });

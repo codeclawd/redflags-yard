@@ -47,7 +47,7 @@
         "grade": "F",
         "rank": "Ghost ship"
       },
-      "flagCount": 30,
+      "flagCount": 29,
       "counts": {
         "biometric_sensitive": 4,
         "ai_training": 1,
@@ -66,19 +66,42 @@
       "fetchedAt": "2026-09-21",
       "chars": 42407,
       "score": {
-        "value": 75,
+        "value": 74,
         "grade": "D",
         "rank": "Pirate"
       },
-      "flagCount": 23,
+      "flagCount": 22,
       "counts": {
         "biometric_sensitive": 2,
         "ai_training": 2,
         "cross_site_tracking": 3,
-        "precise_location": 2,
+        "precise_location": 1,
         "contacts_harvest": 1,
         "human_review": 0,
         "no_deletion": 3,
+        "business_transfer": 1
+      }
+    },
+    {
+      "id": "zoom",
+      "name": "Zoom",
+      "url": "https://www.zoom.com/en/trust/privacy/privacy-statement/",
+      "fetchedAt": "2026-09-21",
+      "chars": 53752,
+      "score": {
+        "value": 73,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 21,
+      "counts": {
+        "biometric_sensitive": 3,
+        "ai_training": 0,
+        "cross_site_tracking": 6,
+        "precise_location": 0,
+        "contacts_harvest": 0,
+        "human_review": 0,
+        "no_deletion": 1,
         "business_transfer": 1
       }
     },
@@ -152,29 +175,6 @@
       }
     },
     {
-      "id": "zoom",
-      "name": "Zoom",
-      "url": "https://www.zoom.com/en/trust/privacy/privacy-statement/",
-      "fetchedAt": "2026-09-21",
-      "chars": 53752,
-      "score": {
-        "value": 69,
-        "grade": "D",
-        "rank": "Pirate"
-      },
-      "flagCount": 20,
-      "counts": {
-        "biometric_sensitive": 3,
-        "ai_training": 0,
-        "cross_site_tracking": 6,
-        "precise_location": 0,
-        "contacts_harvest": 0,
-        "human_review": 0,
-        "no_deletion": 0,
-        "business_transfer": 1
-      }
-    },
-    {
       "id": "linkedin",
       "name": "LinkedIn",
       "url": "https://www.linkedin.com/legal/privacy-policy",
@@ -185,7 +185,7 @@
         "grade": "D",
         "rank": "Pirate"
       },
-      "flagCount": 24,
+      "flagCount": 25,
       "counts": {
         "biometric_sensitive": 0,
         "ai_training": 1,
@@ -193,7 +193,7 @@
         "precise_location": 0,
         "contacts_harvest": 4,
         "human_review": 0,
-        "no_deletion": 3,
+        "no_deletion": 4,
         "business_transfer": 1
       }
     },

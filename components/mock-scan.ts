@@ -80,7 +80,7 @@ const SEEDS: Seed[] = [
     quote: "We retain information for as long as necessary to provide the Services",
     decoded: {
       phrase: "as long as necessary",
-      meaning: "Indefinitely — the company alone judges what is necessary.",
+      meaning: "Indefinitely: the company alone judges what is necessary.",
     },
   },
   {
@@ -120,7 +120,7 @@ const PHRASES: Array<{
   },
   {
     phrase: "as long as necessary",
-    meaning: "Indefinitely — the company alone judges what is necessary.",
+    meaning: "Indefinitely: the company alone judges what is necessary.",
     category: "no_deletion",
     severity: "high",
   },
@@ -132,7 +132,7 @@ const PHRASES: Array<{
   },
   {
     phrase: "similar technologies",
-    meaning: "Pixels, SDKs and fingerprints — the things that survive clearing cookies.",
+    meaning: "Pixels, SDKs and fingerprints: the things that survive clearing cookies.",
     category: "cross_site_tracking",
     severity: "medium",
   },

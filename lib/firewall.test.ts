@@ -82,3 +82,18 @@ describe("negation names the subject and the verb of every category", () => {
     it(`still flags: ${s.slice(0, 60)}`, () => expect(isNegated(s)).toBe(false));
   }
 });
+
+// A `\b` placed after a singular noun makes every plural miss: "legal obligations",
+// "legal requests", "court orders" all slipped past the legal-process guard.
+describe("legal-process and consent guards accept plurals and passive consent", () => {
+  const legal = [
+    "To comply with our legal obligations and defend our legal rights and commercial interests, and those of our affiliates.",
+    "We may disclose information in response to legal requests.",
+    "We share data when required by court orders.",
+    "We retain data as needed to resolve legal claims.",
+  ];
+  for (const s of legal) it(`legal process: ${s.slice(0, 55)}`, () => expect(isLegalProcess(s)).toBe(true));
+
+  it("consent: 'explicitly permitted by you' is consent-gated", () =>
+    expect(isConsentGated("We use precise location data (where available and explicitly permitted by you).")).toBe(true));
+});

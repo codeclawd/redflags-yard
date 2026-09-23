@@ -86,7 +86,7 @@ export const CATEGORY_CHARGE: Record<CategoryId, string> = {
   biometric_sensitive: "your face and voice",
   precise_location: "where you are",
   ai_training: "your words to train AI",
-  affiliate_sharing: "your data, for partners it won't name",
+  affiliate_sharing: "your data to pass around",
   no_deletion: "your data, for good",
   perpetual_license: "the rights to your posts",
   arbitration: "your right to sue",

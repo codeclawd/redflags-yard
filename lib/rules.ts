@@ -2,7 +2,7 @@
 // the LLM layer is optional, this is not.
 
 import type { CategoryId, Flag, Severity, Specificity } from "@/lib/types";
-import { isConditional, isNegated } from "@/lib/firewall";
+import { LEGAL_REASON_STILL_HARMS, isConditional, isNegated } from "@/lib/firewall";
 import type { Sentence } from "@/lib/text";
 
 export interface Rule {
@@ -107,7 +107,8 @@ export const RULES: Rule[] = [
     headline: "They can pinpoint exactly where you are",
     plainEnglish: "Precise location over time reveals your home, workplace, doctor and place of worship, not just a city.",
     patterns: [
-      /\bprecise\s+(?:geo)?location\b/i,
+      // Lookbehind, not \b: the hyphen in \"non-precise\" is a word boundary, so \b matched inside it.
+      /(?<![-\w])precise\s+(?:geo)?location\b/i,
       /\b(?:gps|global\s+positioning)\b/i,
       /\blocation\s+(?:history|data)\b[^.]{0,60}\b(?:collect|store|retain|share|use)/i,
       /\bbackground\s+location\b/i,
@@ -362,9 +363,10 @@ export function runRules(sentences: Sentence[]): Flag[] {
   for (const sentence of sentences) {
     const negated = isNegated(sentence.text);
     const conditional = isConditional(sentence.text);
+    const conditionalForRetention = isConditional(sentence.text, "no_deletion");
     for (const rule of RULES) {
       if (negated) continue;
-      if (rule.firewall && conditional) continue;
+      if (rule.firewall && (LEGAL_REASON_STILL_HARMS.has(rule.category) ? conditionalForRetention : conditional)) continue;
       if (rule.negativeGuards?.some((r) => r.test(sentence.text))) continue;
       const hits = rule.patterns.filter((r) => r.test(sentence.text)).length;
       if (hits === 0) continue;
