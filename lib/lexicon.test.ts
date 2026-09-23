@@ -140,3 +140,20 @@ describe("a legal reason does not excuse retention", () => {
     expect(flags.map((f) => f.category)).toContain("no_deletion");
   });
 });
+
+// Lexicon findings used a template headline ('"pixels" is doing a lot of work here') that
+// appeared four times in a row and read as filler. They now carry their category's charge
+// headline, so they join that charge's group; the phrase's own meaning stays in `decoded`.
+describe("lexicon findings speak with their category's voice", () => {
+  it("uses the category headline, not a template", async () => {
+    const { RULES } = await import("@/lib/rules");
+    const text = "We use cookies, pixels and SDKs placed by advertising partners to follow your activity on other websites and apps.";
+    const { flags } = runLexicon(text, splitSentences(text));
+    for (const f of flags) {
+      expect(f.headline).not.toMatch(/doing a lot of work/);
+      const rule = RULES.find((r) => r.category === f.category);
+      if (rule) expect(f.headline).toBe(rule.headline);
+      expect(f.decoded?.meaning).toBeTruthy();
+    }
+  });
+});

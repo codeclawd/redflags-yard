@@ -96,7 +96,7 @@ export const RULES: Rule[] = [
       /\bgenetic\s+(?:data|information)\b/i,
       /\b(?:health|medical)\s+(?:data|information|conditions?)\b[^.]{0,60}\b(?:collect|process|use|share)/i,
       /\b(?:sexual\s+orientation|religious\s+(?:beliefs?|affiliation)|political\s+(?:opinions?|affiliation)|racial\s+or\s+ethnic\s+origin|trade\s+union)\b/i,
-      /\bsensitive\s+(?:personal\s+)?(?:information|data|categories)\b/i,
+      /(?<![-\w])sensitive\s+(?:personal\s+)?(?:information|data|categories)\b/i,
     ],
   },
   {
@@ -356,6 +356,17 @@ const VAGUE_MARKERS = [
 export function classifySpecificity(sentence: string): Specificity {
   return VAGUE_MARKERS.some((r) => r.test(sentence)) ? "vague" : "specific";
 }
+
+/**
+ * Each category's charge, named once. The lexicon uses these too, so a weasel-word
+ * finding joins its category's group instead of becoming a separate templated row.
+ */
+export const HEADLINE_BY_CATEGORY: Partial<Record<CategoryId, string>> = Object.fromEntries(
+  RULES.map((r) => [r.category, r.headline]),
+);
+export const PLAIN_BY_CATEGORY: Partial<Record<CategoryId, string>> = Object.fromEntries(
+  RULES.map((r) => [r.category, r.plainEnglish]),
+);
 
 /** One flag per (category, sentence); the firewall gets the last word. */
 export function runRules(sentences: Sentence[]): Flag[] {

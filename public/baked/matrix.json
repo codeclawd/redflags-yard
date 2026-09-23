@@ -60,29 +60,6 @@
       }
     },
     {
-      "id": "spotify",
-      "name": "Spotify",
-      "url": "https://www.spotify.com/us/legal/privacy-policy/",
-      "fetchedAt": "2026-09-21",
-      "chars": 42407,
-      "score": {
-        "value": 74,
-        "grade": "D",
-        "rank": "Pirate"
-      },
-      "flagCount": 22,
-      "counts": {
-        "biometric_sensitive": 2,
-        "ai_training": 2,
-        "cross_site_tracking": 3,
-        "precise_location": 1,
-        "contacts_harvest": 1,
-        "human_review": 0,
-        "no_deletion": 3,
-        "business_transfer": 1
-      }
-    },
-    {
       "id": "zoom",
       "name": "Zoom",
       "url": "https://www.zoom.com/en/trust/privacy/privacy-statement/",
@@ -194,6 +171,29 @@
         "contacts_harvest": 4,
         "human_review": 0,
         "no_deletion": 4,
+        "business_transfer": 1
+      }
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify",
+      "url": "https://www.spotify.com/us/legal/privacy-policy/",
+      "fetchedAt": "2026-09-21",
+      "chars": 42407,
+      "score": {
+        "value": 68,
+        "grade": "D",
+        "rank": "Pirate"
+      },
+      "flagCount": 21,
+      "counts": {
+        "biometric_sensitive": 2,
+        "ai_training": 2,
+        "cross_site_tracking": 3,
+        "precise_location": 0,
+        "contacts_harvest": 1,
+        "human_review": 0,
+        "no_deletion": 3,
         "business_transfer": 1
       }
     },

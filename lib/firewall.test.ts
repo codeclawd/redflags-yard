@@ -107,3 +107,13 @@ describe("a choice the reader makes is not a practice", () => {
   it("still flags 'we may collect biometric identifiers'", () =>
     expect(isConditional("We may collect biometric identifiers and biometric information as defined under US laws, such as faceprints and voiceprints, from your user content.")).toBe(false));
 });
+
+// DuckDuckGo's own privacy protection was flagged Critical as "they can pinpoint exactly
+// where you are". "Shield X from us" is a protection, and "never log" is a denial.
+describe("a protection the company applies to itself is not a finding", () => {
+  const ddg = "For local search results in particular, we've further engineered a solution to shield your precise location from us and our content providers that sends us a random location nearish to you, which we also never log to disk.";
+  it("suppresses DuckDuckGo's 'shield your precise location from us'", () => expect(isConditional(ddg)).toBe(true));
+  it("'never log' is a denial", () => expect(isNegated("We never log your searches.")).toBe(true));
+  it("still flags a real location practice", () =>
+    expect(isConditional("We collect your precise location to show you nearby ads.")).toBe(false));
+});

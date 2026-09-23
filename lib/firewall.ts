@@ -11,7 +11,7 @@ const HARM_VERBS = [
   "track", "monitor", "profile", "target", "combine", "link", "record", "store", "keep",
   "access", "read", "listen", "scan", "analy[sz]e", "train", "transfer", "buy", "license",
   "infer", "fingerprint", "sell", "share", "disclose", "rent", "trade", "use", "collect",
-  "retain", "process",
+  "retain", "process", "log", "save",
 ].join("|");
 
 /** "We do NOT sell..." — the capability is being denied. */
@@ -90,6 +90,9 @@ export const DEFINITIONAL_GUARDS: RegExp[] = [
  * hunting for, and flagging them reads as not having understood the sentence.
  */
 export const PROTECTIVE_GUARDS: RegExp[] = [
+  // Shielding something from the company itself: DuckDuckGo "engineered a solution to
+  // shield your precise location from us" was flagged Critical for tracking location.
+  /\b(?:shield|protect|hide|mask|obscure|withhold)\s+[^.]{0,50}?\bfrom\s+(?:us|ourselves|our\b)/i,
   /\b(?:are|is)\s+not\s+(?:permitted|allowed|eligible)\s+to\b/i,
   /\bmay\s+not\s+(?:use|register|create\s+an\s+account)\b/i,
   /\bif\s+(?:we|you)\s+(?:learn|become\s+aware|discover|find\s+out)\b/i,

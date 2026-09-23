@@ -7,7 +7,7 @@
 
 import type { CategoryId, DecodedPhrase, Flag, Severity } from "@/lib/types";
 import { isConditional, isNegated } from "@/lib/firewall";
-import { classifySpecificity } from "@/lib/rules";
+import { HEADLINE_BY_CATEGORY, PLAIN_BY_CATEGORY, classifySpecificity } from "@/lib/rules";
 import type { Sentence } from "@/lib/text";
 
 export interface LexiconEntry {
@@ -272,7 +272,9 @@ export const LEXICON: LexiconEntry[] = [
     severity: "high",
   },
   {
-    phrase: /\bprecise\s+(?:geo)?location\b/gi,
+    // Lookbehind, not \b: the hyphen in \"non-precise\" is a word boundary. Same fix as rules.ts;
+    // lib/negated-prefix.test.ts now checks every pattern in both engines for this.
+    phrase: /(?<![-\w])precise\s+(?:geo)?location\b/gi,
     display: "precise location",
     meaning: "Coordinates accurate enough to identify your home, workplace and clinic.",
     category: "precise_location",
@@ -541,8 +543,10 @@ export function runLexicon(source: string, sentences: Sentence[]): LexiconRun {
         category: entry.category,
         severity: entry.severity,
         score: 0.55,
-        headline: `"${entry.display}" is doing a lot of work here`,
-        plainEnglish: entry.meaning,
+        // The category's own charge, so this sentence joins that charge's group; what the
+        // specific phrase allows is kept in `decoded` and shown on the sentence's card.
+        headline: HEADLINE_BY_CATEGORY[entry.category] ?? `The wording "${entry.display}" hides what it allows`,
+        plainEnglish: PLAIN_BY_CATEGORY[entry.category] ?? entry.meaning,
         quote: sentence.text,
         start: sentence.start,
         end: sentence.end,
